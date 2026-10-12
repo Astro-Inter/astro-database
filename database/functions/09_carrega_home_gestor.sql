@@ -33,7 +33,7 @@ AS $$
         INNER JOIN contexto ctx ON ctx.id_workspace = un.workspace_id
         LEFT JOIN conclusao_evento ce
             ON ce.turma_funcionario_id = tf.id_turma_funcionario
-        WHERE u.tipo = 'COLABORADOR' AND u.status = 'ATIVO'
+        WHERE u.tipo IN ('COLABORADOR','GESTOR') AND u.status = 'ATIVO'
     ), validacoes AS (
         SELECT id_conclusao_evento, collaborator_name, titulo, data_conclusao
         FROM participacoes
