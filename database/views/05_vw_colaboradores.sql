@@ -19,4 +19,4 @@ INNER JOIN unidade un
 WHERE u.tipo = 'COLABORADOR';
 
 COMMENT ON VIEW vw_colaboradores IS
-'SCRUM-515: reúne os dados de colaboradores para listagem, detalhes e edição, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade e workspace. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. O backend deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.';
+'Reúne os dados de colaboradores para listagem, detalhes e edição, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade e workspace. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. O backend deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.';
