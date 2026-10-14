@@ -103,6 +103,19 @@ Depois execute `npm run analyze`, ou use o modo local, que reprocessa o workspac
 
 Os diretórios são configuráveis em [database-workspace.config.json](database-workspace.config.json). Evite codificar novos caminhos diretamente nos módulos.
 
+### Candidatos para eventos (SCRUM-422)
+
+A função [`fn_seleciona_candidatos_evento`](database/functions/18_fn_seleciona_candidatos_evento.sql) atende à consulta de candidatos do fluxo web de eventos da [API, PR #36](https://github.com/Astro-Inter/astro-api/pull/36). Recebe o Firebase UID do gestor autenticado e uma NR opcional; retorna usuários ativos do mesmo workspace, excluindo o solicitante, com cargo, unidade e modalidade. Sem NR, retorna todos os candidatos do workspace; com NR, exige o vínculo do cargo em `cargo_nr`.
+
+Instale o script no schema das tabelas Astro **antes de implantar a versão da API que chama a função**. Depende de `usuario`, `unidade`, `cargo` e `cargo_nr`; os scripts de criação e constraints devem estar aplicados. A função é `STABLE` e `SECURITY INVOKER`, mantendo os privilégios e políticas de acesso do chamador. Sua inclusão no repositório não executa DDL no banco publicado.
+
+```sql
+SELECT * FROM fn_seleciona_candidatos_evento('firebase-uid-do-gestor');
+SELECT * FROM fn_seleciona_candidatos_evento('firebase-uid-do-gestor', 10);
+```
+
+Este repositório mantém o script de instalação; a API conserva uma cópia idêntica para suas regressões PostgreSQL. Alterações no contrato devem manter ambas as cópias sincronizadas.
+
 ## Onde trocar as imagens
 
 A aplicação utiliza arquivos de imagem apenas na página **Modelagem**:
