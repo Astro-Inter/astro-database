@@ -24,7 +24,7 @@
     },
     {
       "title": "Leitura de mensagens",
-      "description": "Definir como registrar a leitura e confirmar a troca entre funcionários."
+      "description": "A collection mensagens documenta remetente, destinatário, texto e data de envio. O documento exibido não possui campo de leitura; definir como registrar essa informação."
     },
     {
       "title": "Collections de formulários",

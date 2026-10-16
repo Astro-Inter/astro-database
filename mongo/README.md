@@ -13,6 +13,8 @@ O modelo `forms` inclui workspace, gestores remetente e destinatário, NR, unida
 
 A collection `sessoes` documenta a estrutura do chatbot exibida no MongoDB Compass: identificadores textuais de sessão e usuário, ação pendente, datas BSON, mensagens com `role` e `content`, resumo, indicador de indexação, status e última rota. O exemplo usa `human` e `assistant`, status `ativa`, rota `direta` e `acao_pendente` nula. Os identificadores do exemplo são fictícios. A estrutura de ações preenchidas e as definições dos cinco índices indicados na referência ainda precisam ser documentadas.
 
+A collection `mensagens` documenta o chat com os campos `_id`, `id_envia`, `id_recebe`, `mensagem` e `data`. A referência mostra `_id` como string em formato UUID ou como ObjectId, remetente e destinatário numéricos, texto e data BSON. Cada documento representa uma mensagem. As definições dos três índices indicados na referência e o registro de leitura ainda precisam ser documentados.
+
 No modo local, use **Editar documentação** na collection ou na aba de decisões. Revise as alterações e salve para atualizar o arquivo JSON e o catálogo. Para editar os arquivos diretamente, altere os JSONs e execute `npm run analyze` ou `npm run build`. O snapshot `generated/mongo.json` atende tanto ao modo local quanto ao site estático. PostgreSQL continua em `database/`; seus scripts, métricas, execução e histórico permanecem separados do catálogo MongoDB.
 
 Uma nova definição deve conter `name`, `title`, `description`, `status`, `pattern`, `fields`, `example`, `notes` e `indexes`. Cada campo usa `name`, `type`, `description` e `required` (`Sim`, `Não` ou `A definir`). Não coloque credenciais ou dados reais nos exemplos.
