@@ -7,7 +7,9 @@ Este módulo documenta propostas de modelagem. Não executa comandos MongoDB nem
 - `analyzer/mongo/`: leitura e validação do catálogo, independente do parser SQL.
 - `site/components/mongo/`: interface da área MongoDB.
 
-Os arquivos JSON são a fonte da documentação. Nos exemplos, datas usam `$date`. A modelagem de formulários registra a proposta de uma collection por formulário, sem decidir por uma única collection física. Notificações continuam com destino MongoDB/Redis em aberto. Tipos, obrigatoriedade e índices ainda precisam de validação.
+Os arquivos JSON são a fonte da documentação. Nos exemplos, datas BSON usam `$date`; datas sem horário, como `forms.data_limite`, usam strings `YYYY-MM-DD`. A modelagem de formulários registra a proposta de uma collection por formulário, sem decidir por uma única collection física. Notificações continuam com destino MongoDB/Redis em aberto. Tipos, obrigatoriedade e índices ainda precisam de validação.
+
+O modelo `forms` inclui workspace, gestores remetente e destinatário, NR, unidade, prazo, status e datas de criação e resposta. O exemplo de inspeção de segurança contém perguntas dos tipos `alternativa`, `texto`, `foto` e `data`, com respostas inicialmente vazias em `perguntas[].resposta`. Alternativas possuem opções identificadas (`id_opcao`, `texto` e `outra`) e configuração de múltipla escolha; fotos possuem limites de quantidade e tamanho de arquivos. O formato das respostas preenchidas e os status além de `PENDENTE` ainda precisam ser definidos.
 
 No modo local, use **Editar documentação** na collection ou na aba de decisões. Revise as alterações e salve para atualizar o arquivo JSON e o catálogo. Para editar os arquivos diretamente, altere os JSONs e execute `npm run analyze` ou `npm run build`. O snapshot `generated/mongo.json` atende tanto ao modo local quanto ao site estático. PostgreSQL continua em `database/`; seus scripts, métricas, execução e histórico permanecem separados do catálogo MongoDB.
 
