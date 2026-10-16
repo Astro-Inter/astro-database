@@ -1,6 +1,6 @@
 # Documentação MongoDB
 
-Este módulo documenta propostas de modelagem. Não executa comandos MongoDB nem substitui a aprovação das regras de negócio.
+Este módulo documenta propostas de modelagem e estruturas observadas nas referências fornecidas. Não executa comandos MongoDB nem substitui a aprovação das regras de negócio.
 
 - `collections/*.json`: uma definição por collection ou modelo, com nome, finalidade, campos, exemplo, observações e índices documentados.
 - `docs/modeling.json`: princípios e decisões pendentes.
@@ -10,6 +10,8 @@ Este módulo documenta propostas de modelagem. Não executa comandos MongoDB nem
 Os arquivos JSON são a fonte da documentação. Nos exemplos, datas BSON usam `$date`; datas sem horário, como `forms.data_limite`, usam strings `YYYY-MM-DD`. A modelagem de formulários registra a proposta de uma collection por formulário, sem decidir por uma única collection física. Notificações continuam com destino MongoDB/Redis em aberto. Tipos, obrigatoriedade e índices ainda precisam de validação.
 
 O modelo `forms` inclui workspace, gestores remetente e destinatário, NR, unidade, prazo, status e datas de criação e resposta. O exemplo de inspeção de segurança contém perguntas dos tipos `alternativa`, `texto`, `foto` e `data`, com respostas inicialmente vazias em `perguntas[].resposta`. Alternativas possuem opções identificadas (`id_opcao`, `texto` e `outra`) e configuração de múltipla escolha; fotos possuem limites de quantidade e tamanho de arquivos. O formato das respostas preenchidas e os status além de `PENDENTE` ainda precisam ser definidos.
+
+A collection `sessoes` documenta a estrutura do chatbot exibida no MongoDB Compass: identificadores textuais de sessão e usuário, ação pendente, datas BSON, mensagens com `role` e `content`, resumo, indicador de indexação, status e última rota. O exemplo usa `human` e `assistant`, status `ativa`, rota `direta` e `acao_pendente` nula. Os identificadores do exemplo são fictícios. A estrutura de ações preenchidas e as definições dos cinco índices indicados na referência ainda precisam ser documentadas.
 
 No modo local, use **Editar documentação** na collection ou na aba de decisões. Revise as alterações e salve para atualizar o arquivo JSON e o catálogo. Para editar os arquivos diretamente, altere os JSONs e execute `npm run analyze` ou `npm run build`. O snapshot `generated/mongo.json` atende tanto ao modo local quanto ao site estático. PostgreSQL continua em `database/`; seus scripts, métricas, execução e histórico permanecem separados do catálogo MongoDB.
 

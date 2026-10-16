@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-16T02:21:47.284Z",
+  "generatedAt": "2026-10-16T02:25:12.631Z",
   "collections": [
     {
       "name": "chat_mensagens",
@@ -55,90 +55,6 @@
       "status": "Proposta",
       "indexes": [],
       "file": "mongo/collections/chat_mensagens.json"
-    },
-    {
-      "name": "chatbot_sessoes",
-      "title": "Sessões de chatbot",
-      "description": "Histórico de conversas organizado por sessão, com mensagens embutidas.",
-      "pattern": "Embedding · sessão",
-      "notes": [
-        "Confirmar com o frontend se o histórico completo ou apenas a última conversa será exibido.",
-        "Definir a divisão de sessões extensas para evitar crescimento ilimitado do documento."
-      ],
-      "fields": [
-        {
-          "name": "_id",
-          "type": "string",
-          "description": "Identificador da sessão.",
-          "required": "A definir"
-        },
-        {
-          "name": "id_user",
-          "type": "number",
-          "description": "Referência ao usuário.",
-          "required": "A definir"
-        },
-        {
-          "name": "iniciada_em",
-          "type": "date",
-          "description": "Início da sessão.",
-          "required": "A definir"
-        },
-        {
-          "name": "atualizada_em",
-          "type": "date",
-          "description": "Última interação.",
-          "required": "A definir"
-        },
-        {
-          "name": "resumo",
-          "type": "string",
-          "description": "Resumo da sessão.",
-          "required": "A definir"
-        },
-        {
-          "name": "mensagens",
-          "type": "array<object>",
-          "description": "Mensagens embutidas.",
-          "required": "A definir"
-        },
-        {
-          "name": "mensagens[].role",
-          "type": "string",
-          "description": "Papel de quem enviou a mensagem.",
-          "required": "A definir"
-        },
-        {
-          "name": "mensagens[].content",
-          "type": "string",
-          "description": "Conteúdo da mensagem.",
-          "required": "A definir"
-        }
-      ],
-      "example": {
-        "_id": "sessao-exemplo",
-        "id_user": 1,
-        "iniciada_em": {
-          "$date": "2026-06-25T12:19:40.233Z"
-        },
-        "atualizada_em": {
-          "$date": "2026-06-25T12:20:36.194Z"
-        },
-        "resumo": "",
-        "mensagens": [
-          {
-            "role": "human",
-            "content": "Qual foi nossa conversa anterior?"
-          },
-          {
-            "role": "assistant",
-            "content": "Esta é a primeira conversa desta sessão."
-          }
-        ]
-      },
-      "status": "Proposta",
-      "indexes": [],
-      "file": "mongo/collections/chatbot_sessoes.json"
     },
     {
       "name": "forms",
@@ -511,6 +427,123 @@
       "status": "Proposta",
       "indexes": [],
       "file": "mongo/collections/nr_catalogo.json"
+    },
+    {
+      "name": "sessoes",
+      "title": "Sessões de chatbot",
+      "description": "Sessões do chatbot com usuário, datas, mensagens embutidas, resumo, status, última rota e controle de ação pendente.",
+      "pattern": "Embedding · sessão",
+      "notes": [
+        "A collection se chama sessoes. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
+        "id_user é uma string. As mensagens usam role e content; o exemplo mostra os papéis human e assistant.",
+        "acao_pendente aparece como null na referência. O formato de uma ação preenchida ainda precisa ser documentado.",
+        "O exemplo mostra status ativa, ultima_rota direta, resumo vazio e resumo_indexado false. Os demais valores e as transições ainda precisam ser definidos.",
+        "A referência indica cinco índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
+        "Confirmar com o frontend se o histórico completo ou apenas a última conversa será exibido.",
+        "Definir a divisão de sessões extensas para evitar crescimento ilimitado do documento."
+      ],
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string",
+          "description": "Identificador textual da sessão, em formato UUID na referência.",
+          "required": "A definir"
+        },
+        {
+          "name": "id_user",
+          "type": "string",
+          "description": "Identificador textual do usuário associado à sessão.",
+          "required": "A definir"
+        },
+        {
+          "name": "acao_pendente",
+          "type": "null | a definir",
+          "description": "Ação pendente da sessão; null no exemplo. O tipo e a estrutura quando preenchida ainda precisam de definição.",
+          "required": "A definir"
+        },
+        {
+          "name": "iniciada_em",
+          "type": "date",
+          "description": "Início da sessão.",
+          "required": "A definir"
+        },
+        {
+          "name": "atualizada_em",
+          "type": "date",
+          "description": "Última interação.",
+          "required": "A definir"
+        },
+        {
+          "name": "resumo",
+          "type": "string",
+          "description": "Resumo da sessão.",
+          "required": "A definir"
+        },
+        {
+          "name": "resumo_indexado",
+          "type": "boolean",
+          "description": "Indica se o resumo foi indexado; false no exemplo.",
+          "required": "A definir"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "Estado da sessão; ativa no exemplo. Demais valores ainda a definir.",
+          "required": "A definir"
+        },
+        {
+          "name": "ultima_rota",
+          "type": "string",
+          "description": "Última rota utilizada pelo chatbot; direta no exemplo. Demais valores ainda a definir.",
+          "required": "A definir"
+        },
+        {
+          "name": "mensagens",
+          "type": "array<object>",
+          "description": "Mensagens embutidas.",
+          "required": "A definir"
+        },
+        {
+          "name": "mensagens[].role",
+          "type": "string",
+          "description": "Papel de quem enviou a mensagem; human e assistant no exemplo.",
+          "required": "A definir"
+        },
+        {
+          "name": "mensagens[].content",
+          "type": "string",
+          "description": "Conteúdo da mensagem.",
+          "required": "A definir"
+        }
+      ],
+      "example": {
+        "_id": "11111111-2222-4333-8444-555555555555",
+        "id_user": "usuario-exemplo",
+        "acao_pendente": null,
+        "atualizada_em": {
+          "$date": "2026-09-16T21:37:20.334Z"
+        },
+        "iniciada_em": {
+          "$date": "2026-09-16T21:37:15.298Z"
+        },
+        "mensagens": [
+          {
+            "role": "human",
+            "content": "oi quem é você?"
+          },
+          {
+            "role": "assistant",
+            "content": "Olá! Sou o Agente do Astro, seu assistente virtual. Posso ajudar a direcionar suas solicitações para as áreas corretas."
+          }
+        ],
+        "resumo": "",
+        "resumo_indexado": false,
+        "status": "ativa",
+        "ultima_rota": "direta"
+      },
+      "status": "Documentada",
+      "indexes": [],
+      "file": "mongo/collections/sessoes.json"
     }
   ],
   "modeling": {

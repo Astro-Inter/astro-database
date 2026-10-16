@@ -7,7 +7,7 @@ test('modelagem deriva documentos embutidos dos campos sem inventar referências
   const data = await analyzeMongo({ write: false });
   const graph = mongoGraph(data.collections);
   assert.equal(graph.nodes.filter((node) => node.type === 'collection').length, 5);
-  assert.ok(graph.edges.some((edge) => edge.from === 'chatbot_sessoes' && edge.to === 'chatbot_sessoes::mensagens'));
+  assert.ok(graph.edges.some((edge) => edge.from === 'sessoes' && edge.to === 'sessoes::mensagens'));
   assert.ok(graph.edges.some((edge) => edge.from === 'forms' && edge.to === 'forms::perguntas'));
   assert.equal(graph.edges.filter((edge) => edge.type === 'reference').length, 0);
   const layout = mongoModelLayout(graph);

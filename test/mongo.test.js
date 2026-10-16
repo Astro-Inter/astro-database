@@ -13,7 +13,7 @@ test('catálogo documenta as propostas e preserva decisões em aberto', async ()
   assert.ok(data.collections.every((collection) => collection.file.startsWith('mongo/collections/')));
   assert.ok(data.collections.find((collection) => collection.name === 'forms').notes.some((note) => note.includes('cada formulário')));
   assert.ok(data.collections.find((collection) => collection.name === 'notificacoes').notes.some((note) => note.includes('Redis')));
-  assert.ok(mongoMatches(data.collections.find((collection) => collection.name === 'chatbot_sessoes'), 'mensagens'));
+  assert.ok(mongoMatches(data.collections.find((collection) => collection.name === 'sessoes'), 'mensagens'));
   assert.ok(mongoMatches(data.collections.find((collection) => collection.name === 'notificacoes'), 'notificações'));
 });
 
