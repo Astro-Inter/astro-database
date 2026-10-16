@@ -1,153 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-26T17:01:11.597Z",
+  "generatedAt": "2026-10-16T16:08:50.706Z",
   "collections": [
-    {
-      "name": "chat_mensagens",
-      "title": "Mensagens de chat",
-      "description": "Mensagens trocadas entre remetente e destinatário.",
-      "pattern": "Referências",
-      "notes": [
-        "Confirmar mensagens entre funcionários e o registro de leitura.",
-        "Avaliar organização por sessão, conforme a organização proposta."
-      ],
-      "fields": [
-        {
-          "name": "_id",
-          "type": "number",
-          "description": "Identificador da mensagem.",
-          "required": "A definir"
-        },
-        {
-          "name": "id_envia",
-          "type": "number",
-          "description": "Referência ao remetente.",
-          "required": "A definir"
-        },
-        {
-          "name": "id_recebe",
-          "type": "number",
-          "description": "Referência ao destinatário.",
-          "required": "A definir"
-        },
-        {
-          "name": "mensagem",
-          "type": "string",
-          "description": "Texto da mensagem.",
-          "required": "A definir"
-        },
-        {
-          "name": "data",
-          "type": "date",
-          "description": "Data do envio.",
-          "required": "A definir"
-        }
-      ],
-      "example": {
-        "_id": 1,
-        "id_envia": 1,
-        "id_recebe": 2,
-        "mensagem": "Olá!",
-        "data": {
-          "$date": "2026-06-25T12:19:40.233Z"
-        }
-      },
-      "status": "Proposta",
-      "indexes": [],
-      "file": "mongo/collections/chat_mensagens.json"
-    },
-    {
-      "name": "chatbot_sessoes",
-      "title": "Sessões de chatbot",
-      "description": "Histórico de conversas organizado por sessão, com mensagens embutidas.",
-      "pattern": "Embedding · sessão",
-      "notes": [
-        "Confirmar com o frontend se o histórico completo ou apenas a última conversa será exibido.",
-        "Definir a divisão de sessões extensas para evitar crescimento ilimitado do documento."
-      ],
-      "fields": [
-        {
-          "name": "_id",
-          "type": "string",
-          "description": "Identificador da sessão.",
-          "required": "A definir"
-        },
-        {
-          "name": "id_user",
-          "type": "number",
-          "description": "Referência ao usuário.",
-          "required": "A definir"
-        },
-        {
-          "name": "iniciada_em",
-          "type": "date",
-          "description": "Início da sessão.",
-          "required": "A definir"
-        },
-        {
-          "name": "atualizada_em",
-          "type": "date",
-          "description": "Última interação.",
-          "required": "A definir"
-        },
-        {
-          "name": "resumo",
-          "type": "string",
-          "description": "Resumo da sessão.",
-          "required": "A definir"
-        },
-        {
-          "name": "mensagens",
-          "type": "array<object>",
-          "description": "Mensagens embutidas.",
-          "required": "A definir"
-        },
-        {
-          "name": "mensagens[].role",
-          "type": "string",
-          "description": "Papel de quem enviou a mensagem.",
-          "required": "A definir"
-        },
-        {
-          "name": "mensagens[].content",
-          "type": "string",
-          "description": "Conteúdo da mensagem.",
-          "required": "A definir"
-        }
-      ],
-      "example": {
-        "_id": "sessao-exemplo",
-        "id_user": 1,
-        "iniciada_em": {
-          "$date": "2026-06-25T12:19:40.233Z"
-        },
-        "atualizada_em": {
-          "$date": "2026-06-25T12:20:36.194Z"
-        },
-        "resumo": "",
-        "mensagens": [
-          {
-            "role": "human",
-            "content": "Qual foi nossa conversa anterior?"
-          },
-          {
-            "role": "assistant",
-            "content": "Esta é a primeira conversa desta sessão."
-          }
-        ]
-      },
-      "status": "Proposta",
-      "indexes": [],
-      "file": "mongo/collections/chatbot_sessoes.json"
-    },
     {
       "name": "forms",
       "title": "Formulários",
-      "description": "Estrutura de formulários com perguntas e opções embutidas.",
+      "description": "Formulários vinculados ao workspace, com gestores, prazo, status, perguntas, opções e respostas embutidas.",
       "pattern": "Embedding",
       "notes": [
         "A modelagem propõe uma collection para cada formulário com a mesma estrutura. forms é o nome documental deste modelo, não uma decisão de collection única.",
-        "Validar armazenamento das respostas e organização das collections antes de implementar."
+        "As respostas ficam em perguntas[].resposta, iniciado como array vazio para todos os tipos. O formato dos itens após o preenchimento ainda precisa ser definido.",
+        "O exemplo contempla perguntas dos tipos alternativa, texto, foto e data. Perguntas de alternativa incluem multipla_escolha e opções com id_opcao, texto e outra; outra identifica a opção Outros.",
+        "Perguntas de foto podem informar maximo_arquivos e tamanho_maximo_mb; o exemplo permite até 3 arquivos de até 10 MB cada.",
+        "data_limite usa uma string no formato YYYY-MM-DD, sem horário. criado_em usa uma data BSON representada com $date; respondido_em inicia como null e registra a data da resposta quando preenchido.",
+        "PENDENTE é o status apresentado no exemplo. Os demais status, as transições, a obrigatoriedade dos campos e a organização física das collections ainda precisam de validação."
       ],
       "fields": [
         {
@@ -157,9 +23,21 @@
           "required": "A definir"
         },
         {
+          "name": "id_workspace",
+          "type": "number",
+          "description": "Workspace ao qual o formulário pertence.",
+          "required": "A definir"
+        },
+        {
+          "name": "id_gestor_remetente",
+          "type": "number",
+          "description": "Gestor que envia o formulário.",
+          "required": "A definir"
+        },
+        {
           "name": "id_gestor",
           "type": "number",
-          "description": "Gestor responsável.",
+          "description": "Gestor destinatário responsável pelo formulário.",
           "required": "A definir"
         },
         {
@@ -175,12 +53,6 @@
           "required": "Não"
         },
         {
-          "name": "id_gestor_remetente",
-          "type": "number",
-          "description": "Gestor remetente.",
-          "required": "A definir"
-        },
-        {
           "name": "titulo",
           "type": "string",
           "description": "Título do formulário.",
@@ -190,6 +62,30 @@
           "name": "descricao",
           "type": "string",
           "description": "Descrição do formulário.",
+          "required": "A definir"
+        },
+        {
+          "name": "data_limite",
+          "type": "string",
+          "description": "Data limite para responder, no formato YYYY-MM-DD e sem horário.",
+          "required": "A definir"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "Situação do formulário. O exemplo usa PENDENTE; demais valores ainda a definir.",
+          "required": "A definir"
+        },
+        {
+          "name": "criado_em",
+          "type": "date",
+          "description": "Data e hora de criação; representada com $date no exemplo JSON.",
+          "required": "A definir"
+        },
+        {
+          "name": "respondido_em",
+          "type": "date | null",
+          "description": "Data e hora da resposta; null enquanto o formulário ainda não foi respondido.",
           "required": "A definir"
         },
         {
@@ -207,7 +103,7 @@
         {
           "name": "perguntas[].tipo",
           "type": "string",
-          "description": "Alternativa, dissertativa, avaliação, foto ou data.",
+          "description": "Tipo da pergunta: alternativa, texto, foto ou data, conforme o exemplo.",
           "required": "A definir"
         },
         {
@@ -217,41 +113,123 @@
           "required": "A definir"
         },
         {
-          "name": "perguntas[].resposta",
-          "type": "array | null",
-          "description": "Resposta; formato ainda em discussão.",
+          "name": "perguntas[].obrigatoria",
+          "type": "boolean",
+          "description": "Indica se a pergunta precisa ser respondida.",
+          "required": "A definir"
+        },
+        {
+          "name": "perguntas[].multipla_escolha",
+          "type": "boolean",
+          "description": "Em perguntas de alternativa, indica se permite selecionar mais de uma opção. false no exemplo.",
           "required": "A definir"
         },
         {
           "name": "perguntas[].opcoes",
-          "type": "array",
-          "description": "Opções disponíveis.",
+          "type": "array<object>",
+          "description": "Opções embutidas nas perguntas de alternativa.",
           "required": "A definir"
         },
         {
-          "name": "perguntas[].obrigatoria",
+          "name": "perguntas[].opcoes[].id_opcao",
+          "type": "number",
+          "description": "Identificador da opção dentro da pergunta.",
+          "required": "A definir"
+        },
+        {
+          "name": "perguntas[].opcoes[].texto",
+          "type": "string",
+          "description": "Texto exibido para a opção.",
+          "required": "A definir"
+        },
+        {
+          "name": "perguntas[].opcoes[].outra",
           "type": "boolean",
-          "description": "Obrigatoriedade da pergunta.",
+          "description": "Identifica a opção Outros; true para essa opção no exemplo.",
+          "required": "A definir"
+        },
+        {
+          "name": "perguntas[].maximo_arquivos",
+          "type": "number",
+          "description": "Quantidade máxima de arquivos para perguntas de foto. 3 no exemplo.",
+          "required": "A definir"
+        },
+        {
+          "name": "perguntas[].tamanho_maximo_mb",
+          "type": "number",
+          "description": "Tamanho máximo de cada arquivo, em MB, para perguntas de foto. 10 no exemplo.",
+          "required": "A definir"
+        },
+        {
+          "name": "perguntas[].resposta",
+          "type": "array",
+          "description": "Respostas da pergunta, inicialmente []. A estrutura dos itens preenchidos ainda está a definir.",
           "required": "A definir"
         }
       ],
       "example": {
         "_id": 1,
-        "id_gestor": 2,
-        "id_gestor_remetente": 1,
-        "titulo": "Pesquisa Clima",
-        "descricao": "Avaliação do ambiente organizacional",
+        "id_workspace": 1,
+        "id_gestor_remetente": 10,
+        "id_gestor": 20,
+        "titulo": "Inspeção de segurança",
+        "descricao": "Verificação das condições de segurança da unidade.",
+        "nr": 6,
+        "id_unidade": 3,
+        "data_limite": "2026-10-30",
+        "status": "PENDENTE",
+        "criado_em": {
+          "$date": "2026-10-15T15:00:00Z"
+        },
+        "respondido_em": null,
         "perguntas": [
           {
             "id_pergunta": 1,
             "tipo": "alternativa",
-            "pergunta": "Você está satisfeito com seu ambiente de trabalho?",
-            "resposta": [],
+            "pergunta": "Os colaboradores estão utilizando os EPIs?",
+            "obrigatoria": true,
+            "multipla_escolha": false,
             "opcoes": [
-              "Sim",
-              "Não"
+              {
+                "id_opcao": 1,
+                "texto": "Sim",
+                "outra": false
+              },
+              {
+                "id_opcao": 2,
+                "texto": "Não",
+                "outra": false
+              },
+              {
+                "id_opcao": 3,
+                "texto": "Outros",
+                "outra": true
+              }
             ],
-            "obrigatoria": true
+            "resposta": []
+          },
+          {
+            "id_pergunta": 2,
+            "tipo": "texto",
+            "pergunta": "Descreva as condições de segurança observadas.",
+            "obrigatoria": true,
+            "resposta": []
+          },
+          {
+            "id_pergunta": 3,
+            "tipo": "foto",
+            "pergunta": "Anexe fotos do local inspecionado.",
+            "obrigatoria": false,
+            "maximo_arquivos": 3,
+            "tamanho_maximo_mb": 10,
+            "resposta": []
+          },
+          {
+            "id_pergunta": 4,
+            "tipo": "data",
+            "pergunta": "Em qual data a inspeção foi realizada?",
+            "obrigatoria": true,
+            "resposta": []
           }
         ]
       },
@@ -260,13 +238,72 @@
       "file": "mongo/collections/forms.json"
     },
     {
+      "name": "mensagens",
+      "title": "Mensagens de chat",
+      "description": "Mensagens de chat com remetente, destinatário, texto e data de envio, em um documento por mensagem.",
+      "pattern": "Referências",
+      "notes": [
+        "A collection se chama mensagens. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
+        "A referência contém documentos com _id em string no formato UUID e documentos com _id do tipo ObjectId. O exemplo usa uma string; em JSON estendido, um ObjectId pode ser representado como {\"$oid\": \"000000000000000000000001\"}.",
+        "id_envia e id_recebe são identificadores numéricos do remetente e do destinatário. A mensagem é uma string e data é uma data BSON, representada com $date no exemplo JSON.",
+        "A referência indica três índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
+        "O documento exibido não contém campo de leitura nem identificador de sessão. Definir o registro de leitura e avaliar a organização por sessão."
+      ],
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string | ObjectId",
+          "description": "Identificador da mensagem. A referência mostra string em formato UUID e ObjectId em documentos distintos.",
+          "required": "A definir"
+        },
+        {
+          "name": "id_envia",
+          "type": "number",
+          "description": "Identificador numérico do remetente.",
+          "required": "A definir"
+        },
+        {
+          "name": "id_recebe",
+          "type": "number",
+          "description": "Identificador numérico do destinatário.",
+          "required": "A definir"
+        },
+        {
+          "name": "mensagem",
+          "type": "string",
+          "description": "Texto da mensagem.",
+          "required": "A definir"
+        },
+        {
+          "name": "data",
+          "type": "date",
+          "description": "Data e hora do envio, em BSON date; representada com $date no exemplo JSON.",
+          "required": "A definir"
+        }
+      ],
+      "example": {
+        "_id": "11111111-2222-4333-8444-555555555555",
+        "id_envia": 1,
+        "id_recebe": 2,
+        "mensagem": "Olá!",
+        "data": {
+          "$date": "2026-09-12T21:53:55.934Z"
+        }
+      },
+      "status": "Documentada",
+      "indexes": [],
+      "file": "mongo/collections/mensagens.json"
+    },
+    {
       "name": "notificacoes",
       "title": "Notificações",
-      "description": "Proposta de mensagens e alertas destinados a usuários.",
+      "description": "Proposta de notificações destinadas a usuários, com mensagem, data de criação, evento vinculado e título do alerta.",
       "pattern": "Referências",
       "notes": [
         "O armazenamento em MongoDB ou Redis ainda está em aberto.",
-        "Definir título dos alertas criados por gestores e responsabilidade pela automação no backend."
+        "O campo id_evento é opcional e pode ser omitido quando a notificação não estiver vinculada a um evento.",
+        "titulo contém o título do alerta, separado do texto de mensagem. O exemplo notifica sobre o prazo de um evento próximo do fim.",
+        "Definir a responsabilidade pela automação dos alertas no backend."
       ],
       "fields": [
         {
@@ -292,6 +329,18 @@
           "type": "date",
           "description": "Data de criação.",
           "required": "A definir"
+        },
+        {
+          "name": "id_evento",
+          "type": "number",
+          "description": "Identificador opcional do evento vinculado à notificação; pode ser omitido quando não houver evento associado.",
+          "required": "Não"
+        },
+        {
+          "name": "titulo",
+          "type": "string",
+          "description": "Título do alerta exibido ao destinatário.",
+          "required": "A definir"
         }
       ],
       "example": {
@@ -300,14 +349,16 @@
         "mensagem": "Conclua o treinamento pendente.",
         "data_criacao": {
           "$date": "2026-06-25T12:19:40.233Z"
-        }
+        },
+        "id_evento": 1,
+        "titulo": "Prazo de evento próximo do fim"
       },
       "status": "Proposta",
       "indexes": [],
       "file": "mongo/collections/notificacoes.json"
     },
     {
-      "name": "nr_catalogo",
+      "name": "nrs",
       "title": "Normas Regulamentadoras",
       "description": "Conteúdo descritivo e atributos das NRs.",
       "pattern": "Documento",
@@ -394,7 +445,124 @@
       },
       "status": "Proposta",
       "indexes": [],
-      "file": "mongo/collections/nr_catalogo.json"
+      "file": "mongo/collections/nrs.json"
+    },
+    {
+      "name": "sessoes",
+      "title": "Sessões de chatbot",
+      "description": "Sessões do chatbot com usuário, datas, mensagens embutidas, resumo, status, última rota e controle de ação pendente.",
+      "pattern": "Embedding · sessão",
+      "notes": [
+        "A collection se chama sessoes. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
+        "id_user é uma string. As mensagens usam role e content; o exemplo mostra os papéis human e assistant.",
+        "acao_pendente aparece como null na referência. O formato de uma ação preenchida ainda precisa ser documentado.",
+        "O exemplo mostra status ativa, ultima_rota direta, resumo vazio e resumo_indexado false. Os demais valores e as transições ainda precisam ser definidos.",
+        "A referência indica cinco índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
+        "Confirmar com o frontend se o histórico completo ou apenas a última conversa será exibido.",
+        "Definir a divisão de sessões extensas para evitar crescimento ilimitado do documento."
+      ],
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string",
+          "description": "Identificador textual da sessão, em formato UUID na referência.",
+          "required": "A definir"
+        },
+        {
+          "name": "id_user",
+          "type": "string",
+          "description": "Identificador textual do usuário associado à sessão.",
+          "required": "A definir"
+        },
+        {
+          "name": "acao_pendente",
+          "type": "null | a definir",
+          "description": "Ação pendente da sessão; null no exemplo. O tipo e a estrutura quando preenchida ainda precisam de definição.",
+          "required": "A definir"
+        },
+        {
+          "name": "iniciada_em",
+          "type": "date",
+          "description": "Início da sessão.",
+          "required": "A definir"
+        },
+        {
+          "name": "atualizada_em",
+          "type": "date",
+          "description": "Última interação.",
+          "required": "A definir"
+        },
+        {
+          "name": "resumo",
+          "type": "string",
+          "description": "Resumo da sessão.",
+          "required": "A definir"
+        },
+        {
+          "name": "resumo_indexado",
+          "type": "boolean",
+          "description": "Indica se o resumo foi indexado; false no exemplo.",
+          "required": "A definir"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "Estado da sessão; ativa no exemplo. Demais valores ainda a definir.",
+          "required": "A definir"
+        },
+        {
+          "name": "ultima_rota",
+          "type": "string",
+          "description": "Última rota utilizada pelo chatbot; direta no exemplo. Demais valores ainda a definir.",
+          "required": "A definir"
+        },
+        {
+          "name": "mensagens",
+          "type": "array<object>",
+          "description": "Mensagens embutidas.",
+          "required": "A definir"
+        },
+        {
+          "name": "mensagens[].role",
+          "type": "string",
+          "description": "Papel de quem enviou a mensagem; human e assistant no exemplo.",
+          "required": "A definir"
+        },
+        {
+          "name": "mensagens[].content",
+          "type": "string",
+          "description": "Conteúdo da mensagem.",
+          "required": "A definir"
+        }
+      ],
+      "example": {
+        "_id": "11111111-2222-4333-8444-555555555555",
+        "id_user": "usuario-exemplo",
+        "acao_pendente": null,
+        "atualizada_em": {
+          "$date": "2026-09-16T21:37:20.334Z"
+        },
+        "iniciada_em": {
+          "$date": "2026-09-16T21:37:15.298Z"
+        },
+        "mensagens": [
+          {
+            "role": "human",
+            "content": "oi quem é você?"
+          },
+          {
+            "role": "assistant",
+            "content": "Olá! Sou o Agente do Astro, seu assistente virtual. Posso ajudar a direcionar suas solicitações para as áreas corretas."
+          }
+        ],
+        "resumo": "",
+        "resumo_indexado": false,
+        "status": "ativa",
+        "ultima_rota": "direta"
+      },
+      "status": "Documentada",
+      "indexes": [],
+      "file": "mongo/collections/sessoes.json"
     }
   ],
   "modeling": {
@@ -423,11 +591,11 @@
       },
       {
         "title": "Leitura de mensagens",
-        "description": "Definir como registrar a leitura e confirmar a troca entre funcionários."
+        "description": "A collection mensagens documenta remetente, destinatário, texto e data de envio. O documento exibido não possui campo de leitura; definir como registrar essa informação."
       },
       {
         "title": "Collections de formulários",
-        "description": "Validar a proposta de uma collection por formulário e onde guardar respostas."
+        "description": "Validar a proposta de uma collection por formulário. O modelo documenta respostas embutidas em perguntas[].resposta, inicialmente como arrays vazios; a estrutura dos itens preenchidos, os demais status e suas transições ainda precisam de definição."
       },
       {
         "title": "Destino das notificações",

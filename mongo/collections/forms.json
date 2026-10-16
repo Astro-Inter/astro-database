@@ -1,11 +1,15 @@
 {
   "name": "forms",
   "title": "Formulários",
-  "description": "Estrutura de formulários com perguntas e opções embutidas.",
+  "description": "Formulários vinculados ao workspace, com gestores, prazo, status, perguntas, opções e respostas embutidas.",
   "pattern": "Embedding",
   "notes": [
     "A modelagem propõe uma collection para cada formulário com a mesma estrutura. forms é o nome documental deste modelo, não uma decisão de collection única.",
-    "Validar armazenamento das respostas e organização das collections antes de implementar."
+    "As respostas ficam em perguntas[].resposta, iniciado como array vazio para todos os tipos. O formato dos itens após o preenchimento ainda precisa ser definido.",
+    "O exemplo contempla perguntas dos tipos alternativa, texto, foto e data. Perguntas de alternativa incluem multipla_escolha e opções com id_opcao, texto e outra; outra identifica a opção Outros.",
+    "Perguntas de foto podem informar maximo_arquivos e tamanho_maximo_mb; o exemplo permite até 3 arquivos de até 10 MB cada.",
+    "data_limite usa uma string no formato YYYY-MM-DD, sem horário. criado_em usa uma data BSON representada com $date; respondido_em inicia como null e registra a data da resposta quando preenchido.",
+    "PENDENTE é o status apresentado no exemplo. Os demais status, as transições, a obrigatoriedade dos campos e a organização física das collections ainda precisam de validação."
   ],
   "fields": [
     {
@@ -15,9 +19,21 @@
       "required": "A definir"
     },
     {
+      "name": "id_workspace",
+      "type": "number",
+      "description": "Workspace ao qual o formulário pertence.",
+      "required": "A definir"
+    },
+    {
+      "name": "id_gestor_remetente",
+      "type": "number",
+      "description": "Gestor que envia o formulário.",
+      "required": "A definir"
+    },
+    {
       "name": "id_gestor",
       "type": "number",
-      "description": "Gestor responsável.",
+      "description": "Gestor destinatário responsável pelo formulário.",
       "required": "A definir"
     },
     {
@@ -33,12 +49,6 @@
       "required": "Não"
     },
     {
-      "name": "id_gestor_remetente",
-      "type": "number",
-      "description": "Gestor remetente.",
-      "required": "A definir"
-    },
-    {
       "name": "titulo",
       "type": "string",
       "description": "Título do formulário.",
@@ -48,6 +58,30 @@
       "name": "descricao",
       "type": "string",
       "description": "Descrição do formulário.",
+      "required": "A definir"
+    },
+    {
+      "name": "data_limite",
+      "type": "string",
+      "description": "Data limite para responder, no formato YYYY-MM-DD e sem horário.",
+      "required": "A definir"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "description": "Situação do formulário. O exemplo usa PENDENTE; demais valores ainda a definir.",
+      "required": "A definir"
+    },
+    {
+      "name": "criado_em",
+      "type": "date",
+      "description": "Data e hora de criação; representada com $date no exemplo JSON.",
+      "required": "A definir"
+    },
+    {
+      "name": "respondido_em",
+      "type": "date | null",
+      "description": "Data e hora da resposta; null enquanto o formulário ainda não foi respondido.",
       "required": "A definir"
     },
     {
@@ -65,7 +99,7 @@
     {
       "name": "perguntas[].tipo",
       "type": "string",
-      "description": "Alternativa, dissertativa, avaliação, foto ou data.",
+      "description": "Tipo da pergunta: alternativa, texto, foto ou data, conforme o exemplo.",
       "required": "A definir"
     },
     {
@@ -75,41 +109,123 @@
       "required": "A definir"
     },
     {
-      "name": "perguntas[].resposta",
-      "type": "array | null",
-      "description": "Resposta; formato ainda em discussão.",
+      "name": "perguntas[].obrigatoria",
+      "type": "boolean",
+      "description": "Indica se a pergunta precisa ser respondida.",
+      "required": "A definir"
+    },
+    {
+      "name": "perguntas[].multipla_escolha",
+      "type": "boolean",
+      "description": "Em perguntas de alternativa, indica se permite selecionar mais de uma opção. false no exemplo.",
       "required": "A definir"
     },
     {
       "name": "perguntas[].opcoes",
-      "type": "array",
-      "description": "Opções disponíveis.",
+      "type": "array<object>",
+      "description": "Opções embutidas nas perguntas de alternativa.",
       "required": "A definir"
     },
     {
-      "name": "perguntas[].obrigatoria",
+      "name": "perguntas[].opcoes[].id_opcao",
+      "type": "number",
+      "description": "Identificador da opção dentro da pergunta.",
+      "required": "A definir"
+    },
+    {
+      "name": "perguntas[].opcoes[].texto",
+      "type": "string",
+      "description": "Texto exibido para a opção.",
+      "required": "A definir"
+    },
+    {
+      "name": "perguntas[].opcoes[].outra",
       "type": "boolean",
-      "description": "Obrigatoriedade da pergunta.",
+      "description": "Identifica a opção Outros; true para essa opção no exemplo.",
+      "required": "A definir"
+    },
+    {
+      "name": "perguntas[].maximo_arquivos",
+      "type": "number",
+      "description": "Quantidade máxima de arquivos para perguntas de foto. 3 no exemplo.",
+      "required": "A definir"
+    },
+    {
+      "name": "perguntas[].tamanho_maximo_mb",
+      "type": "number",
+      "description": "Tamanho máximo de cada arquivo, em MB, para perguntas de foto. 10 no exemplo.",
+      "required": "A definir"
+    },
+    {
+      "name": "perguntas[].resposta",
+      "type": "array",
+      "description": "Respostas da pergunta, inicialmente []. A estrutura dos itens preenchidos ainda está a definir.",
       "required": "A definir"
     }
   ],
   "example": {
     "_id": 1,
-    "id_gestor": 2,
-    "id_gestor_remetente": 1,
-    "titulo": "Pesquisa Clima",
-    "descricao": "Avaliação do ambiente organizacional",
+    "id_workspace": 1,
+    "id_gestor_remetente": 10,
+    "id_gestor": 20,
+    "titulo": "Inspeção de segurança",
+    "descricao": "Verificação das condições de segurança da unidade.",
+    "nr": 6,
+    "id_unidade": 3,
+    "data_limite": "2026-10-30",
+    "status": "PENDENTE",
+    "criado_em": {
+      "$date": "2026-10-15T15:00:00Z"
+    },
+    "respondido_em": null,
     "perguntas": [
       {
         "id_pergunta": 1,
         "tipo": "alternativa",
-        "pergunta": "Você está satisfeito com seu ambiente de trabalho?",
-        "resposta": [],
+        "pergunta": "Os colaboradores estão utilizando os EPIs?",
+        "obrigatoria": true,
+        "multipla_escolha": false,
         "opcoes": [
-          "Sim",
-          "Não"
+          {
+            "id_opcao": 1,
+            "texto": "Sim",
+            "outra": false
+          },
+          {
+            "id_opcao": 2,
+            "texto": "Não",
+            "outra": false
+          },
+          {
+            "id_opcao": 3,
+            "texto": "Outros",
+            "outra": true
+          }
         ],
-        "obrigatoria": true
+        "resposta": []
+      },
+      {
+        "id_pergunta": 2,
+        "tipo": "texto",
+        "pergunta": "Descreva as condições de segurança observadas.",
+        "obrigatoria": true,
+        "resposta": []
+      },
+      {
+        "id_pergunta": 3,
+        "tipo": "foto",
+        "pergunta": "Anexe fotos do local inspecionado.",
+        "obrigatoria": false,
+        "maximo_arquivos": 3,
+        "tamanho_maximo_mb": 10,
+        "resposta": []
+      },
+      {
+        "id_pergunta": 4,
+        "tipo": "data",
+        "pergunta": "Em qual data a inspeção foi realizada?",
+        "obrigatoria": true,
+        "resposta": []
       }
     ]
   },

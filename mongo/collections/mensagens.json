@@ -1,0 +1,56 @@
+{
+  "name": "mensagens",
+  "title": "Mensagens de chat",
+  "description": "Mensagens de chat com remetente, destinatário, texto e data de envio, em um documento por mensagem.",
+  "pattern": "Referências",
+  "notes": [
+    "A collection se chama mensagens. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
+    "A referência contém documentos com _id em string no formato UUID e documentos com _id do tipo ObjectId. O exemplo usa uma string; em JSON estendido, um ObjectId pode ser representado como {\"$oid\": \"000000000000000000000001\"}.",
+    "id_envia e id_recebe são identificadores numéricos do remetente e do destinatário. A mensagem é uma string e data é uma data BSON, representada com $date no exemplo JSON.",
+    "A referência indica três índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
+    "O documento exibido não contém campo de leitura nem identificador de sessão. Definir o registro de leitura e avaliar a organização por sessão."
+  ],
+  "fields": [
+    {
+      "name": "_id",
+      "type": "string | ObjectId",
+      "description": "Identificador da mensagem. A referência mostra string em formato UUID e ObjectId em documentos distintos.",
+      "required": "A definir"
+    },
+    {
+      "name": "id_envia",
+      "type": "number",
+      "description": "Identificador numérico do remetente.",
+      "required": "A definir"
+    },
+    {
+      "name": "id_recebe",
+      "type": "number",
+      "description": "Identificador numérico do destinatário.",
+      "required": "A definir"
+    },
+    {
+      "name": "mensagem",
+      "type": "string",
+      "description": "Texto da mensagem.",
+      "required": "A definir"
+    },
+    {
+      "name": "data",
+      "type": "date",
+      "description": "Data e hora do envio, em BSON date; representada com $date no exemplo JSON.",
+      "required": "A definir"
+    }
+  ],
+  "example": {
+    "_id": "11111111-2222-4333-8444-555555555555",
+    "id_envia": 1,
+    "id_recebe": 2,
+    "mensagem": "Olá!",
+    "data": {
+      "$date": "2026-09-12T21:53:55.934Z"
+    }
+  },
+  "status": "Documentada",
+  "indexes": []
+}

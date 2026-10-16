@@ -24,11 +24,11 @@
     },
     {
       "title": "Leitura de mensagens",
-      "description": "Definir como registrar a leitura e confirmar a troca entre funcionários."
+      "description": "A collection mensagens documenta remetente, destinatário, texto e data de envio. O documento exibido não possui campo de leitura; definir como registrar essa informação."
     },
     {
       "title": "Collections de formulários",
-      "description": "Validar a proposta de uma collection por formulário e onde guardar respostas."
+      "description": "Validar a proposta de uma collection por formulário. O modelo documenta respostas embutidas em perguntas[].resposta, inicialmente como arrays vazios; a estrutura dos itens preenchidos, os demais status e suas transições ainda precisam de definição."
     },
     {
       "title": "Destino das notificações",

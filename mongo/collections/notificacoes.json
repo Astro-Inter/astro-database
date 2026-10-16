@@ -1,11 +1,13 @@
 {
   "name": "notificacoes",
   "title": "Notificações",
-  "description": "Proposta de mensagens e alertas destinados a usuários.",
+  "description": "Proposta de notificações destinadas a usuários, com mensagem, data de criação, evento vinculado e título do alerta.",
   "pattern": "Referências",
   "notes": [
     "O armazenamento em MongoDB ou Redis ainda está em aberto.",
-    "Definir título dos alertas criados por gestores e responsabilidade pela automação no backend."
+    "O campo id_evento é opcional e pode ser omitido quando a notificação não estiver vinculada a um evento.",
+    "titulo contém o título do alerta, separado do texto de mensagem. O exemplo notifica sobre o prazo de um evento próximo do fim.",
+    "Definir a responsabilidade pela automação dos alertas no backend."
   ],
   "fields": [
     {
@@ -31,6 +33,18 @@
       "type": "date",
       "description": "Data de criação.",
       "required": "A definir"
+    },
+    {
+      "name": "id_evento",
+      "type": "number",
+      "description": "Identificador opcional do evento vinculado à notificação; pode ser omitido quando não houver evento associado.",
+      "required": "Não"
+    },
+    {
+      "name": "titulo",
+      "type": "string",
+      "description": "Título do alerta exibido ao destinatário.",
+      "required": "A definir"
     }
   ],
   "example": {
@@ -39,7 +53,9 @@
     "mensagem": "Conclua o treinamento pendente.",
     "data_criacao": {
       "$date": "2026-06-25T12:19:40.233Z"
-    }
+    },
+    "id_evento": 1,
+    "titulo": "Prazo de evento próximo do fim"
   },
   "status": "Proposta",
   "indexes": []
