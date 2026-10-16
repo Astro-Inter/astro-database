@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-16T02:27:01.581Z",
+  "generatedAt": "2026-10-16T02:28:22.189Z",
   "collections": [
     {
       "name": "forms",
@@ -342,7 +342,7 @@
       "file": "mongo/collections/notificacoes.json"
     },
     {
-      "name": "nr_catalogo",
+      "name": "nrs",
       "title": "Normas Regulamentadoras",
       "description": "Conteúdo descritivo e atributos das NRs.",
       "pattern": "Documento",
@@ -429,7 +429,7 @@
       },
       "status": "Proposta",
       "indexes": [],
-      "file": "mongo/collections/nr_catalogo.json"
+      "file": "mongo/collections/nrs.json"
     },
     {
       "name": "sessoes",
