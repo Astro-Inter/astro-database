@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-16T16:05:46.882Z",
+  "generatedAt": "2026-10-16T16:08:50.706Z",
   "collections": [
     {
       "name": "forms",
@@ -301,7 +301,7 @@
       "pattern": "Referências",
       "notes": [
         "O armazenamento em MongoDB ou Redis ainda está em aberto.",
-        "O campo idevento é opcional e pode ser omitido quando a notificação não estiver vinculada a um evento; o nome é escrito sem sublinhado, conforme o modelo fornecido.",
+        "O campo id_evento é opcional e pode ser omitido quando a notificação não estiver vinculada a um evento.",
         "titulo contém o título do alerta, separado do texto de mensagem. O exemplo notifica sobre o prazo de um evento próximo do fim.",
         "Definir a responsabilidade pela automação dos alertas no backend."
       ],
@@ -331,7 +331,7 @@
           "required": "A definir"
         },
         {
-          "name": "idevento",
+          "name": "id_evento",
           "type": "number",
           "description": "Identificador opcional do evento vinculado à notificação; pode ser omitido quando não houver evento associado.",
           "required": "Não"
@@ -350,7 +350,7 @@
         "data_criacao": {
           "$date": "2026-06-25T12:19:40.233Z"
         },
-        "idevento": 1,
+        "id_evento": 1,
         "titulo": "Prazo de evento próximo do fim"
       },
       "status": "Proposta",
