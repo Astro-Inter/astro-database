@@ -5,7 +5,7 @@
   "pattern": "Referências",
   "notes": [
     "O armazenamento em MongoDB ou Redis ainda está em aberto.",
-    "O campo idevento identifica o evento vinculado à notificação; o nome é escrito sem sublinhado, conforme o modelo fornecido.",
+    "O campo idevento é opcional e pode ser omitido quando a notificação não estiver vinculada a um evento; o nome é escrito sem sublinhado, conforme o modelo fornecido.",
     "titulo contém o título do alerta, separado do texto de mensagem. O exemplo notifica sobre o prazo de um evento próximo do fim.",
     "Definir a responsabilidade pela automação dos alertas no backend."
   ],
@@ -37,8 +37,8 @@
     {
       "name": "idevento",
       "type": "number",
-      "description": "Identificador do evento vinculado à notificação.",
-      "required": "A definir"
+      "description": "Identificador opcional do evento vinculado à notificação; pode ser omitido quando não houver evento associado.",
+      "required": "Não"
     },
     {
       "name": "titulo",
