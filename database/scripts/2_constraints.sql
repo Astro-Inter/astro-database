@@ -241,7 +241,7 @@ ALTER TABLE conformidade
 ALTER TABLE conformidade
     ADD CONSTRAINT pk_conformidade PRIMARY KEY (id_conformidade),
     ADD CONSTRAINT uq_conformidade_conclusao UNIQUE (conclusao_evento_id),
-    ADD CONSTRAINT ck_conformidade_origem CHECK (CHAR_LENGTH(BTRIM(origem)) >= 2);
+    ADD CONSTRAINT ck_conformidade_origem CHECK (origem IN ('MANUAL', 'EVENTO'));
 
 ALTER TABLE cargo
     ADD CONSTRAINT fk_cargo_workspace FOREIGN KEY (workspace_id)

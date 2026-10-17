@@ -5,7 +5,7 @@ SELECT
     evento.nr_id,
     TRUE,
     conclusao.data_validade,
-    'CONCLUSAO_EVENTO',
+    'EVENTO',
     conclusao.id_conclusao_evento
 FROM conclusao_evento conclusao
 INNER JOIN turma_funcionario turma_funcionario
@@ -38,7 +38,7 @@ SET usuario_id = EXCLUDED.usuario_id,
 -- Cada funcionário tem duas NRs aplicáveis: 60 registros por conclusão e 140 por análise.
 INSERT INTO conformidade
     (usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
-SELECT participante.id_usuario, cargo_nr.nr_id, TRUE, NULL, 'ANALISE_CARGO', NULL
+SELECT participante.id_usuario, cargo_nr.nr_id, TRUE, NULL, 'MANUAL', NULL
 FROM usuario participante
 INNER JOIN cargo_nr cargo_nr ON cargo_nr.cargo_id = participante.cargo_id
 INNER JOIN unidade_nr unidade_nr

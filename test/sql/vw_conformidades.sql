@@ -70,10 +70,10 @@ BEGIN
     VALUES (v_usuario, 99534, TRUE, CURRENT_DATE + 10, 'MANUAL'),
            (v_usuario, 99534, TRUE, CURRENT_DATE + 40, 'MANUAL');
     INSERT INTO conformidade (usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
-    VALUES (v_usuario, 99534, TRUE, CURRENT_DATE + 40, 'CONCLUSAO_EVENTO', v_conclusao)
+    VALUES (v_usuario, 99534, TRUE, CURRENT_DATE + 40, 'EVENTO', v_conclusao)
     RETURNING id_conformidade INTO v_selecionado;
     INSERT INTO conformidade (usuario_id, nr_id, aplicavel, data_validade, origem)
-    VALUES (v_usuario, 99534, TRUE, NULL, 'ANALISE_CARGO')
+    VALUES (v_usuario, 99534, TRUE, NULL, 'MANUAL')
     RETURNING id_conformidade INTO v_sem_validade;
     INSERT INTO conformidade (usuario_id, nr_id, aplicavel, data_validade, origem)
     VALUES (v_usuario, 99534, FALSE, CURRENT_DATE + 400, 'MANUAL')
@@ -81,7 +81,7 @@ BEGIN
 
     ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidades WHERE usuario_id = v_usuario AND nr_id = 99534);
     ASSERT (SELECT id_conformidade = v_selecionado AND aplicavel
-                   AND origem = 'CONCLUSAO_EVENTO' AND conclusao_evento_id = v_conclusao
+                   AND origem = 'EVENTO' AND conclusao_evento_id = v_conclusao
                    AND data_validade = CURRENT_DATE + 40 AND status = 'Válida'
                    AND nome = 'Colaborador teste' AND email = 'conformidade534@example.com'
                    AND titulo_nr = 'NR de teste' AND cargo_id = v_cargo

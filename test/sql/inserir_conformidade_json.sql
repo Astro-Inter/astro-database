@@ -68,11 +68,11 @@ BEGIN
     VALUES (v_participacao, 'CONCLUIDO', '2026-01-01 12:00:00', '2026-01-01 13:00:00', '2027-01-01')
     RETURNING id_conclusao_evento INTO v_conclusao;
     INSERT INTO conformidade (usuario_id, nr_id, aplicavel, origem, conclusao_evento_id, data_validade)
-    VALUES (v_usuario, 99174, FALSE, 'CONCLUSAO_EVENTO', v_conclusao, '2027-01-01') RETURNING id_conformidade INTO v_conformidade;
+    VALUES (v_usuario, 99174, FALSE, 'EVENTO', v_conclusao, '2027-01-01') RETURNING id_conformidade INTO v_conformidade;
     CALL inserir_conformidade_json('[{"email":"scrum174@example.com","nr":99174,"dataValidade":"2030-01-01"}]', v_erros);
     ASSERT v_erros = '[]'::JSONB;
     ASSERT (SELECT COUNT(*) = 2 AND BOOL_AND(data_validade = DATE '2030-01-01') FROM conformidade WHERE usuario_id = v_usuario AND nr_id = 99174);
-    ASSERT (SELECT NOT aplicavel AND origem = 'CONCLUSAO_EVENTO' AND conclusao_evento_id = v_conclusao FROM conformidade WHERE id_conformidade = v_conformidade);
+    ASSERT (SELECT NOT aplicavel AND origem = 'EVENTO' AND conclusao_evento_id = v_conclusao FROM conformidade WHERE id_conformidade = v_conformidade);
     ASSERT (SELECT data_validade = DATE '2027-01-01' FROM conclusao_evento WHERE id_conclusao_evento = v_conclusao);
 
     -- Erros de formato e referências não escrevem registros, nem interrompem o lote.
