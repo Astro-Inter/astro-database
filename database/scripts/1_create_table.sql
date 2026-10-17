@@ -280,7 +280,7 @@ COMMENT ON COLUMN conformidade.usuario_id IS 'Usuário ao qual a conformidade pe
 COMMENT ON COLUMN conformidade.nr_id IS 'Norma Regulamentadora avaliada no registro de conformidade.';
 COMMENT ON COLUMN conformidade.aplicavel IS 'Indica se a NR é aplicável ao usuário no contexto avaliado.';
 COMMENT ON COLUMN conformidade.data_validade IS 'Data limite da conformidade, quando houver validade definida.';
-COMMENT ON COLUMN conformidade.origem IS 'Origem do registro, como conclusão de evento ou registro administrativo.';
+COMMENT ON COLUMN conformidade.origem IS 'Origem do registro: MANUAL ou EVENTO.';
 COMMENT ON COLUMN conformidade.conclusao_evento_id IS 'Conclusão que originou a conformidade, quando existir.';
 
 CREATE TABLE acesso (
