@@ -165,6 +165,7 @@ COMMENT ON COLUMN evento.motivo_cancelamento IS 'Justificativa registrada para o
 CREATE TABLE eventos_astro (
     id_evento BIGSERIAL,
     firebase_uid VARCHAR,
+    cliente_ip INET,
     tipo_evento VARCHAR,
     nome_botao VARCHAR,
     nome_tela VARCHAR,
@@ -179,6 +180,7 @@ CREATE TABLE eventos_astro (
 COMMENT ON TABLE eventos_astro IS 'Armazena todos os eventos da aplicação web do Astro.';
 COMMENT ON COLUMN eventos_astro.id_evento IS 'Identificador interno e autoincrementado do evento web.';
 COMMENT ON COLUMN eventos_astro.firebase_uid IS 'Identificador do usuário no Firebase associado ao evento web.';
+COMMENT ON COLUMN eventos_astro.cliente_ip IS 'Endereço IPv4 ou IPv6 da pessoa que executou o evento, informado pela aplicação; pode ser nulo quando indisponível.';
 COMMENT ON COLUMN eventos_astro.tipo_evento IS 'Tipo do evento registrado na aplicação web.';
 COMMENT ON COLUMN eventos_astro.nome_botao IS 'Nome do botão associado ao evento.';
 COMMENT ON COLUMN eventos_astro.nome_tela IS 'Nome da tela em que o evento ocorreu.';

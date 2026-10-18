@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-10-16T02:32:42.582Z",
+  "generatedAt": "2026-10-18T16:30:38.799Z",
   "counts": {
     "table": 19,
     "log-table": 3,
-    "view": 2,
-    "procedure": 2,
-    "function": 9,
+    "view": 8,
+    "procedure": 5,
+    "function": 18,
     "index": 11,
     "trigger": 18,
     "dataload": 14,
-    "files": 47
+    "files": 65
   },
   "dialect": "postgresql"
 }
