@@ -162,7 +162,7 @@ COMMENT ON COLUMN evento.status IS 'Situação atual do evento em seu ciclo de v
 COMMENT ON COLUMN evento.data_cancelamento IS 'Data e horário em que o evento foi cancelado, quando aplicável.';
 COMMENT ON COLUMN evento.motivo_cancelamento IS 'Justificativa registrada para o cancelamento do evento.';
 
-CREATE TABLE eventos_astro (
+CREATE TABLE evento_astro (
     id_evento BIGSERIAL,
     firebase_uid VARCHAR,
     cliente_ip INET,
@@ -177,19 +177,19 @@ CREATE TABLE eventos_astro (
     criado_em TIMESTAMP
 );
 
-COMMENT ON TABLE eventos_astro IS 'Armazena todos os eventos da aplicação web do Astro.';
-COMMENT ON COLUMN eventos_astro.id_evento IS 'Identificador interno e autoincrementado do evento web.';
-COMMENT ON COLUMN eventos_astro.firebase_uid IS 'Identificador do usuário no Firebase associado ao evento web.';
-COMMENT ON COLUMN eventos_astro.cliente_ip IS 'Endereço IPv4 ou IPv6 da pessoa que executou o evento, informado pela aplicação; pode ser nulo quando indisponível.';
-COMMENT ON COLUMN eventos_astro.tipo_evento IS 'Tipo do evento registrado na aplicação web.';
-COMMENT ON COLUMN eventos_astro.nome_botao IS 'Nome do botão associado ao evento.';
-COMMENT ON COLUMN eventos_astro.nome_tela IS 'Nome da tela em que o evento ocorreu.';
-COMMENT ON COLUMN eventos_astro.contexto_tela IS 'Contexto da tela no momento do evento.';
-COMMENT ON COLUMN eventos_astro.nome_dialog IS 'Nome do diálogo associado ao evento.';
-COMMENT ON COLUMN eventos_astro.dialog_clicado IS 'Registro do clique no diálogo.';
-COMMENT ON COLUMN eventos_astro.showcase_click IS 'Registro do clique no showcase.';
-COMMENT ON COLUMN eventos_astro.nome_showcase IS 'Nome do showcase associado ao evento.';
-COMMENT ON COLUMN eventos_astro.criado_em IS 'Data e horário de criação do registro; por padrão, recebe a data atual à meia-noite.';
+COMMENT ON TABLE evento_astro IS 'Armazena todos os eventos da aplicação web do Astro.';
+COMMENT ON COLUMN evento_astro.id_evento IS 'Identificador interno e autoincrementado do evento web.';
+COMMENT ON COLUMN evento_astro.firebase_uid IS 'Identificador do usuário no Firebase associado ao evento web.';
+COMMENT ON COLUMN evento_astro.cliente_ip IS 'Endereço IPv4 ou IPv6 da pessoa que executou o evento, informado pela aplicação; pode ser nulo quando indisponível.';
+COMMENT ON COLUMN evento_astro.tipo_evento IS 'Tipo do evento registrado na aplicação web.';
+COMMENT ON COLUMN evento_astro.nome_botao IS 'Nome do botão associado ao evento.';
+COMMENT ON COLUMN evento_astro.nome_tela IS 'Nome da tela em que o evento ocorreu.';
+COMMENT ON COLUMN evento_astro.contexto_tela IS 'Contexto da tela no momento do evento.';
+COMMENT ON COLUMN evento_astro.nome_dialog IS 'Nome do diálogo associado ao evento.';
+COMMENT ON COLUMN evento_astro.dialog_clicado IS 'Registro do clique no diálogo.';
+COMMENT ON COLUMN evento_astro.showcase_click IS 'Registro do clique no showcase.';
+COMMENT ON COLUMN evento_astro.nome_showcase IS 'Nome do showcase associado ao evento.';
+COMMENT ON COLUMN evento_astro.criado_em IS 'Data e horário de criação do registro; por padrão, recebe a data atual à meia-noite.';
 
 CREATE TABLE turma (
     id_turma BIGSERIAL,
