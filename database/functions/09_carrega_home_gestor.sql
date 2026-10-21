@@ -27,12 +27,12 @@ AS $$
                ce.data_conclusao, ce.data_validacao
         FROM eventos_gestor e
         INNER JOIN turma t ON t.evento_id = e.id_evento
-        INNER JOIN turma_funcionario tf ON tf.turma_id = t.id_turma
+        INNER JOIN turma_colaborador tf ON tf.turma_id = t.id_turma
         INNER JOIN usuario u ON u.id_usuario = tf.usuario_id
         INNER JOIN unidade un ON un.id_unidade = u.unidade_id
         INNER JOIN contexto ctx ON ctx.id_workspace = un.workspace_id
         LEFT JOIN conclusao_evento ce
-            ON ce.turma_funcionario_id = tf.id_turma_funcionario
+            ON ce.turma_colaborador_id = tf.id_turma_colaborador
         WHERE u.tipo IN ('COLABORADOR','GESTOR') AND u.status = 'ATIVO'
     ), validacoes AS (
         SELECT id_conclusao_evento, collaborator_name, titulo, data_conclusao

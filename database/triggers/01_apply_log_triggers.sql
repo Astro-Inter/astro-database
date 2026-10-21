@@ -53,9 +53,9 @@ CREATE TRIGGER trg_auditoria_turma
 AFTER INSERT OR UPDATE OR DELETE ON turma
 FOR EACH ROW EXECUTE FUNCTION fn_registrar_log_dml();
 
-DROP TRIGGER IF EXISTS trg_auditoria_turma_funcionario ON turma_funcionario;
-CREATE TRIGGER trg_auditoria_turma_funcionario
-AFTER INSERT OR UPDATE OR DELETE ON turma_funcionario
+DROP TRIGGER IF EXISTS trg_auditoria_turma_colaborador ON turma_colaborador;
+CREATE TRIGGER trg_auditoria_turma_colaborador
+AFTER INSERT OR UPDATE OR DELETE ON turma_colaborador
 FOR EACH ROW EXECUTE FUNCTION fn_registrar_log_dml();
 
 DROP TRIGGER IF EXISTS trg_auditoria_conclusao_evento ON conclusao_evento;

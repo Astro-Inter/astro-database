@@ -59,9 +59,9 @@ BEGIN
     INSERT INTO turma (evento_id, nome, data_inicial, data_termino)
     VALUES (v_evento, 'Turma teste', CURRENT_DATE - 1, CURRENT_DATE)
     RETURNING id_turma INTO v_turma;
-    INSERT INTO turma_funcionario (turma_id, usuario_id) VALUES (v_turma, v_usuario)
-    RETURNING id_turma_funcionario INTO v_participacao;
-    INSERT INTO conclusao_evento (turma_funcionario_id, status, data_conclusao, data_validacao, data_validade)
+    INSERT INTO turma_colaborador (turma_id, usuario_id) VALUES (v_turma, v_usuario)
+    RETURNING id_turma_colaborador INTO v_participacao;
+    INSERT INTO conclusao_evento (turma_colaborador_id, status, data_conclusao, data_validacao, data_validade)
     VALUES (v_participacao, 'CONCLUIDO', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_DATE + 40)
     RETURNING id_conclusao_evento INTO v_conclusao;
 

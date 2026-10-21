@@ -1,16 +1,16 @@
 WITH participacoes AS (
     SELECT
-        turma_funcionario.id_turma_funcionario,
+        turma_colaborador.id_turma_colaborador,
         turma.data_termino,
         nr.tempo_reciclagem_mes,
         ROW_NUMBER() OVER (
             ORDER BY participante.email, evento.titulo, turma.nome
         ) AS ordem
-    FROM turma_funcionario turma_funcionario
+    FROM turma_colaborador turma_colaborador
     INNER JOIN usuario participante
-        ON participante.id_usuario = turma_funcionario.usuario_id
+        ON participante.id_usuario = turma_colaborador.usuario_id
     INNER JOIN turma turma
-        ON turma.id_turma = turma_funcionario.turma_id
+        ON turma.id_turma = turma_colaborador.turma_id
     INNER JOIN evento evento
         ON evento.id_evento = turma.evento_id
     INNER JOIN usuario gestor
@@ -27,7 +27,7 @@ WITH participacoes AS (
 ),
 dados AS (
     SELECT
-        id_turma_funcionario,
+        id_turma_colaborador,
         CASE
             WHEN MOD(ordem, 5) = 0 THEN 'PENDENTE'
             WHEN MOD(ordem, 5) = 1 THEN 'REJEITADO'
@@ -56,17 +56,17 @@ dados AS (
     FROM participacoes
 )
 INSERT INTO conclusao_evento
-    (turma_funcionario_id, status, data_conclusao,
+    (turma_colaborador_id, status, data_conclusao,
      data_validacao, data_validade, motivo_rejeicao)
 SELECT
-    id_turma_funcionario,
+    id_turma_colaborador,
     status,
     data_conclusao,
     data_validacao,
     data_validade,
     motivo_rejeicao
 FROM dados
-ON CONFLICT (turma_funcionario_id) DO UPDATE
+ON CONFLICT (turma_colaborador_id) DO UPDATE
 SET status = EXCLUDED.status,
     data_conclusao = EXCLUDED.data_conclusao,
     data_validacao = EXCLUDED.data_validacao,
@@ -75,16 +75,16 @@ SET status = EXCLUDED.status,
 
 -- SCRUM-172: 60 conclusões validadas e 40 pendências nos eventos futuros.
 INSERT INTO conclusao_evento
-    (turma_funcionario_id, status, data_conclusao, data_validacao, data_validade, motivo_rejeicao)
+    (turma_colaborador_id, status, data_conclusao, data_validacao, data_validade, motivo_rejeicao)
 SELECT
-    tf.id_turma_funcionario,
+    tf.id_turma_colaborador,
     CASE WHEN evento.status = 'CONCLUIDO' THEN 'CONCLUIDO' ELSE 'PENDENTE' END,
     CASE WHEN evento.status = 'CONCLUIDO' THEN turma.data_termino END,
     CASE WHEN evento.status = 'CONCLUIDO' THEN turma.data_termino + INTERVAL '1 hour' END,
     CASE WHEN evento.status = 'CONCLUIDO'
         THEN (turma.data_termino + MAKE_INTERVAL(months => nr.tempo_reciclagem_mes))::DATE END,
     NULL
-FROM turma_funcionario tf
+FROM turma_colaborador tf
 INNER JOIN usuario participante ON participante.id_usuario = tf.usuario_id
 INNER JOIN turma turma ON turma.id_turma = tf.turma_id
 INNER JOIN evento evento ON evento.id_evento = turma.evento_id
@@ -100,7 +100,7 @@ WHERE participante.unidade_id = 1
       'Reciclagem de EPI - Unidade 1',
       'Bloqueio de máquinas - Unidade 1'
   )
-ON CONFLICT (turma_funcionario_id) DO UPDATE
+ON CONFLICT (turma_colaborador_id) DO UPDATE
 SET status = EXCLUDED.status,
     data_conclusao = EXCLUDED.data_conclusao,
     data_validacao = EXCLUDED.data_validacao,

@@ -47,7 +47,7 @@ turmas_disponiveis AS (
           'ana.gomes.006@example.com'
       )
 )
-INSERT INTO turma_funcionario (turma_id, usuario_id)
+INSERT INTO turma_colaborador (turma_id, usuario_id)
 SELECT
     turma.id_turma,
     participante.id_usuario
@@ -84,7 +84,7 @@ participantes_lote AS (
     WHERE unidade_id = 1 AND tipo = 'COLABORADOR' AND status = 'ATIVO'
       AND email ~ '^[^.]+[.]c689bedf0fc64d4c[.]([1-9][0-9]?|100)@example[.]com$'
 )
-INSERT INTO turma_funcionario (turma_id, usuario_id)
+INSERT INTO turma_colaborador (turma_id, usuario_id)
 SELECT turma.id_turma, participante.id_usuario
 FROM participantes_lote participante
 INNER JOIN eventos_lote lote ON lote.ordem = (participante.ordem - 1) / 20 + 1

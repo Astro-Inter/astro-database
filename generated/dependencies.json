@@ -192,56 +192,56 @@
     },
     {
       "from": "table:usuario",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": true
     },
     {
       "from": "table:unidade",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": true
     },
     {
       "from": "table:turma",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": true
     },
     {
       "from": "table:evento",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": true
     },
     {
-      "from": "table:turma_funcionario",
-      "to": "dataload:12_turma_funcionario",
+      "from": "table:turma_colaborador",
+      "to": "dataload:12_turma_colaborador",
       "resolved": true
     },
     {
       "from": "unknown:participantes",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": false
     },
     {
       "from": "unknown:turmas_disponiveis",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": false
     },
     {
       "from": "unknown:participantes_lote",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": false
     },
     {
       "from": "unknown:eventos_lote",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": false
     },
     {
       "from": "unknown:gestor_unidade",
-      "to": "dataload:12_turma_funcionario",
+      "to": "dataload:12_turma_colaborador",
       "resolved": false
     },
     {
-      "from": "table:turma_funcionario",
+      "from": "table:turma_colaborador",
       "to": "dataload:13_conclusao_evento",
       "resolved": true
     },
@@ -296,7 +296,7 @@
       "resolved": true
     },
     {
-      "from": "table:turma_funcionario",
+      "from": "table:turma_colaborador",
       "to": "dataload:14_conformidade",
       "resolved": true
     },
@@ -426,7 +426,7 @@
       "resolved": false
     },
     {
-      "from": "table:turma_funcionario",
+      "from": "table:turma_colaborador",
       "to": "function:carrega_home_colaborador",
       "resolved": true
     },
@@ -501,7 +501,7 @@
       "resolved": true
     },
     {
-      "from": "table:turma_funcionario",
+      "from": "table:turma_colaborador",
       "to": "function:carrega_home_gestor",
       "resolved": true
     },
@@ -541,8 +541,8 @@
       "resolved": true
     },
     {
-      "from": "table:turma_funcionario",
-      "to": "index:idx_turma_funcionario_usuario_turma",
+      "from": "table:turma_colaborador",
+      "to": "index:idx_turma_colaborador_usuario_turma",
       "resolved": true
     },
     {
@@ -702,16 +702,16 @@
     },
     {
       "from": "table:turma",
-      "to": "table:turma_funcionario",
+      "to": "table:turma_colaborador",
       "resolved": true
     },
     {
       "from": "table:usuario",
-      "to": "table:turma_funcionario",
+      "to": "table:turma_colaborador",
       "resolved": true
     },
     {
-      "from": "table:turma_funcionario",
+      "from": "table:turma_colaborador",
       "to": "table:conclusao_evento",
       "resolved": true
     },
@@ -846,13 +846,13 @@
       "resolved": true
     },
     {
-      "from": "table:turma_funcionario",
-      "to": "trigger:trg_auditoria_turma_funcionario",
+      "from": "table:turma_colaborador",
+      "to": "trigger:trg_auditoria_turma_colaborador",
       "resolved": true
     },
     {
       "from": "function:fn_registrar_log_dml",
-      "to": "trigger:trg_auditoria_turma_funcionario",
+      "to": "trigger:trg_auditoria_turma_colaborador",
       "resolved": true
     },
     {

@@ -25,7 +25,7 @@ AS $$
                    ELSE 'PENDING'
                END AS situacao
         FROM contexto ctx
-        INNER JOIN turma_funcionario tf ON tf.usuario_id = ctx.id_usuario
+        INNER JOIN turma_colaborador tf ON tf.usuario_id = ctx.id_usuario
         INNER JOIN turma t ON t.id_turma = tf.turma_id
         INNER JOIN evento e ON e.id_evento = t.evento_id
         INNER JOIN usuario gestor ON gestor.id_usuario = e.gestor_id
@@ -33,7 +33,7 @@ AS $$
             ON un_gestor.id_unidade = gestor.unidade_id
            AND un_gestor.workspace_id = ctx.id_workspace
         LEFT JOIN conclusao_evento ce
-            ON ce.turma_funcionario_id = tf.id_turma_funcionario
+            ON ce.turma_colaborador_id = tf.id_turma_colaborador
         WHERE e.status <> 'CANCELADO'
           AND (e.status = 'ATIVO' OR ce.status = 'CONCLUIDO')
     ), eventos AS (
