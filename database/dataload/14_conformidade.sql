@@ -1,19 +1,19 @@
 INSERT INTO conformidade
     (usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
 SELECT
-    turma_funcionario.usuario_id,
+    turma_colaborador.usuario_id,
     evento.nr_id,
     TRUE,
     conclusao.data_validade,
     'EVENTO',
     conclusao.id_conclusao_evento
 FROM conclusao_evento conclusao
-INNER JOIN turma_funcionario turma_funcionario
-    ON turma_funcionario.id_turma_funcionario = conclusao.turma_funcionario_id
+INNER JOIN turma_colaborador turma_colaborador
+    ON turma_colaborador.id_turma_colaborador = conclusao.turma_colaborador_id
 INNER JOIN usuario participante
-    ON participante.id_usuario = turma_funcionario.usuario_id
+    ON participante.id_usuario = turma_colaborador.usuario_id
 INNER JOIN turma turma
-    ON turma.id_turma = turma_funcionario.turma_id
+    ON turma.id_turma = turma_colaborador.turma_id
 INNER JOIN evento evento
     ON evento.id_evento = turma.evento_id
 INNER JOIN usuario gestor

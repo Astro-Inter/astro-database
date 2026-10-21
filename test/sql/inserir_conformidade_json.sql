@@ -63,8 +63,8 @@ BEGIN
     VALUES (v_gestor, 99174, 'Evento teste', 'Descrição teste', 'GESTOR') RETURNING id_evento INTO v_evento;
     INSERT INTO turma (evento_id, nome, data_inicial, data_termino)
     VALUES (v_evento, 'Turma teste', '2026-01-01 08:00:00', '2026-01-01 12:00:00') RETURNING id_turma INTO v_turma;
-    INSERT INTO turma_funcionario (turma_id, usuario_id) VALUES (v_turma, v_usuario) RETURNING id_turma_funcionario INTO v_participacao;
-    INSERT INTO conclusao_evento (turma_funcionario_id, status, data_conclusao, data_validacao, data_validade)
+    INSERT INTO turma_colaborador (turma_id, usuario_id) VALUES (v_turma, v_usuario) RETURNING id_turma_colaborador INTO v_participacao;
+    INSERT INTO conclusao_evento (turma_colaborador_id, status, data_conclusao, data_validacao, data_validade)
     VALUES (v_participacao, 'CONCLUIDO', '2026-01-01 12:00:00', '2026-01-01 13:00:00', '2027-01-01')
     RETURNING id_conclusao_evento INTO v_conclusao;
     INSERT INTO conformidade (usuario_id, nr_id, aplicavel, origem, conclusao_evento_id, data_validade)

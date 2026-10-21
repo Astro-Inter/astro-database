@@ -206,20 +206,20 @@ COMMENT ON COLUMN turma.nome IS 'Nome usado para distinguir a turma dentro do ev
 COMMENT ON COLUMN turma.data_inicial IS 'Data e horário de início da turma.';
 COMMENT ON COLUMN turma.data_termino IS 'Data e horário de encerramento da turma.';
 
-CREATE TABLE turma_funcionario (
-    id_turma_funcionario BIGSERIAL,
+CREATE TABLE turma_colaborador (
+    id_turma_colaborador BIGSERIAL,
     turma_id BIGINT,
     usuario_id BIGINT
 );
 
-COMMENT ON TABLE turma_funcionario IS 'Participações de usuários funcionários nas turmas dos eventos.';
-COMMENT ON COLUMN turma_funcionario.id_turma_funcionario IS 'Identificador interno e autoincrementado da participação.';
-COMMENT ON COLUMN turma_funcionario.turma_id IS 'Turma na qual o funcionário foi incluído.';
-COMMENT ON COLUMN turma_funcionario.usuario_id IS 'Usuário funcionário participante da turma.';
+COMMENT ON TABLE turma_colaborador IS 'Participações de usuários colaboradores nas turmas dos eventos.';
+COMMENT ON COLUMN turma_colaborador.id_turma_colaborador IS 'Identificador interno e autoincrementado da participação.';
+COMMENT ON COLUMN turma_colaborador.turma_id IS 'Turma na qual o colaborador foi incluído.';
+COMMENT ON COLUMN turma_colaborador.usuario_id IS 'Usuário colaborador participante da turma.';
 
 CREATE TABLE conclusao_evento (
     id_conclusao_evento BIGSERIAL,
-    turma_funcionario_id BIGINT,
+    turma_colaborador_id BIGINT,
     status VARCHAR(50),
     data_conclusao TIMESTAMP,
     data_validacao TIMESTAMP,
@@ -229,7 +229,7 @@ CREATE TABLE conclusao_evento (
 
 COMMENT ON TABLE conclusao_evento IS 'Registros de conclusão e validação da participação de um funcionário em uma turma.';
 COMMENT ON COLUMN conclusao_evento.id_conclusao_evento IS 'Identificador interno e autoincrementado da conclusão.';
-COMMENT ON COLUMN conclusao_evento.turma_funcionario_id IS 'Participação em turma à qual a conclusão pertence.';
+COMMENT ON COLUMN conclusao_evento.turma_colaborador_id IS 'Participação em turma à qual a conclusão pertence.';
 COMMENT ON COLUMN conclusao_evento.status IS 'Situação da conclusão durante o processo de validação.';
 COMMENT ON COLUMN conclusao_evento.data_conclusao IS 'Data e horário em que a participação foi marcada como concluída.';
 COMMENT ON COLUMN conclusao_evento.data_validacao IS 'Data e horário em que a conclusão foi validada ou rejeitada.';
