@@ -57,6 +57,12 @@ ALTER TABLE unidade_endereco
     ADD CONSTRAINT ck_unidade_endereco_bairro CHECK (CHAR_LENGTH(BTRIM(bairro)) >= 2),
     ADD CONSTRAINT ck_unidade_endereco_complemento CHECK (
         complemento IS NULL OR CHAR_LENGTH(BTRIM(complemento)) >= 1
+    ),
+    ADD CONSTRAINT ck_unidade_endereco_geolocalizacao CHECK (
+        geolocalizacao IS NULL OR (
+            geolocalizacao[0] BETWEEN -180 AND 180
+            AND geolocalizacao[1] BETWEEN -90 AND 90
+        )
     );
 
 ALTER TABLE usuario

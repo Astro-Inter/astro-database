@@ -40,7 +40,8 @@ CREATE TABLE unidade_endereco (
     cidade VARCHAR(255),
     bairro VARCHAR(255),
     estado VARCHAR(2),
-    complemento VARCHAR(255)
+    complemento VARCHAR(255),
+    geolocalizacao POINT
 );
 
 COMMENT ON TABLE unidade_endereco IS 'Endereço opcional e único de cada unidade.';
@@ -51,6 +52,7 @@ COMMENT ON COLUMN unidade_endereco.cidade IS 'Cidade onde a unidade está locali
 COMMENT ON COLUMN unidade_endereco.bairro IS 'Bairro onde a unidade está localizada.';
 COMMENT ON COLUMN unidade_endereco.estado IS 'Sigla da unidade federativa em duas letras maiúsculas.';
 COMMENT ON COLUMN unidade_endereco.complemento IS 'Informação complementar e opcional do endereço.';
+COMMENT ON COLUMN unidade_endereco.geolocalizacao IS 'Coordenadas geográficas opcionais da unidade em graus decimais WGS 84, na ordem (longitude, latitude). NULL indica localização não cadastrada. A aplicação utiliza as coordenadas para calcular a distância em metros.';
 
 CREATE TABLE conta (
     nome VARCHAR(255),
