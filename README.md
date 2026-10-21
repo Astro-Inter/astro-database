@@ -86,6 +86,24 @@ Arquivos SQL → scanner/parser → modelo normalizado → dependências → JSO
 
 O diretório `database/` não depende do site ou do servidor e continua utilizável isoladamente.
 
+## Geolocalização da unidade
+
+O script original de criação inclui `unidade_endereco.geolocalizacao POINT`, opcional e sem valor padrão. Quando não informada, a localização fica `NULL`. As coordenadas usam graus decimais WGS 84 na ordem **(longitude, latitude)**, com longitude entre -180 e 180 e latitude entre -90 e 90.
+
+Na gravação, use `point(longitude, latitude)`. Para fornecer os valores separados ao mobile:
+
+```sql
+SELECT
+    geolocalizacao[1] AS latitude,
+    geolocalizacao[0] AS longitude
+FROM unidade_endereco
+WHERE unidade_id = $1;
+```
+
+A aplicação deve tratar coordenadas nulas como localização não cadastrada. Para calcular o raio de 100 metros, passe latitude e longitude da pessoa e da unidade para `Location.distanceBetween`. O tipo `POINT` apenas armazena as coordenadas; o cálculo em metros fica na aplicação.
+
+Referência: [tipo POINT do PostgreSQL](https://www.postgresql.org/docs/current/datatype-geometric.html#DATATYPE-GEOMETRIC-POINTS).
+
 ## Como adicionar scripts
 
 Coloque arquivos `.sql` na categoria correspondente:
