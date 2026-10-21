@@ -105,7 +105,7 @@ Os diretórios são configuráveis em [database-workspace.config.json](database-
 
 ### IP do cliente nos eventos web (SCRUM-407)
 
-A tabela `eventos_astro` já é criada com `cliente_ip` do tipo `INET` no script original [`1_create_table.sql`](database/scripts/1_create_table.sql), para a instalação em um banco vazio. O campo aceita IPv4 e IPv6 e é opcional quando o IP estiver indisponível. A aplicação deve informar o IP da pessoa que executou o evento ao inserir o registro.
+A tabela `evento_astro` já é criada com `cliente_ip` do tipo `INET` no script original [`1_create_table.sql`](database/scripts/1_create_table.sql), para a instalação em um banco vazio. O campo aceita IPv4 e IPv6 e é opcional quando o IP estiver indisponível. A aplicação deve informar o IP da pessoa que executou o evento ao inserir o registro.
 
 ### Candidatos para eventos (SCRUM-422)
 

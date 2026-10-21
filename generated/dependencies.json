@@ -771,8 +771,8 @@
       "resolved": true
     },
     {
-      "from": "table:eventos_astro",
-      "to": "index:idx_eventos_astro_criado_em",
+      "from": "table:evento_astro",
+      "to": "index:idx_evento_astro_criado_em",
       "resolved": true
     },
     {
