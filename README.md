@@ -103,6 +103,10 @@ Depois execute `npm run analyze`, ou use o modo local, que reprocessa o workspac
 
 Os diretórios são configuráveis em [database-workspace.config.json](database-workspace.config.json). Evite codificar novos caminhos diretamente nos módulos.
 
+### IP do cliente nos eventos web (SCRUM-407)
+
+A tabela `evento_astro` já é criada com `cliente_ip` do tipo `INET` no script original [`1_create_table.sql`](database/scripts/1_create_table.sql), para a instalação em um banco vazio. O campo aceita IPv4 e IPv6 e é opcional quando o IP estiver indisponível. A aplicação deve informar o IP da pessoa que executou o evento ao inserir o registro.
+
 ### Candidatos para eventos (SCRUM-422)
 
 A função [`fn_seleciona_candidatos_evento`](database/functions/18_fn_seleciona_candidatos_evento.sql) atende à consulta de candidatos do fluxo web de eventos da [API, PR #36](https://github.com/Astro-Inter/astro-api/pull/36). Recebe o Firebase UID do gestor autenticado e uma NR opcional; retorna usuários ativos do mesmo workspace, excluindo o solicitante, com cargo, unidade e modalidade. Sem NR, retorna todos os candidatos do workspace; com NR, exige o vínculo do cargo em `cargo_nr`.

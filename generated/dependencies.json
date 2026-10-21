@@ -531,6 +531,196 @@
       "resolved": false
     },
     {
+      "from": "view:vw_cargos",
+      "to": "function:fn_seleciona_cargos",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_seleciona_cargos",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_seleciona_cargos",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_workspace_id",
+      "to": "function:fn_altera_status_cargo",
+      "resolved": false
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_altera_status_cargo",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_altera_status_cargo",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "function:fn_altera_status_cargo",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_ativo",
+      "to": "function:fn_altera_status_cargo",
+      "resolved": false
+    },
+    {
+      "from": "unknown:v_workspace_id",
+      "to": "function:fn_altera_cargo",
+      "resolved": false
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_altera_cargo",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_altera_cargo",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "function:fn_altera_cargo",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_id_cargo",
+      "to": "function:fn_altera_cargo",
+      "resolved": false
+    },
+    {
+      "from": "view:vw_cargos",
+      "to": "function:fn_altera_cargo",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_seleciona_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_seleciona_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "function:fn_seleciona_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo_nr",
+      "to": "function:fn_seleciona_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "function:fn_seleciona_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_carrega_workspace",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_carrega_workspace",
+      "resolved": true
+    },
+    {
+      "from": "table:workspace",
+      "to": "function:fn_carrega_workspace",
+      "resolved": true
+    },
+    {
+      "from": "view:vw_home_estatisticas_gerais",
+      "to": "function:fn_carrega_workspace",
+      "resolved": true
+    },
+    {
+      "from": "view:vw_unidades",
+      "to": "function:fn_seleciona_unidades",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_seleciona_unidades",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_seleciona_unidades",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_workspace_id",
+      "to": "function:fn_altera_status_unidade",
+      "resolved": false
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_altera_status_unidade",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_altera_status_unidade",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_ativo",
+      "to": "function:fn_altera_status_unidade",
+      "resolved": false
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_seleciona_unidade_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_seleciona_unidade_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade_nr",
+      "to": "function:fn_seleciona_unidade_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "function:fn_seleciona_unidade_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "function:fn_seleciona_candidatos_evento",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "function:fn_seleciona_candidatos_evento",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "function:fn_seleciona_candidatos_evento",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo_nr",
+      "to": "function:fn_seleciona_candidatos_evento",
+      "resolved": true
+    },
+    {
       "from": "table:usuario",
       "to": "index:idx_usuario_unidade_status",
       "resolved": true
@@ -581,8 +771,8 @@
       "resolved": true
     },
     {
-      "from": "table:eventos_astro",
-      "to": "index:idx_eventos_astro_criado_em",
+      "from": "table:evento_astro",
+      "to": "index:idx_evento_astro_criado_em",
       "resolved": true
     },
     {
@@ -623,6 +813,91 @@
     {
       "from": "table:conformidade",
       "to": "procedure:inserir_conformidade_json",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_workspace_id",
+      "to": "procedure:pr_inseri_cargo",
+      "resolved": false
+    },
+    {
+      "from": "table:usuario",
+      "to": "procedure:pr_inseri_cargo",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "procedure:pr_inseri_cargo",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "procedure:pr_inseri_cargo",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_workspace_id",
+      "to": "procedure:pr_alterar_cargo_nrs",
+      "resolved": false
+    },
+    {
+      "from": "table:usuario",
+      "to": "procedure:pr_alterar_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "procedure:pr_alterar_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "procedure:pr_alterar_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "unknown:jsonb_array_elements",
+      "to": "procedure:pr_alterar_cargo_nrs",
+      "resolved": false
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "procedure:pr_alterar_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo_nr",
+      "to": "procedure:pr_alterar_cargo_nrs",
+      "resolved": true
+    },
+    {
+      "from": "unknown:v_workspace_id",
+      "to": "procedure:pr_alterar_unidade_nrs",
+      "resolved": false
+    },
+    {
+      "from": "table:usuario",
+      "to": "procedure:pr_alterar_unidade_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "procedure:pr_alterar_unidade_nrs",
+      "resolved": true
+    },
+    {
+      "from": "unknown:jsonb_array_elements",
+      "to": "procedure:pr_alterar_unidade_nrs",
+      "resolved": false
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "procedure:pr_alterar_unidade_nrs",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade_nr",
+      "to": "procedure:pr_alterar_unidade_nrs",
       "resolved": true
     },
     {
@@ -979,6 +1254,141 @@
       "from": "unknown:agrupado",
       "to": "view:dim_resumo_funcionario",
       "resolved": false
+    },
+    {
+      "from": "table:cargo",
+      "to": "view:vw_cargos",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "view:vw_cargos",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": true
+    },
+    {
+      "from": "unknown:unidades_ativas",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "unknown:colaboradores_ativos",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "table:conformidade",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": true
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": true
+    },
+    {
+      "from": "unknown:conformidades_atuais",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "table:workspace",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": true
+    },
+    {
+      "from": "unknown:resumo_unidades",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "unknown:resumo_colaboradores",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "unknown:resumo_conformidade",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "table:unidade",
+      "to": "view:vw_unidades",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "view:vw_unidades",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade_endereco",
+      "to": "view:vw_unidades",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "view:vw_colaboradores",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "view:vw_colaboradores",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "view:vw_colaboradores",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "view:vw_gestores",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "view:vw_gestores",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "view:vw_gestores",
+      "resolved": true
+    },
+    {
+      "from": "table:conformidade",
+      "to": "view:vw_conformidades",
+      "resolved": true
+    },
+    {
+      "from": "table:usuario",
+      "to": "view:vw_conformidades",
+      "resolved": true
+    },
+    {
+      "from": "table:cargo",
+      "to": "view:vw_conformidades",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "view:vw_conformidades",
+      "resolved": true
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "view:vw_conformidades",
+      "resolved": true
     }
   ]
 }
