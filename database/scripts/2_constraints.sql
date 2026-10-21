@@ -179,24 +179,24 @@ ALTER TABLE turma
     ADD CONSTRAINT ck_turma_nome CHECK (CHAR_LENGTH(BTRIM(nome)) >= 1),
     ADD CONSTRAINT ck_turma_periodo CHECK (data_termino > data_inicial);
 
-ALTER TABLE turma_funcionario
-    ALTER COLUMN id_turma_funcionario SET NOT NULL,
+ALTER TABLE turma_colaborador
+    ALTER COLUMN id_turma_colaborador SET NOT NULL,
     ALTER COLUMN turma_id SET NOT NULL,
     ALTER COLUMN usuario_id SET NOT NULL;
 
-ALTER TABLE turma_funcionario
-    ADD CONSTRAINT pk_turma_funcionario PRIMARY KEY (id_turma_funcionario),
-    ADD CONSTRAINT uq_turma_funcionario_participacao UNIQUE (turma_id, usuario_id); -- Impede incluir o mesmo usuário duas vezes na turma.
+ALTER TABLE turma_colaborador
+    ADD CONSTRAINT pk_turma_colaborador PRIMARY KEY (id_turma_colaborador),
+    ADD CONSTRAINT uq_turma_colaborador_participacao UNIQUE (turma_id, usuario_id); -- Impede incluir o mesmo usuário duas vezes na turma.
 
 ALTER TABLE conclusao_evento
     ALTER COLUMN id_conclusao_evento SET NOT NULL,
-    ALTER COLUMN turma_funcionario_id SET NOT NULL,
+    ALTER COLUMN turma_colaborador_id SET NOT NULL,
     ALTER COLUMN status SET DEFAULT 'PENDENTE',
     ALTER COLUMN status SET NOT NULL;
 
 ALTER TABLE conclusao_evento
     ADD CONSTRAINT pk_conclusao_evento PRIMARY KEY (id_conclusao_evento),
-    ADD CONSTRAINT uq_conclusao_evento_participacao UNIQUE (turma_funcionario_id), -- Materializa a cardinalidade 1:0..1.
+    ADD CONSTRAINT uq_conclusao_evento_participacao UNIQUE (turma_colaborador_id), -- Materializa a cardinalidade 1:0..1.
     ADD CONSTRAINT ck_conclusao_evento_status CHECK (
         status IN ('PENDENTE', 'CONCLUIDO', 'REJEITADO')
     ),
@@ -306,17 +306,17 @@ ALTER TABLE turma
         REFERENCES evento (id_evento)
         ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE turma_funcionario
-    ADD CONSTRAINT fk_turma_funcionario_turma FOREIGN KEY (turma_id)
+ALTER TABLE turma_colaborador
+    ADD CONSTRAINT fk_turma_colaborador_turma FOREIGN KEY (turma_id)
         REFERENCES turma (id_turma)
         ON UPDATE CASCADE ON DELETE RESTRICT,
-    ADD CONSTRAINT fk_turma_funcionario_usuario FOREIGN KEY (usuario_id)
+    ADD CONSTRAINT fk_turma_colaborador_usuario FOREIGN KEY (usuario_id)
         REFERENCES usuario (id_usuario)
         ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE conclusao_evento
-    ADD CONSTRAINT fk_conclusao_evento_participacao FOREIGN KEY (turma_funcionario_id)
-        REFERENCES turma_funcionario (id_turma_funcionario)
+    ADD CONSTRAINT fk_conclusao_evento_participacao FOREIGN KEY (turma_colaborador_id)
+        REFERENCES turma_colaborador (id_turma_colaborador)
         ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE evidencia
