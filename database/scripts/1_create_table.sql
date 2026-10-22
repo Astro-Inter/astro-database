@@ -37,7 +37,7 @@ CREATE TABLE unidade_endereco (
     unidade_id BIGINT,
     cep VARCHAR(8),
     rua VARCHAR(255),
-    numero VARCHAR(20),
+    numero VARCHAR(30),
     cidade VARCHAR(255),
     bairro VARCHAR(255),
     estado VARCHAR(2),
