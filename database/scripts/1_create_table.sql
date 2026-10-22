@@ -37,6 +37,7 @@ CREATE TABLE unidade_endereco (
     unidade_id BIGINT,
     cep VARCHAR(8),
     rua VARCHAR(255),
+    numero VARCHAR(20),
     cidade VARCHAR(255),
     bairro VARCHAR(255),
     estado VARCHAR(2),
@@ -48,6 +49,7 @@ COMMENT ON TABLE unidade_endereco IS 'Endereço opcional e único de cada unidad
 COMMENT ON COLUMN unidade_endereco.unidade_id IS 'Unidade à qual o endereço pertence; também identifica unicamente o endereço.';
 COMMENT ON COLUMN unidade_endereco.cep IS 'CEP do endereço, armazenado somente com os 8 dígitos.';
 COMMENT ON COLUMN unidade_endereco.rua IS 'Nome da rua, avenida ou logradouro da unidade.';
+COMMENT ON COLUMN unidade_endereco.numero IS 'Número opcional do endereço da unidade; utiliza texto para aceitar valores como 120-A ou S/N.';
 COMMENT ON COLUMN unidade_endereco.cidade IS 'Cidade onde a unidade está localizada.';
 COMMENT ON COLUMN unidade_endereco.bairro IS 'Bairro onde a unidade está localizada.';
 COMMENT ON COLUMN unidade_endereco.estado IS 'Sigla da unidade federativa em duas letras maiúsculas.';
