@@ -22,6 +22,7 @@ AS $$
                    WHEN ce.status = 'PENDENTE'
                         AND ce.data_conclusao IS NOT NULL
                         AND ce.data_validacao IS NULL THEN 'ANALYSIS'
+                   WHEN t.data_termino < LOCALTIMESTAMP THEN 'EXPIRED'
                    ELSE 'PENDING'
                END AS situacao
         FROM contexto ctx
@@ -45,6 +46,7 @@ AS $$
                    ELSE 'DONE'
                END AS situacao
         FROM participacoes
+        WHERE situacao <> 'EXPIRED'
         GROUP BY id_evento, titulo
     ), metricas AS (
         SELECT COUNT(*) FILTER (WHERE situacao = 'PENDING') AS pending,
@@ -89,4 +91,4 @@ AS $$
 $$;
 
 COMMENT ON FUNCTION carrega_home_colaborador(TEXT) IS
-'Retorna JSONB com a parte PostgreSQL da Home Mobile de um COLABORADOR ou GESTOR ativo identificado pelo Firebase UID: nome, workspace, métricas por evento, status URGENT > PENDENT > ANALYSIS > OK e até três eventos pendentes ordenados pelo prazo e pelo ID. Cada evento conta uma vez: pendência prevalece sobre análise, que prevalece sobre conclusão validada. Considera em análise a conclusão PENDENTE com data_conclusao preenchida e sem data_validacao; ausência de conclusão, rejeição ou PENDENTE ainda não enviado representam pendências. Eventos cancelados são excluídos; eventos encerrados contam apenas conclusões validadas. Pendências com prazo em até três dias, inclusive vencidas, são urgentes. As datas seguem o fuso da sessão PostgreSQL. O backend acrescenta last_notifications da fonte de notificações e resolve viewed via Redis. Retorna NULL para UID ausente ou vazio, usuário inexistente, inativo ou de outro perfil.';
+'Retorna JSONB com a parte PostgreSQL da Home Mobile de um COLABORADOR ou GESTOR ativo identificado pelo Firebase UID: nome, workspace, métricas por evento, status URGENT > PENDENT > ANALYSIS > OK e até três eventos pendentes ordenados pelo prazo e pelo ID. Cada evento conta uma vez: pendência prevalece sobre análise, que prevalece sobre conclusão validada. Considera em análise a conclusão PENDENTE com data_conclusao preenchida e sem data_validacao; ausência de conclusão, rejeição ou PENDENTE ainda não enviado representam pendências enquanto o prazo da turma estiver aberto ou não informado. Pendências com data_termino anterior ao horário atual são excluídas da lista, do contador e da urgência, sem impedir que outra turma com prazo aberto do mesmo evento apareça. Eventos cancelados são excluídos; eventos encerrados contam apenas conclusões validadas. Pendências com prazo em até três dias são urgentes. As datas e horários seguem o fuso da sessão PostgreSQL. O backend acrescenta last_notifications da fonte de notificações e resolve viewed via Redis. Retorna NULL para UID ausente ou vazio, usuário inexistente, inativo ou de outro perfil.';
