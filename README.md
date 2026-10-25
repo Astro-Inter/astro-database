@@ -104,6 +104,12 @@ A aplicação deve tratar coordenadas nulas como localização não cadastrada. 
 
 Referência: [tipo POINT do PostgreSQL](https://www.postgresql.org/docs/current/datatype-geometric.html#DATATYPE-GEOMETRIC-POINTS).
 
+## Desativação de unidades (SCRUM-173)
+
+Desativar ou reativar uma unidade preserva o status de todos os usuários vinculados. A desativação por cargo continua com o comportamento existente.
+
+Em bancos já instalados, aplique [`5_remover_desativacao_usuario_por_unidade.sql`](database/scripts/5_remover_desativacao_usuario_por_unidade.sql) para remover a trigger e sua função auxiliar. O script pode ser reaplicado e não altera dados nem reativa usuários desativados anteriormente. Atualize também o comentário da função com [`16_fn_altera_status_unidade.sql`](database/functions/16_fn_altera_status_unidade.sql). A alteração no repositório não executa esses scripts no banco publicado.
+
 ## Como adicionar scripts
 
 Coloque arquivos `.sql` na categoria correspondente:

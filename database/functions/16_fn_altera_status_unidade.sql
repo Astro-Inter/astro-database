@@ -44,4 +44,4 @@ END;
 $$;
 
 COMMENT ON FUNCTION fn_altera_status_unidade(TEXT, BIGINT) IS
-'Alterna o status da unidade quando o Firebase UID pertence a um gestor ativo do mesmo workspace. Retorna TRUE quando fica ativa e FALSE quando fica inativa. Ao desativar, o trigger existente executa as regras de desativação dos usuários vinculados.';
+'Alterna o status da unidade quando o Firebase UID pertence a um gestor ativo do mesmo workspace. Retorna TRUE quando fica ativa e FALSE quando fica inativa. A alteração não modifica o status dos usuários vinculados.';

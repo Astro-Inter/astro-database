@@ -46,14 +46,13 @@ BEGIN
     UPDATE unidade SET ativo = FALSE WHERE id_unidade = v_unidade_a;
     ASSERT NOT EXISTS (
         SELECT 1 FROM usuario u JOIN usuarios_antes_scrum176 a USING (id_usuario)
-        WHERE u.status IS DISTINCT FROM CASE
-            WHEN a.unidade_id = v_unidade_a AND a.tipo <> 'GESTOR_WORKSPACE' THEN 'DESATIVADO'
-            ELSE a.status END
-    ), 'Unidade deve afetar todos os cargos vinculados, exceto GESTOR_WORKSPACE';
+        WHERE u.status IS DISTINCT FROM a.status
+    ), 'Desativar unidade deve preservar o status de todos os usuários';
 
     UPDATE unidade SET ativo = TRUE WHERE id_unidade = v_unidade_a;
-    ASSERT NOT EXISTS (SELECT 1 FROM usuario WHERE unidade_id = v_unidade_a AND tipo <> 'GESTOR_WORKSPACE' AND status <> 'DESATIVADO'),
-        'Reativar unidade não deve reativar contas';
+    ASSERT NOT EXISTS (SELECT 1 FROM usuario u JOIN usuarios_antes_scrum176 a USING (id_usuario)
+        WHERE u.status IS DISTINCT FROM a.status),
+        'Reativar unidade deve preservar o status de todos os usuários';
     UPDATE usuario u SET status = a.status FROM usuarios_antes_scrum176 a WHERE u.id_usuario = a.id_usuario;
 
     UPDATE cargo SET ativo = TRUE, nome = 'Cargo renomeado' WHERE id_cargo = v_cargo_a;
@@ -78,12 +77,14 @@ BEGIN
     UPDATE unidade SET ativo = NULL WHERE id_unidade = v_unidade_b;
     UPDATE unidade SET ativo = FALSE WHERE id_unidade IN (v_unidade_a, v_unidade_b);
     ASSERT NOT EXISTS (SELECT 1 FROM usuario u JOIN usuarios_antes_scrum176 a USING (id_usuario)
-        WHERE u.status <> CASE WHEN a.tipo = 'GESTOR_WORKSPACE' THEN a.status ELSE 'DESATIVADO' END);
+        WHERE u.status IS DISTINCT FROM a.status),
+        'Desativar múltiplas unidades, inclusive com ativo nulo, deve preservar todos os status';
 
-    UPDATE usuario SET status = 'ATIVO' WHERE id_usuario = v_usuario;
     UPDATE unidade SET ativo = FALSE WHERE id_unidade IN (v_unidade_a, v_unidade_b);
     UPDATE unidade SET nome = 'Unidade inativa renomeada' WHERE id_unidade = v_unidade_a;
-    ASSERT (SELECT status = 'ATIVO' FROM usuario WHERE id_usuario = v_usuario), 'Unidade já inativa não dispara novamente';
+    ASSERT NOT EXISTS (SELECT 1 FROM usuario u JOIN usuarios_antes_scrum176 a USING (id_usuario)
+        WHERE u.status IS DISTINCT FROM a.status),
+        'Atualizar unidades já inativas deve preservar o status de todos os usuários';
 END;
 $$;
 ROLLBACK;
