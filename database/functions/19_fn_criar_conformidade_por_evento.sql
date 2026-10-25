@@ -1,4 +1,3 @@
--- SCRUM-624: versão inicial; não recalcula conclusões anteriores à instalação.
 CREATE OR REPLACE FUNCTION fn_criar_conformidade_por_evento()
 RETURNS TRIGGER
 LANGUAGE plpgsql
