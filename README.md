@@ -110,6 +110,18 @@ Desativar ou reativar uma unidade preserva o status de todos os usuários vincul
 
 Em bancos já instalados, aplique [`5_remover_desativacao_usuario_por_unidade.sql`](database/scripts/5_remover_desativacao_usuario_por_unidade.sql) para remover a trigger e sua função auxiliar. O script pode ser reaplicado e não altera dados nem reativa usuários desativados anteriormente. Atualize também o comentário da função com [`16_fn_altera_status_unidade.sql`](database/functions/16_fn_altera_status_unidade.sql). A alteração no repositório não executa esses scripts no banco publicado.
 
+## Conformidade automática por evento (SCRUM-624)
+
+A versão inicial gera uma conformidade quando uma participação é inserida ou atualizada em `conclusao_evento` com status `CONCLUIDO`. A NR vem do evento da turma; eventos sem NR não geram conformidade. O registro recebe `origem = 'EVENTO'` e `aplicavel = TRUE`. Sua validade é calculada somando `nr_catalogo.tempo_reciclagem_mes` à data de `conclusao_evento.data_conclusao`, usando meses de calendário. Por exemplo, conclusão em 25/10/2026 com reciclagem de 12 meses gera validade em 25/10/2027. Em finais de mês, o dia é ajustado ao último dia disponível no mês de destino. O campo `conclusao_evento.data_validade` não é usado nem alterado por esta função.
+
+O vínculo único por `conclusao_evento_id` evita duplicação. Correções em `data_conclusao` recalculam somente a conformidade daquela conclusão, preservando registros manuais e outras conclusões do mesmo colaborador e NR. Alterar apenas `data_validade` da conclusão não dispara esta trigger. As constraints existentes exigem data de conclusão para status `CONCLUIDO` e um prazo positivo em meses no catálogo.
+
+Para instalar em banco existente, aplique primeiro [`19_fn_criar_conformidade_por_evento.sql`](database/functions/19_fn_criar_conformidade_por_evento.sql) e depois [`05_criar_conformidade_por_evento.sql`](database/triggers/05_criar_conformidade_por_evento.sql), com as tabelas e constraints já instaladas. Os arquivos podem ser reaplicados. Sua criação no workspace não executa a instalação no banco publicado.
+
+Para validar em banco de teste com `psql`, execute `\i test/sql/criar_conformidade_por_evento.sql` a partir da raiz do projeto. O teste usa um schema isolado e encerra com `ROLLBACK`. Cobre conclusão, pendência, rejeição, evento sem NR, prazos distintos por NR, finais de mês e ano bissexto, correção da data de conclusão, duplicidade e preservação de histórico.
+
+Esta versão não processa conclusões antigas automaticamente nem desfaz conformidades quando uma conclusão é reaberta/rejeitada ou um evento é cancelado. Alterações posteriores no prazo de reciclagem do catálogo, na NR do evento ou na participação também não disparam sincronização. Essas regras ficam para a próxima validação do fluxo.
+
 ## Como adicionar scripts
 
 Coloque arquivos `.sql` na categoria correspondente:
