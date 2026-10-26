@@ -12,6 +12,11 @@ SET LOCAL search_path = teste_scrum_635;
 \ir ../../database/views/04_vw_home_estatisticas_gerais.sql
 \ir ../../database/views/04_vw_unidades.sql
 \ir ../../database/views/07_vw_conformidades.sql
+\ir ../../database/views/05_vw_colaboradores.sql
+\ir ../../database/views/03_vw_cargos.sql
+\ir ../../database/views/02_dim_resumo_funcionario.sql
+\ir ../../database/views/01_dim_nr_catalogo.sql
+\ir ../../database/functions/18_fn_seleciona_candidatos_evento.sql
 
 INSERT INTO workspace (id_workspace, nome, cnpj) VALUES
     (1, 'Workspace teste', '99999999999635'), (2, 'Outro workspace', '99999999999636'),
@@ -76,6 +81,20 @@ DECLARE
     v_uid TEXT;
     v_home JSONB;
 BEGIN
+    ASSERT (SELECT COUNT(*) = 10 FROM vw_colaboradores), 'Três perfis e todos os status, sem duplicação';
+    ASSERT (SELECT COUNT(*) = 3 FROM vw_colaboradores WHERE id_usuario IN (1, 2, 3));
+    ASSERT (SELECT quantidade_colaboradores = 5 FROM vw_cargos WHERE id_cargo = 1), 'Três perfis ativos por cargo';
+    ASSERT (SELECT qtd_funcionario = 3 FROM dim_resumo_funcionario WHERE unidade_id = 1), 'Três perfis ativos por unidade/cargo';
+    ASSERT (SELECT ARRAY_AGG(id_usuario ORDER BY id_usuario) = ARRAY[1,3,5,6]::BIGINT[]
+            FROM fn_seleciona_candidatos_evento('uid-2', NULL)), 'Três perfis ativos, mesmo workspace e criador excluído';
+    ASSERT (SELECT ARRAY_AGG(id_usuario ORDER BY id_usuario) = ARRAY[1,2,5,6]::BIGINT[]
+            FROM fn_seleciona_candidatos_evento('uid-3', NULL)), 'Gestor do workspace também não participa do próprio evento';
+    ASSERT NOT EXISTS (SELECT 1 FROM fn_seleciona_candidatos_evento('uid-2', 1)), 'NR sem vínculo de cargo não oferece candidatos';
+    INSERT INTO cargo_nr(cargo_id,nr_id) VALUES (1,1);
+    ASSERT (SELECT COUNT(*) = 4 FROM fn_seleciona_candidatos_evento('uid-2', 1)), 'NR permite os três perfis sem duplicar pessoas';
+    ASSERT NOT EXISTS (SELECT 1 FROM fn_seleciona_candidatos_evento('uid-1', NULL)), 'Colaborador não administra seleção';
+    ASSERT NOT EXISTS (SELECT 1 FROM fn_seleciona_candidatos_evento('uid-4', NULL)), 'Gestor inativo não administra seleção';
+    ASSERT NOT EXISTS (SELECT 1 FROM fn_seleciona_candidatos_evento(NULL, NULL));
     ASSERT TO_REGPROCEDURE('carrega_home_colaborador(text)') IS NULL;
     ASSERT TO_REGPROCEDURE('carrega_home_gestor(text)') IS NULL;
     FOREACH v_id IN ARRAY ARRAY[1, 2, 3] LOOP

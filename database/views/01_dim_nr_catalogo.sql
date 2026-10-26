@@ -9,7 +9,7 @@ WITH nr_funcionario AS (
         ON cn.cargo_id = u.cargo_id
     JOIN nr_catalogo nr
         ON nr.codigo_nr = cn.nr_id
-    WHERE u.tipo = 'COLABORADOR'
+    WHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE')
       AND nr.revogada = false
 ),
 nr_empresa AS (
@@ -39,4 +39,4 @@ SELECT
 FROM uniao;
 
 COMMENT ON VIEW dim_nr_catalogo IS
-'Consolida as NRs aplicáveis a cada unidade, considerando tanto as NRs associadas aos cargos dos funcionários quanto as NRs vinculadas diretamente às unidades. A view desconsidera NRs revogadas e unifica os registros para evitar duplicidades, disponibilizando uma dimensão de NRs por unidade para utilização na camada de BI.';
+'Consolida as NRs aplicáveis a cada unidade, considerando tanto as NRs associadas aos cargos dos funcionários dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE quanto as NRs vinculadas diretamente às unidades. A view desconsidera NRs revogadas e unifica os registros para evitar duplicidades, disponibilizando uma dimensão de NRs por unidade para utilização na camada de BI.';

@@ -397,137 +397,132 @@
     },
     {
       "from": "table:usuario",
-      "to": "function:fn_desativar_usuario_por_unidade",
-      "resolved": true
-    },
-    {
-      "from": "table:usuario",
       "to": "function:fn_retornar_tipo_conta",
       "resolved": true
     },
     {
       "from": "table:usuario",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": true
     },
     {
       "from": "table:unidade",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": true
     },
     {
       "from": "table:workspace",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": true
     },
     {
       "from": "unknown:contexto",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": false
     },
     {
       "from": "table:turma_colaborador",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": true
     },
     {
       "from": "table:turma",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": true
     },
     {
       "from": "table:evento",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": true
     },
     {
       "from": "table:conclusao_evento",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": true
     },
     {
       "from": "unknown:participacoes",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": false
     },
     {
       "from": "unknown:eventos",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": false
     },
     {
       "from": "unknown:pendentes",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": false
     },
     {
       "from": "unknown:metricas",
-      "to": "function:carrega_home_colaborador",
+      "to": "function:fn_carrega_home_colaborador",
       "resolved": false
     },
     {
       "from": "table:usuario",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": true
     },
     {
       "from": "table:unidade",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": true
     },
     {
       "from": "table:workspace",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": true
     },
     {
       "from": "table:evento",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": true
     },
     {
       "from": "unknown:contexto",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": false
     },
     {
       "from": "unknown:eventos_gestor",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": false
     },
     {
       "from": "table:turma",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": true
     },
     {
       "from": "table:turma_colaborador",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": true
     },
     {
       "from": "table:conclusao_evento",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": true
     },
     {
       "from": "unknown:participacoes",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": false
     },
     {
       "from": "unknown:validacoes",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": false
     },
     {
       "from": "unknown:primeiras_validacoes",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": false
     },
     {
       "from": "unknown:eventos_atuais",
-      "to": "function:carrega_home_gestor",
+      "to": "function:fn_carrega_home_gestor",
       "resolved": false
     },
     {
@@ -719,6 +714,36 @@
       "from": "table:cargo_nr",
       "to": "function:fn_seleciona_candidatos_evento",
       "resolved": true
+    },
+    {
+      "from": "table:conformidade",
+      "to": "function:fn_criar_conformidade_por_evento",
+      "resolved": true
+    },
+    {
+      "from": "table:turma_colaborador",
+      "to": "function:fn_criar_conformidade_por_evento",
+      "resolved": true
+    },
+    {
+      "from": "table:turma",
+      "to": "function:fn_criar_conformidade_por_evento",
+      "resolved": true
+    },
+    {
+      "from": "table:evento",
+      "to": "function:fn_criar_conformidade_por_evento",
+      "resolved": true
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "function:fn_criar_conformidade_por_evento",
+      "resolved": true
+    },
+    {
+      "from": "unknown:set",
+      "to": "function:fn_criar_conformidade_por_evento",
+      "resolved": false
     },
     {
       "from": "table:usuario",
@@ -1171,16 +1196,6 @@
       "resolved": true
     },
     {
-      "from": "table:unidade",
-      "to": "trigger:trg_desativar_usuario_por_unidade",
-      "resolved": true
-    },
-    {
-      "from": "function:fn_desativar_usuario_por_unidade",
-      "to": "trigger:trg_desativar_usuario_por_unidade",
-      "resolved": true
-    },
-    {
       "from": "table:usuario",
       "to": "trigger:trg_ativar_colaborador_apos_firebase_uid",
       "resolved": true
@@ -1188,6 +1203,16 @@
     {
       "from": "function:fn_ativar_colaborador_apos_firebase_uid",
       "to": "trigger:trg_ativar_colaborador_apos_firebase_uid",
+      "resolved": true
+    },
+    {
+      "from": "table:conclusao_evento",
+      "to": "trigger:trg_criar_conformidade_por_evento",
+      "resolved": true
+    },
+    {
+      "from": "function:fn_criar_conformidade_por_evento",
+      "to": "trigger:trg_criar_conformidade_por_evento",
       "resolved": true
     },
     {

@@ -550,3 +550,9 @@ O workflow `.github/workflows/pages.yml` executa testes, build e deploy. No GitH
 Evoluções previstas incluem parsers AST mais completos, reanálise incremental, editor CodeMirror/Monaco e layouts avançados de grafo.
 
 Para o **Executar Banco**, o próximo passo é o suporte a **SQL Server** e **MySQL**: a arquitetura já separa o contrato (`server/database/adapters/base-adapter.js`) da implementação, então adicionar um dialeto significa criar um adapter e registrá-lo em `server/database/adapters/index.js` — plano, validação, histórico e runner não mudam. Conversão de dialeto (por exemplo PostgreSQL → SQL Server) continua fora de escopo e será avaliada separadamente. Login e automações de commit/push permanecem fora do projeto.
+
+## Colaboradores de todos os perfis
+
+`05_vw_colaboradores.sql` inclui COLABORADOR, GESTOR e GESTOR_WORKSPACE, sem filtrar status, cargo ou unidade inativos. `03_vw_cargos.sql` e `02_dim_resumo_funcionario.sql` contam os três perfis ativos; `01_dim_nr_catalogo.sql` inclui seus cargos na composição de NRs por unidade. `07_vw_conformidades.sql` mantém a escolha de um registro por usuário/NR e seus critérios de ordenação e aplicabilidade.
+
+A API deve manter a restrição de workspace e unidades autorizadas. Na tela de colaboradores, `GET /collaborators?excludeSelf=true` oculta o próprio usuário; a view não filtra identidade e os seletores de conformidades continuam incluindo a própria conta. Listagem e detalhes não ampliam permissões de edição ou alteração de status. Atualizar os arquivos documenta a regra; aplicar as views ao banco e publicar a API são etapas separadas.
