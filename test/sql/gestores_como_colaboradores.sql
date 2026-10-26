@@ -62,7 +62,7 @@ INSERT INTO turma_colaborador (id_turma_colaborador, turma_id, usuario_id) VALUE
     (1, 1, 1), (2, 1, 2), (3, 1, 3), (4, 1, 4), (5, 1, 7),
     (6, 2, 1), (7, 2, 2), (8, 2, 3), (9, 3, 3), (10, 4, 3), (11, 5, 3),
     (12, 1, 8), (13, 1, 9), (14, 1, 10);
-INSERT INTO conclusao_evento (id_conclusao_evento, turma_colaborador_id, status, data_conclusao) 
+INSERT INTO conclusao_evento (id_conclusao_evento, turma_colaborador_id, status, data_conclusao)
 SELECT id_turma_colaborador, id_turma_colaborador, 'PENDENTE', LOCALTIMESTAMP - INTERVAL '1 hour'
 FROM turma_colaborador WHERE id_turma_colaborador IN (1, 2, 3, 4, 5, 12, 13, 14);
 INSERT INTO conclusao_evento (id_conclusao_evento, turma_colaborador_id, status, data_conclusao, data_validacao)
@@ -111,6 +111,7 @@ BEGIN
     END LOOP;
     FOREACH v_uid IN ARRAY ARRAY[NULL, '', '   ', 'inexistente', 'uid-admin', 'uid-4', 'uid-8', 'uid-9', 'uid-10'] LOOP
         ASSERT fn_carrega_home_colaborador(v_uid) IS NULL, 'UID/perfil/status inelegível';
+        ASSERT fn_carrega_home_gestor(v_uid) IS NULL, 'Home do gestor também rejeita UID/perfil/status inelegível';
     END LOOP;
     v_home := fn_carrega_home_colaborador('uid-3');
     ASSERT (v_home #>> '{events_metrics,done}')::INTEGER = 1, 'Encerrado validado continua contado';
@@ -129,6 +130,10 @@ BEGIN
     ASSERT (v_home #>> '{indicators,current_events}')::INTEGER = 1;
     ASSERT (SELECT quantidade_colaboradores = 3 FROM vw_unidades WHERE id_unidade = 1);
     ASSERT (SELECT quantidade_colaboradores = 1 FROM vw_unidades WHERE id_unidade = 2);
+    ASSERT (SELECT quantidade_colaboradores = 1 FROM vw_unidades WHERE id_unidade = 3),
+        'Listagem de unidades mantém a contagem de ativos em unidade inativa';
+    ASSERT (SELECT quantidade_colaboradores = 1 FROM vw_unidades WHERE id_unidade = 4),
+        'Gestor de outro workspace permanece em sua própria unidade';
     ASSERT (SELECT quantidade_colaboradores = 0 FROM vw_unidades WHERE id_unidade = 5);
     ASSERT (SELECT quantidade_colaboradores = 4 AND quantidade_unidades = 3
                    AND quantidade_requisitos = 4 AND quantidade_conformes = 1
