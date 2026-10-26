@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION carrega_home_colaborador(
+CREATE OR REPLACE FUNCTION fn_carrega_home_colaborador(
     p_firebase_uid TEXT
 )
 RETURNS JSONB
@@ -13,7 +13,7 @@ AS $$
         INNER JOIN workspace w ON w.id_workspace = un.workspace_id
         WHERE u.firebase_uid = p_firebase_uid
           AND NULLIF(BTRIM(p_firebase_uid), '') IS NOT NULL
-          AND u.tipo IN ('COLABORADOR', 'GESTOR')
+          AND u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE')
           AND u.status = 'ATIVO'
     ), participacoes AS (
         SELECT e.id_evento, e.titulo, t.data_termino::DATE AS limit_date,
@@ -90,5 +90,5 @@ AS $$
     CROSS JOIN metricas m;
 $$;
 
-COMMENT ON FUNCTION carrega_home_colaborador(TEXT) IS
-'Retorna JSONB com a parte PostgreSQL da Home Mobile de um COLABORADOR ou GESTOR ativo identificado pelo Firebase UID: nome, workspace, métricas por evento, status URGENT > PENDENT > ANALYSIS > OK e até três eventos pendentes ordenados pelo prazo e pelo ID. Cada evento conta uma vez: pendência prevalece sobre análise, que prevalece sobre conclusão validada. Considera em análise a conclusão PENDENTE com data_conclusao preenchida e sem data_validacao; ausência de conclusão, rejeição ou PENDENTE ainda não enviado representam pendências enquanto o prazo da turma estiver aberto ou não informado. Pendências com data_termino anterior ao horário atual são excluídas da lista, do contador e da urgência, sem impedir que outra turma com prazo aberto do mesmo evento apareça. Eventos cancelados são excluídos; eventos encerrados contam apenas conclusões validadas. Pendências com prazo em até três dias são urgentes. As datas e horários seguem o fuso da sessão PostgreSQL. O backend acrescenta last_notifications da fonte de notificações e resolve viewed via Redis. Retorna NULL para UID ausente ou vazio, usuário inexistente, inativo ou de outro perfil.';
+COMMENT ON FUNCTION fn_carrega_home_colaborador(TEXT) IS
+'Retorna JSONB com a parte PostgreSQL da Home Mobile de um COLABORADOR, GESTOR ou GESTOR_WORKSPACE ativo identificado pelo Firebase UID: nome, workspace, métricas por evento, status URGENT > PENDENT > ANALYSIS > OK e até três eventos pendentes ordenados pelo prazo e pelo ID. Cada evento conta uma vez: pendência prevalece sobre análise, que prevalece sobre conclusão validada. Considera em análise a conclusão PENDENTE com data_conclusao preenchida e sem data_validacao; ausência de conclusão, rejeição ou PENDENTE ainda não enviado representam pendências enquanto o prazo da turma estiver aberto ou não informado. Pendências com data_termino anterior ao horário atual são excluídas da lista, do contador e da urgência, sem impedir que outra turma com prazo aberto do mesmo evento apareça. Eventos cancelados são excluídos; eventos encerrados contam apenas conclusões validadas. Pendências com prazo em até três dias são urgentes. As datas e horários seguem o fuso da sessão PostgreSQL. O backend acrescenta last_notifications da fonte de notificações e resolve viewed via Redis. Retorna NULL para UID ausente ou vazio, usuário inexistente, inativo ou de outro perfil.';

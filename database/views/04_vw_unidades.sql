@@ -4,7 +4,7 @@ SELECT
     un.workspace_id AS id_workspace,
     un.nome,
     COUNT(DISTINCT u.id_usuario) FILTER (
-        WHERE u.tipo = 'COLABORADOR'
+        WHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE')
           AND u.status = 'ATIVO'
     ) AS quantidade_colaboradores,
     CASE
@@ -37,4 +37,4 @@ GROUP BY
     endereco.complemento;
 
 COMMENT ON VIEW vw_unidades IS
-'Lista unidades com workspace, nome, status, endereço e quantidade de colaboradores ativos vinculados. Unidades sem colaboradores também aparecem com quantidade zero.';
+'Lista unidades com workspace, nome, status, endereço e quantidade distinta de usuários ativos dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE vinculados. Unidades sem colaboradores também aparecem com quantidade zero.';

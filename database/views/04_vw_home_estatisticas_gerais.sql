@@ -7,7 +7,7 @@ WITH unidades_ativas AS (
     SELECT u.id_usuario, un.workspace_id
     FROM usuario u
     INNER JOIN unidades_ativas un ON un.id_unidade = u.unidade_id
-    WHERE u.tipo = 'COLABORADOR'
+    WHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE')
       AND u.status = 'ATIVO'
 ), conformidades_atuais AS (
     SELECT ca.workspace_id, ca.id_usuario, c.nr_id,
@@ -63,4 +63,4 @@ LEFT JOIN resumo_colaboradores rc ON rc.workspace_id = w.id_workspace
 LEFT JOIN resumo_conformidade r ON r.workspace_id = w.id_workspace;
 
 COMMENT ON VIEW vw_home_estatisticas_gerais IS
-'SCRUM-490: estatísticas da Home WEB por workspace, incluindo workspaces sem dados com valores zero. Conta unidades ativas e colaboradores ATIVOS dessas unidades. Avalia somente conformidades registradas como aplicáveis de NRs não revogadas, uma por colaborador/NR, usando a maior validade. Não infere requisitos ausentes a partir de cargo_nr ou unidade_nr. Categorias exclusivas: conformes (mais de 30 dias), próximos do vencimento (hoje até 30 dias, inclusive), vencidos (antes de hoje) e pendentes (sem validade). Conformidade geral é a porcentagem de requisitos com validade vigente, incluindo próximos do vencimento, sobre todos os requisitos avaliados, incluindo pendentes. Sem requisitos, retorna 0.00. Datas seguem o fuso da sessão PostgreSQL.';
+'SCRUM-490: estatísticas da Home WEB por workspace, incluindo workspaces sem dados com valores zero. Conta unidades ativas e usuários ATIVOS dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE dessas unidades, contados uma vez por usuário. Avalia somente conformidades registradas como aplicáveis de NRs não revogadas, uma por colaborador/NR, usando a maior validade. Não infere requisitos ausentes a partir de cargo_nr ou unidade_nr. Categorias exclusivas: conformes (mais de 30 dias), próximos do vencimento (hoje até 30 dias, inclusive), vencidos (antes de hoje) e pendentes (sem validade). Conformidade geral é a porcentagem de requisitos com validade vigente, incluindo próximos do vencimento, sobre todos os requisitos avaliados, incluindo pendentes. Sem requisitos, retorna 0.00. Datas seguem o fuso da sessão PostgreSQL.';
