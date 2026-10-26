@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION carrega_home_gestor(
+CREATE OR REPLACE FUNCTION fn_carrega_home_gestor(
     p_firebase_uid TEXT
 )
 RETURNS JSONB
@@ -33,7 +33,7 @@ AS $$
         INNER JOIN contexto ctx ON ctx.id_workspace = un.workspace_id
         LEFT JOIN conclusao_evento ce
             ON ce.turma_colaborador_id = tf.id_turma_colaborador
-        WHERE u.tipo IN ('COLABORADOR','GESTOR') AND u.status = 'ATIVO'
+        WHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE') AND u.status = 'ATIVO'
     ), validacoes AS (
         SELECT id_conclusao_evento, collaborator_name, titulo, data_conclusao
         FROM participacoes
@@ -85,5 +85,5 @@ AS $$
     FROM contexto ctx;
 $$;
 
-COMMENT ON FUNCTION carrega_home_gestor(TEXT) IS
-'Retorna JSONB com a parte PostgreSQL da Home Mobile de um GESTOR ou GESTOR_WORKSPACE ativo identificado pelo Firebase UID: nome, workspace, até três validações pendentes e indicadores. Restringe os dados aos eventos não cancelados do próprio gestor e aos colaboradores ativos do mesmo workspace. Validação pendente é uma conclusão PENDENTE com data_conclusao preenchida e sem data_validacao; seu ID é id_conclusao_evento. Prioriza os envios mais antigos, com desempate pelo ID, e contabiliza todas as validações no indicador. Evento atual é ATIVO com ao menos uma turma em andamento. Conta colaboradores distintos com pendências em qualquer turma desses eventos: ausência de conclusão, rejeição ou PENDENTE ainda não enviado. Datas e horários seguem o fuso da sessão PostgreSQL. O backend acrescenta pending_forms da fonte de formulários e resolve viewed via Redis. Retorna NULL para UID ausente ou vazio, usuário inexistente, inativo ou de outro perfil.';
+COMMENT ON FUNCTION fn_carrega_home_gestor(TEXT) IS
+'Retorna JSONB com a parte PostgreSQL da Home Mobile de um GESTOR ou GESTOR_WORKSPACE ativo identificado pelo Firebase UID: nome, workspace, até três validações pendentes e indicadores. Restringe os dados aos eventos não cancelados do próprio gestor e aos participantes ativos dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE do mesmo workspace. Validação pendente é uma conclusão PENDENTE com data_conclusao preenchida e sem data_validacao; seu ID é id_conclusao_evento. Prioriza os envios mais antigos, com desempate pelo ID, e contabiliza todas as validações no indicador. Evento atual é ATIVO com ao menos uma turma em andamento. Conta colaboradores distintos com pendências em qualquer turma desses eventos: ausência de conclusão, rejeição ou PENDENTE ainda não enviado. Datas e horários seguem o fuso da sessão PostgreSQL. O backend acrescenta pending_forms da fonte de formulários e resolve viewed via Redis. Retorna NULL para UID ausente ou vazio, usuário inexistente, inativo ou de outro perfil.';

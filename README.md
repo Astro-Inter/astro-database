@@ -122,6 +122,16 @@ Para validar em banco de teste com `psql`, execute `\i test/sql/criar_conformida
 
 Esta versão não processa conclusões antigas automaticamente nem desfaz conformidades quando uma conclusão é reaberta/rejeitada ou um evento é cancelado. Alterações posteriores no prazo de reciclagem do catálogo, na NR do evento ou na participação também não disparam sincronização. Essas regras ficam para a próxima validação do fluxo.
 
+## Gestores nos fluxos de colaboradores (SCRUM-635)
+
+As funções `fn_carrega_home_colaborador(TEXT)` e `fn_carrega_home_gestor(TEXT)` e as views `vw_home_estatisticas_gerais`, `vw_unidades` e `vw_conformidades` consideram os perfis `COLABORADOR`, `GESTOR` e `GESTOR_WORKSPACE` nos fluxos de colaboradores. Não incluem `ADMIN`. Permanecem os filtros existentes de workspace, unidade e status: as Homes e contagens consideram usuários ativos; a estatística do workspace exige unidade ativa. A listagem `vw_conformidades` continua incluindo todos os status, cargos/unidades inativos e NRs revogadas, com uma linha por usuário/NR.
+
+Na criação do banco do zero, aplique as tabelas e constraints e depois as funções e views. As funções de Home já são criadas com os nomes definitivos `fn_carrega_home_colaborador` e `fn_carrega_home_gestor`.
+
+Coordene a publicação com a API: as chamadas de `GET /home/collaborator` e `GET /home/manager` devem usar os novos nomes com `fn_`. Não há aliases para os nomes anteriores. No repositório `astro-api`, alinhe os filtros de perfis das consultas de conformidades e substitua a contagem `countByUnit_IdAndType(..., UserType.COLABORADOR)` de `UnitSettingsService` por uma consulta dos três perfis com status ativo e a mesma unidade. Alterar `vw_unidades` não modifica essa contagem feita pela API. Este checkout contém somente o banco.
+
+Para testar com PostgreSQL/psql, execute `\i test/sql/gestores_como_colaboradores.sql` na raiz. O teste cria tabelas e constraints reais em schema isolado e termina com `ROLLBACK`. Cobre os três perfis, UID inválido, administrador, inatividade, isolamento de workspace/unidade, deduplicação e conformidades na criação do banco do zero. Execute também `test/sql/vw_conformidades.sql` em banco de teste com tabelas, constraints e a view atualizada, para validar seleção e edição do histórico. Nenhum desses arquivos aplica alterações ao banco publicado automaticamente.
+
 ## Como adicionar scripts
 
 Coloque arquivos `.sql` na categoria correspondente:
