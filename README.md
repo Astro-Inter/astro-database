@@ -126,17 +126,11 @@ Esta versão não processa conclusões antigas automaticamente nem desfaz confor
 
 As funções `fn_carrega_home_colaborador(TEXT)` e `fn_carrega_home_gestor(TEXT)` e as views `vw_home_estatisticas_gerais`, `vw_unidades` e `vw_conformidades` consideram os perfis `COLABORADOR`, `GESTOR` e `GESTOR_WORKSPACE` nos fluxos de colaboradores. Não incluem `ADMIN`. Permanecem os filtros existentes de workspace, unidade e status: as Homes e contagens consideram usuários ativos; a estatística do workspace exige unidade ativa. A listagem `vw_conformidades` continua incluindo todos os status, cargos/unidades inativos e NRs revogadas, com uma linha por usuário/NR.
 
-Em banco existente, execute na mesma transação e no schema da aplicação, nesta ordem:
-
-1. [`6_prefixar_funcoes_home.sql`](database/scripts/6_prefixar_funcoes_home.sql).
-2. [`08_fn_carrega_home_colaborador.sql`](database/functions/08_fn_carrega_home_colaborador.sql) e [`09_fn_carrega_home_gestor.sql`](database/functions/09_fn_carrega_home_gestor.sql).
-3. [`04_vw_home_estatisticas_gerais.sql`](database/views/04_vw_home_estatisticas_gerais.sql), [`04_vw_unidades.sql`](database/views/04_vw_unidades.sql) e [`07_vw_conformidades.sql`](database/views/07_vw_conformidades.sql).
-
-A migração renomeia as funções existentes usando `ALTER FUNCTION`, preservando permissões, OIDs e dependências. Pode ser reaplicada e também executada antes de uma instalação nova. Se os dois nomes já existirem, interrompe para revisão sem excluir objetos. Defina o `search_path` com o schema da aplicação primeiro. Aplique a migração antes das novas definições para evitar funções duplicadas.
+Na criação do banco do zero, aplique as tabelas e constraints e depois as funções e views. As funções de Home já são criadas com os nomes definitivos `fn_carrega_home_colaborador` e `fn_carrega_home_gestor`.
 
 Coordene a publicação com a API: as chamadas de `GET /home/collaborator` e `GET /home/manager` devem usar os novos nomes com `fn_`. Não há aliases para os nomes anteriores. No repositório `astro-api`, alinhe os filtros de perfis das consultas de conformidades e substitua a contagem `countByUnit_IdAndType(..., UserType.COLABORADOR)` de `UnitSettingsService` por uma consulta dos três perfis com status ativo e a mesma unidade. Alterar `vw_unidades` não modifica essa contagem feita pela API. Este checkout contém somente o banco.
 
-Para testar com PostgreSQL/psql, execute `\i test/sql/gestores_como_colaboradores.sql` na raiz. O teste cria tabelas e constraints reais em schema isolado e termina com `ROLLBACK`. Cobre os três perfis, UID inválido, administrador, inatividade, isolamento de workspace/unidade, deduplicação, conformidades e migração de nomes com preservação de dependência e permissões. Execute também `test/sql/vw_conformidades.sql` em banco de teste com tabelas, constraints e a view atualizada, para validar seleção e edição do histórico. Nenhum desses arquivos aplica alterações ao banco publicado automaticamente.
+Para testar com PostgreSQL/psql, execute `\i test/sql/gestores_como_colaboradores.sql` na raiz. O teste cria tabelas e constraints reais em schema isolado e termina com `ROLLBACK`. Cobre os três perfis, UID inválido, administrador, inatividade, isolamento de workspace/unidade, deduplicação e conformidades na criação do banco do zero. Execute também `test/sql/vw_conformidades.sql` em banco de teste com tabelas, constraints e a view atualizada, para validar seleção e edição do histórico. Nenhum desses arquivos aplica alterações ao banco publicado automaticamente.
 
 ## Como adicionar scripts
 

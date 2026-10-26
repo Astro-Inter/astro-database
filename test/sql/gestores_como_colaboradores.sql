@@ -6,19 +6,7 @@ SET LOCAL search_path = teste_scrum_635;
 \ir ../../database/scripts/1_create_table.sql
 \ir ../../database/scripts/2_constraints.sql
 
--- Instalação nova e reaplicação, incluindo migração sem funções antigas.
-\ir ../../database/scripts/6_prefixar_funcoes_home.sql
-\ir ../../database/functions/08_fn_carrega_home_colaborador.sql
-\ir ../../database/functions/09_fn_carrega_home_gestor.sql
-CREATE TEMP TABLE funcoes_originais AS
-SELECT oid, proname, proacl FROM pg_proc
-WHERE pronamespace = 'teste_scrum_635'::REGNAMESPACE;
-REVOKE EXECUTE ON FUNCTION fn_carrega_home_colaborador(TEXT) FROM PUBLIC;
-ALTER FUNCTION fn_carrega_home_colaborador(TEXT) RENAME TO carrega_home_colaborador;
-ALTER FUNCTION fn_carrega_home_gestor(TEXT) RENAME TO carrega_home_gestor;
-CREATE VIEW dependencia_home AS SELECT carrega_home_colaborador('inexistente') AS home;
-\ir ../../database/scripts/6_prefixar_funcoes_home.sql
-\ir ../../database/scripts/6_prefixar_funcoes_home.sql
+-- Criação do banco do zero, com os nomes definitivos das funções.
 \ir ../../database/functions/08_fn_carrega_home_colaborador.sql
 \ir ../../database/functions/09_fn_carrega_home_gestor.sql
 \ir ../../database/views/04_vw_home_estatisticas_gerais.sql
@@ -88,18 +76,6 @@ DECLARE
     v_uid TEXT;
     v_home JSONB;
 BEGIN
-    ASSERT NOT EXISTS (
-        SELECT 1 FROM funcoes_originais f
-        LEFT JOIN pg_proc p ON p.oid = f.oid AND p.proname = f.proname
-        WHERE p.oid IS NULL
-    ), 'Migração preserva OID e nomes finais';
-    ASSERT NOT EXISTS (
-        SELECT 1 FROM pg_proc p, ACLEXPLODE(p.proacl) a
-        WHERE p.oid = 'fn_carrega_home_colaborador(text)'::REGPROCEDURE
-          AND a.grantee = 0 AND a.privilege_type = 'EXECUTE'
-    ),
-        'Migração preserva permissões';
-    ASSERT (SELECT home IS NULL FROM dependencia_home), 'Dependência permanece válida';
     ASSERT TO_REGPROCEDURE('carrega_home_colaborador(text)') IS NULL;
     ASSERT TO_REGPROCEDURE('carrega_home_gestor(text)') IS NULL;
     FOREACH v_id IN ARRAY ARRAY[1, 2, 3] LOOP
