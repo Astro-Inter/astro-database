@@ -1,5 +1,6 @@
 -- Executar em um banco de teste com as tabelas, constraints e vw_conformidades aplicadas.
 -- Os dados de teste e suas alterações são revertidos ao final.
+\set ON_ERROR_STOP on
 BEGIN;
 DO $$
 DECLARE
@@ -14,6 +15,7 @@ DECLARE
     v_pre_cadastrado BIGINT;
     v_desativado BIGINT;
     v_gestor BIGINT;
+    v_gestor_workspace BIGINT;
     v_evento BIGINT;
     v_turma BIGINT;
     v_participacao BIGINT;
@@ -52,6 +54,9 @@ BEGIN
     INSERT INTO usuario (nome, email, tipo, cargo_id, unidade_id, status)
     VALUES ('Gestor teste', 'conformidade538@example.com', 'GESTOR', v_cargo, v_unidade, 'ATIVO')
     RETURNING id_usuario INTO v_gestor;
+    INSERT INTO usuario (nome, email, tipo, cargo_id, unidade_id, status)
+    VALUES ('Gestor workspace teste', 'conformidade539@example.com', 'GESTOR_WORKSPACE', v_cargo, v_unidade, 'ATIVO')
+    RETURNING id_usuario INTO v_gestor_workspace;
 
     INSERT INTO evento (gestor_id, nr_id, titulo, descricao, modo_conclusao)
     VALUES (v_gestor, 99534, 'Evento teste', 'Descrição teste', 'GESTOR')
@@ -95,9 +100,11 @@ BEGIN
            (v_pre_cadastrado, 99534, TRUE, CURRENT_DATE - 1, 'MANUAL'),
            (v_desativado, 99534, TRUE, NULL, 'MANUAL'),
            (v_gestor, 99534, TRUE, CURRENT_DATE + 40, 'MANUAL'),
+           (v_gestor_workspace, 99534, TRUE, CURRENT_DATE + 40, 'MANUAL'),
            (v_usuario, 99535, FALSE, NULL, 'MANUAL');
-    ASSERT (SELECT COUNT(*) = 5 FROM vw_conformidades WHERE nr_id IN (99534, 99535));
-    ASSERT NOT EXISTS (SELECT 1 FROM vw_conformidades WHERE usuario_id = v_gestor);
+    ASSERT (SELECT COUNT(*) = 7 FROM vw_conformidades WHERE nr_id IN (99534, 99535));
+    ASSERT (SELECT COUNT(*) = 2 FROM vw_conformidades WHERE usuario_id IN (v_gestor, v_gestor_workspace)),
+           'Gestores de ambos os tipos mantêm suas conformidades mesmo em unidade e cargo inativos';
     ASSERT (SELECT status = 'Válida' AND workspace_id = v_outro_workspace
             FROM vw_conformidades WHERE usuario_id = v_outro_usuario AND nr_id = 99534),
            'Validade de hoje é vigente e o workspace não se mistura';
