@@ -4,7 +4,7 @@ SELECT
     c.workspace_id AS id_workspace,
     c.nome AS cargo,
     COUNT(DISTINCT u.id_usuario) FILTER (
-        WHERE u.tipo = 'COLABORADOR'
+        WHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE')
           AND u.status = 'ATIVO'
     ) AS quantidade_colaboradores,
     CASE
@@ -21,4 +21,4 @@ GROUP BY
     c.ativo;
 
 COMMENT ON VIEW vw_cargos IS
-'Lista os cargos por workspace, com o identificador do cargo, o nome, a quantidade de colaboradores ativos vinculados e o status do cargo. Cargos sem colaboradores também são exibidos com quantidade zero.';
+'Lista os cargos por workspace, com o identificador do cargo, o nome, a quantidade de usuários ativos dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE vinculados e o status do cargo. Cargos sem colaboradores também são exibidos com quantidade zero.';
