@@ -72,7 +72,7 @@ test('documentação pesquisa dados, escapa conteúdo e apresenta scripts comple
   assert.doesNotMatch(docs, /<script>/);
   assert.match(docs, /&lt;script&gt;/);
   assert.match(neo4jView(data, { ...state, tab: 'scripts', scriptSelected: 'neo4j/scripts/12-traversal-nr10.cypher' }), /c\.nome AS colaborador/);
-  assert.match(neo4jView(data, { ...state, tab: 'model' }), /Simular consulta NR-10/);
+  assert.match(neo4jView(data, { ...state, tab: 'model' }), /Consulta NR-10/);
   assert.match(neo4jView(data, { ...state, query: 'inexistente' }), /Nenhuma documentação encontrada/);
   assert.match(neo4jView(null, { error: 'Sem dados' }), /Tentar novamente/);
 });
