@@ -19,7 +19,7 @@
     "triggers": "database/triggers",
     "logs": "database/logs"
   },
-  "generatedAt": "2026-10-26T13:45:15.141Z",
+  "generatedAt": "2026-10-27T02:23:10.986Z",
   "counts": {
     "table": 19,
     "log-table": 3,
@@ -413,8 +413,8 @@
     {
       "category": "views",
       "path": "database/views/05_vw_colaboradores.sql",
-      "size": 998,
-      "content": "CREATE OR REPLACE VIEW vw_colaboradores AS\r\nSELECT\r\n    u.id_usuario,\r\n    u.nome,\r\n    u.email,\r\n    u.cpf,\r\n    u.modalidade,\r\n    u.status,\r\n    u.cargo_id,\r\n    c.nome AS cargo,\r\n    u.unidade_id,\r\n    un.nome AS unidade,\r\n    un.workspace_id AS workspace_id\r\nFROM usuario u\r\nINNER JOIN cargo c\r\n    ON c.id_cargo = u.cargo_id\r\nINNER JOIN unidade un\r\n    ON un.id_unidade = u.unidade_id\r\nWHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE');\r\n\r\nCOMMENT ON VIEW vw_colaboradores IS\r\n'Reúne os dados de usuários dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE como colaboradores para listagem e detalhes, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade e workspace. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. As permissões de edição são definidas pelo backend, que deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.';\r\n"
+      "size": 1100,
+      "content": "CREATE OR REPLACE VIEW vw_colaboradores AS\r\nSELECT\r\n    u.id_usuario,\r\n    u.nome,\r\n    u.email,\r\n    u.cpf,\r\n    u.modalidade,\r\n    u.status,\r\n    u.cargo_id,\r\n    c.nome AS cargo,\r\n    u.unidade_id,\r\n    un.nome AS unidade,\r\n    un.workspace_id AS workspace_id,\r\n    u.tipo\r\nFROM usuario u\r\nINNER JOIN cargo c\r\n    ON c.id_cargo = u.cargo_id\r\nINNER JOIN unidade un\r\n    ON un.id_unidade = u.unidade_id\r\nWHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE');\r\n\r\nCOMMENT ON VIEW vw_colaboradores IS\r\n'Reúne os dados de usuários dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE como colaboradores para listagem e detalhes, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade, workspace e tipo do usuário para cálculo das permissões sem junção adicional à tabela usuario. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. As permissões de edição são definidas pelo backend, que deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.';\r\n"
     },
     {
       "category": "views",
@@ -5200,8 +5200,8 @@
       "databaseType": "view",
       "file": "database/views/05_vw_colaboradores.sql",
       "category": "views",
-      "code": "CREATE OR REPLACE VIEW vw_colaboradores AS\r\nSELECT\r\n    u.id_usuario,\r\n    u.nome,\r\n    u.email,\r\n    u.cpf,\r\n    u.modalidade,\r\n    u.status,\r\n    u.cargo_id,\r\n    c.nome AS cargo,\r\n    u.unidade_id,\r\n    un.nome AS unidade,\r\n    un.workspace_id AS workspace_id\r\nFROM usuario u\r\nINNER JOIN cargo c\r\n    ON c.id_cargo = u.cargo_id\r\nINNER JOIN unidade un\r\n    ON un.id_unidade = u.unidade_id\r\nWHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE');\r\n\r\nCOMMENT ON VIEW vw_colaboradores IS\r\n'Reúne os dados de usuários dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE como colaboradores para listagem e detalhes, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade e workspace. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. As permissões de edição são definidas pelo backend, que deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.';\r\n",
-      "description": "Reúne os dados de usuários dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE como colaboradores para listagem e detalhes, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade e workspace. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. As permissões de edição são definidas pelo backend, que deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.",
+      "code": "CREATE OR REPLACE VIEW vw_colaboradores AS\r\nSELECT\r\n    u.id_usuario,\r\n    u.nome,\r\n    u.email,\r\n    u.cpf,\r\n    u.modalidade,\r\n    u.status,\r\n    u.cargo_id,\r\n    c.nome AS cargo,\r\n    u.unidade_id,\r\n    un.nome AS unidade,\r\n    un.workspace_id AS workspace_id,\r\n    u.tipo\r\nFROM usuario u\r\nINNER JOIN cargo c\r\n    ON c.id_cargo = u.cargo_id\r\nINNER JOIN unidade un\r\n    ON un.id_unidade = u.unidade_id\r\nWHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE');\r\n\r\nCOMMENT ON VIEW vw_colaboradores IS\r\n'Reúne os dados de usuários dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE como colaboradores para listagem e detalhes, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade, workspace e tipo do usuário para cálculo das permissões sem junção adicional à tabela usuario. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. As permissões de edição são definidas pelo backend, que deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.';\r\n",
+      "description": "Reúne os dados de usuários dos tipos COLABORADOR, GESTOR e GESTOR_WORKSPACE como colaboradores para listagem e detalhes, incluindo nome, e-mail, CPF, modalidade, status, cargo, unidade, workspace e tipo do usuário para cálculo das permissões sem junção adicional à tabela usuario. Mantém colaboradores pré-cadastrados, ativos e desativados, mesmo quando cargo ou unidade estão inativos. Não expõe senha nem Firebase UID. As permissões de edição são definidas pelo backend, que deve restringir todas as consultas pelo workspace e pelas unidades permitidas ao solicitante.",
       "dependencies": [
         "usuario",
         "cargo",
