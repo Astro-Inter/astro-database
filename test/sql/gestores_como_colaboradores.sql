@@ -82,6 +82,12 @@ DECLARE
     v_home JSONB;
 BEGIN
     ASSERT (SELECT COUNT(*) = 10 FROM vw_colaboradores), 'Três perfis e todos os status, sem duplicação';
+    ASSERT NOT EXISTS (
+        SELECT 1 FROM vw_colaboradores v JOIN usuario u ON u.id_usuario = v.id_usuario
+        WHERE v.tipo IS DISTINCT FROM u.tipo
+    ), 'Tipo persistido disponível na view para todos os perfis e status';
+    ASSERT (SELECT array_agg(tipo ORDER BY id_usuario) = ARRAY['COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE']::varchar[]
+        FROM vw_colaboradores WHERE id_usuario IN (1, 2, 3)), 'Três tipos retornados pela view';
     ASSERT (SELECT COUNT(*) = 3 FROM vw_colaboradores WHERE id_usuario IN (1, 2, 3));
     ASSERT (SELECT quantidade_colaboradores = 5 FROM vw_cargos WHERE id_cargo = 1), 'Três perfis ativos por cargo';
     ASSERT (SELECT qtd_funcionario = 3 FROM dim_resumo_funcionario WHERE unidade_id = 1), 'Três perfis ativos por unidade/cargo';
