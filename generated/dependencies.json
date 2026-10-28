@@ -331,6 +331,16 @@
       "resolved": true
     },
     {
+      "from": "table:unidade",
+      "to": "dataload:14_conformidade",
+      "resolved": true
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "dataload:14_conformidade",
+      "resolved": true
+    },
+    {
       "from": "log-table:insere_log",
       "to": "function:fn_registrar_log_dml",
       "resolved": true
@@ -786,6 +796,11 @@
       "resolved": true
     },
     {
+      "from": "table:conformidade",
+      "to": "index:idx_conformidade_unidade_nr",
+      "resolved": true
+    },
+    {
       "from": "table:cargo_nr",
       "to": "index:idx_cargo_nr_nr_cargo",
       "resolved": true
@@ -1018,6 +1033,11 @@
     {
       "from": "table:conclusao_evento",
       "to": "table:evidencia",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "table:conformidade",
       "resolved": true
     },
     {
@@ -1321,7 +1341,37 @@
       "resolved": true
     },
     {
+      "from": "table:unidade_nr",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": true
+    },
+    {
+      "from": "unknown:historico_unidades",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "unknown:requisitos_unidades",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "unknown:false",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
       "from": "unknown:conformidades_atuais",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "unknown:conformidades_unidades",
+      "to": "view:vw_home_estatisticas_gerais",
+      "resolved": false
+    },
+    {
+      "from": "unknown:conformidades_avaliadas",
       "to": "view:vw_home_estatisticas_gerais",
       "resolved": false
     },
@@ -1392,27 +1442,42 @@
     },
     {
       "from": "table:conformidade",
-      "to": "view:vw_conformidades",
+      "to": "view:vw_conformidade_colaborador",
       "resolved": true
     },
     {
       "from": "table:usuario",
-      "to": "view:vw_conformidades",
+      "to": "view:vw_conformidade_colaborador",
       "resolved": true
     },
     {
       "from": "table:cargo",
-      "to": "view:vw_conformidades",
+      "to": "view:vw_conformidade_colaborador",
       "resolved": true
     },
     {
       "from": "table:unidade",
-      "to": "view:vw_conformidades",
+      "to": "view:vw_conformidade_colaborador",
       "resolved": true
     },
     {
       "from": "table:nr_catalogo",
-      "to": "view:vw_conformidades",
+      "to": "view:vw_conformidade_colaborador",
+      "resolved": true
+    },
+    {
+      "from": "table:conformidade",
+      "to": "view:vw_conformidade_unidade",
+      "resolved": true
+    },
+    {
+      "from": "table:unidade",
+      "to": "view:vw_conformidade_unidade",
+      "resolved": true
+    },
+    {
+      "from": "table:nr_catalogo",
+      "to": "view:vw_conformidade_unidade",
       "resolved": true
     }
   ]

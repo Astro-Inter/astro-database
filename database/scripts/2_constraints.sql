@@ -239,7 +239,8 @@ ALTER TABLE evidencia
 
 ALTER TABLE conformidade
     ALTER COLUMN id_conformidade SET NOT NULL,
-    ALTER COLUMN usuario_id SET NOT NULL,
+    ALTER COLUMN tipo SET NOT NULL,
+    ALTER COLUMN tipo SET DEFAULT 'COLABORADOR',
     ALTER COLUMN nr_id SET NOT NULL,
     ALTER COLUMN aplicavel SET NOT NULL,
     ALTER COLUMN origem SET NOT NULL;
@@ -247,7 +248,18 @@ ALTER TABLE conformidade
 ALTER TABLE conformidade
     ADD CONSTRAINT pk_conformidade PRIMARY KEY (id_conformidade),
     ADD CONSTRAINT uq_conformidade_conclusao UNIQUE (conclusao_evento_id),
-    ADD CONSTRAINT ck_conformidade_origem CHECK (origem IN ('MANUAL', 'EVENTO'));
+    ADD CONSTRAINT uq_conformidade_formulario UNIQUE (formulario_resposta_id),
+    ADD CONSTRAINT ck_conformidade_destinatario CHECK (
+        (tipo = 'COLABORADOR' AND usuario_id IS NOT NULL AND unidade_id IS NULL)
+        OR (tipo = 'UNIDADE' AND unidade_id IS NOT NULL AND usuario_id IS NULL)
+    ),
+    ADD CONSTRAINT ck_conformidade_origem CHECK (origem IN ('MANUAL', 'EVENTO', 'FORMULARIO')),
+    ADD CONSTRAINT ck_conformidade_evidencia CHECK (
+        (origem = 'FORMULARIO' AND tipo = 'UNIDADE' AND formulario_resposta_id IS NOT NULL
+            AND LENGTH(BTRIM(formulario_resposta_id)) > 0 AND conclusao_evento_id IS NULL)
+        OR (origem = 'EVENTO' AND tipo = 'COLABORADOR' AND formulario_resposta_id IS NULL)
+        OR (origem = 'MANUAL' AND formulario_resposta_id IS NULL AND conclusao_evento_id IS NULL)
+    );
 
 ALTER TABLE cargo
     ADD CONSTRAINT fk_cargo_workspace FOREIGN KEY (workspace_id)
@@ -325,6 +337,9 @@ ALTER TABLE evidencia
         ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE conformidade
+    ADD CONSTRAINT fk_conformidade_unidade FOREIGN KEY (unidade_id)
+        REFERENCES unidade (id_unidade)
+        ON UPDATE CASCADE ON DELETE RESTRICT,
     ADD CONSTRAINT fk_conformidade_usuario FOREIGN KEY (usuario_id)
         REFERENCES usuario (id_usuario)
         ON UPDATE CASCADE ON DELETE RESTRICT,

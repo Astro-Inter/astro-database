@@ -1,4 +1,4 @@
--- Executar em um banco de teste com as tabelas, constraints e vw_conformidades aplicadas.
+-- Executar em um banco de teste com as tabelas, constraints e vw_conformidade_colaborador aplicadas.
 -- Os dados de teste e suas alterações são revertidos ao final.
 \set ON_ERROR_STOP on
 BEGIN;
@@ -84,14 +84,14 @@ BEGIN
     VALUES (v_usuario, 99534, FALSE, CURRENT_DATE + 400, 'MANUAL')
     RETURNING id_conformidade INTO v_nao_aplicavel;
 
-    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidades WHERE usuario_id = v_usuario AND nr_id = 99534);
+    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidade_colaborador WHERE usuario_id = v_usuario AND nr_id = 99534);
     ASSERT (SELECT id_conformidade = v_selecionado AND aplicavel
                    AND origem = 'EVENTO' AND conclusao_evento_id = v_conclusao
                    AND data_validade = CURRENT_DATE + 40 AND status = 'Válida'
                    AND nome = 'Colaborador teste' AND email = 'conformidade534@example.com'
                    AND titulo_nr = 'NR de teste' AND cargo_id = v_cargo
                    AND unidade_id = v_unidade AND workspace_id = v_workspace
-            FROM vw_conformidades WHERE usuario_id = v_usuario AND nr_id = 99534);
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_usuario AND nr_id = 99534);
     ASSERT (SELECT COUNT(*) = 5 FROM conformidade WHERE usuario_id = v_usuario AND nr_id = 99534),
            'A leitura não remove histórico';
 
@@ -102,18 +102,18 @@ BEGIN
            (v_gestor, 99534, TRUE, CURRENT_DATE + 40, 'MANUAL'),
            (v_gestor_workspace, 99534, TRUE, CURRENT_DATE + 40, 'MANUAL'),
            (v_usuario, 99535, FALSE, NULL, 'MANUAL');
-    ASSERT (SELECT COUNT(*) = 7 FROM vw_conformidades WHERE nr_id IN (99534, 99535));
-    ASSERT (SELECT COUNT(*) = 2 FROM vw_conformidades WHERE usuario_id IN (v_gestor, v_gestor_workspace)),
+    ASSERT (SELECT COUNT(*) = 7 FROM vw_conformidade_colaborador WHERE nr_id IN (99534, 99535));
+    ASSERT (SELECT COUNT(*) = 2 FROM vw_conformidade_colaborador WHERE usuario_id IN (v_gestor, v_gestor_workspace)),
            'Gestores de ambos os tipos mantêm suas conformidades mesmo em unidade e cargo inativos';
     ASSERT (SELECT status = 'Válida' AND workspace_id = v_outro_workspace
-            FROM vw_conformidades WHERE usuario_id = v_outro_usuario AND nr_id = 99534),
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_outro_usuario AND nr_id = 99534),
            'Validade de hoje é vigente e o workspace não se mistura';
     ASSERT (SELECT status = 'Vencida' AND status_colaborador = 'PRE_CADASTRADO'
-            FROM vw_conformidades WHERE usuario_id = v_pre_cadastrado AND nr_id = 99534);
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_pre_cadastrado AND nr_id = 99534);
     ASSERT (SELECT status = 'Sem validade' AND status_colaborador = 'DESATIVADO'
-            FROM vw_conformidades WHERE usuario_id = v_desativado AND nr_id = 99534);
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_desativado AND nr_id = 99534);
     ASSERT (SELECT NOT aplicavel AND status = 'Sem validade'
-            FROM vw_conformidades WHERE usuario_id = v_usuario AND nr_id = 99535),
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_usuario AND nr_id = 99535),
            'Mantém o par inteiramente não aplicável e a NR revogada';
 
     -- Editar o ID selecionado deixa o outro certificado intacto e pode mudar o representante.
@@ -121,17 +121,17 @@ BEGIN
     ASSERT (SELECT data_validade = CURRENT_DATE + 20 FROM conformidade WHERE id_conformidade = v_selecionado);
     ASSERT (SELECT id_conformidade <> v_selecionado AND origem = 'MANUAL'
                    AND data_validade = CURRENT_DATE + 40
-            FROM vw_conformidades WHERE usuario_id = v_usuario AND nr_id = 99534);
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_usuario AND nr_id = 99534);
 
     -- Mesmo sem nenhuma data entre os aplicáveis, eles precedem um não aplicável com data.
     UPDATE conformidade SET data_validade = NULL
     WHERE usuario_id = v_usuario AND nr_id = 99534 AND aplicavel;
     ASSERT (SELECT id_conformidade = v_sem_validade AND aplicavel AND status = 'Sem validade'
-            FROM vw_conformidades WHERE usuario_id = v_usuario AND nr_id = 99534);
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_usuario AND nr_id = 99534);
     UPDATE conformidade SET aplicavel = FALSE WHERE usuario_id = v_usuario AND nr_id = 99534;
     ASSERT (SELECT id_conformidade = v_nao_aplicavel AND NOT aplicavel
                    AND data_validade = CURRENT_DATE + 400
-            FROM vw_conformidades WHERE usuario_id = v_usuario AND nr_id = 99534);
+            FROM vw_conformidade_colaborador WHERE usuario_id = v_usuario AND nr_id = 99534);
 END;
 $$;
 ROLLBACK;
