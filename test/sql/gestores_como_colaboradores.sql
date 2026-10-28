@@ -11,7 +11,7 @@ SET LOCAL search_path = teste_scrum_635;
 \ir ../../database/functions/09_fn_carrega_home_gestor.sql
 \ir ../../database/views/04_vw_home_estatisticas_gerais.sql
 \ir ../../database/views/04_vw_unidades.sql
-\ir ../../database/views/07_vw_conformidades.sql
+\ir ../../database/views/07_vw_conformidade_colaborador.sql
 \ir ../../database/views/05_vw_colaboradores.sql
 \ir ../../database/views/03_vw_cargos.sql
 \ir ../../database/views/02_dim_resumo_funcionario.sql
@@ -145,10 +145,10 @@ BEGIN
             FROM vw_home_estatisticas_gerais WHERE id_workspace = 2);
     ASSERT (SELECT quantidade_colaboradores = 0 AND percentual_conformidade_geral = 0
             FROM vw_home_estatisticas_gerais WHERE id_workspace = 3);
-    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidades WHERE usuario_id = 2 AND nr_id = 1), 'Sem duplicar gestor/NR';
-    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidades WHERE usuario_id = 3 AND nr_id = 1);
-    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidades WHERE usuario_id = 6), 'Listagem mantém unidade inativa';
-    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidades WHERE usuario_id = 9), 'Listagem mantém gestor inativo';
+    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidade_colaborador WHERE usuario_id = 2 AND nr_id = 1), 'Sem duplicar gestor/NR';
+    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidade_colaborador WHERE usuario_id = 3 AND nr_id = 1);
+    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidade_colaborador WHERE usuario_id = 6), 'Listagem mantém unidade inativa';
+    ASSERT (SELECT COUNT(*) = 1 FROM vw_conformidade_colaborador WHERE usuario_id = 9), 'Listagem mantém gestor inativo';
     -- Ao expirar a turma sem envio, a conclusão em análise passa a prevalecer.
     UPDATE turma SET data_termino = LOCALTIMESTAMP - INTERVAL '1 minute' WHERE id_turma = 2;
     v_home := fn_carrega_home_colaborador('uid-3');

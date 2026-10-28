@@ -124,13 +124,13 @@ Esta versão não processa conclusões antigas automaticamente nem desfaz confor
 
 ## Gestores nos fluxos de colaboradores (SCRUM-635)
 
-As funções `fn_carrega_home_colaborador(TEXT)` e `fn_carrega_home_gestor(TEXT)` e as views `vw_home_estatisticas_gerais`, `vw_unidades` e `vw_conformidades` consideram os perfis `COLABORADOR`, `GESTOR` e `GESTOR_WORKSPACE` nos fluxos de colaboradores. Não incluem `ADMIN`. Permanecem os filtros existentes de workspace, unidade e status: as Homes e contagens consideram usuários ativos; a estatística do workspace exige unidade ativa. A listagem `vw_conformidades` continua incluindo todos os status, cargos/unidades inativos e NRs revogadas, com uma linha por usuário/NR.
+As funções `fn_carrega_home_colaborador(TEXT)` e `fn_carrega_home_gestor(TEXT)` e as views `vw_home_estatisticas_gerais`, `vw_unidades` e `vw_conformidade_colaborador` consideram os perfis `COLABORADOR`, `GESTOR` e `GESTOR_WORKSPACE` nos fluxos de colaboradores. Não incluem `ADMIN`. Permanecem os filtros existentes de workspace, unidade e status: as Homes e contagens consideram usuários ativos; a estatística do workspace exige unidade ativa. A listagem `vw_conformidade_colaborador` continua incluindo todos os status, cargos/unidades inativos e NRs revogadas, com uma linha por usuário/NR.
 
 Na criação do banco do zero, aplique as tabelas e constraints e depois as funções e views. As funções de Home já são criadas com os nomes definitivos `fn_carrega_home_colaborador` e `fn_carrega_home_gestor`.
 
 Coordene a publicação com a API: as chamadas de `GET /home/collaborator` e `GET /home/manager` devem usar os novos nomes com `fn_`. Não há aliases para os nomes anteriores. No repositório `astro-api`, alinhe os filtros de perfis das consultas de conformidades e substitua a contagem `countByUnit_IdAndType(..., UserType.COLABORADOR)` de `UnitSettingsService` por uma consulta dos três perfis com status ativo e a mesma unidade. Alterar `vw_unidades` não modifica essa contagem feita pela API. Este checkout contém somente o banco.
 
-Para testar com PostgreSQL/psql, execute `\i test/sql/gestores_como_colaboradores.sql` na raiz. O teste cria tabelas e constraints reais em schema isolado e termina com `ROLLBACK`. Cobre os três perfis, UID inválido, administrador, inatividade, isolamento de workspace/unidade, deduplicação e conformidades na criação do banco do zero. Execute também `test/sql/vw_conformidades.sql` em banco de teste com tabelas, constraints e a view atualizada, para validar seleção e edição do histórico. Nenhum desses arquivos aplica alterações ao banco publicado automaticamente.
+Para testar com PostgreSQL/psql, execute `\i test/sql/gestores_como_colaboradores.sql` na raiz. O teste cria tabelas e constraints reais em schema isolado e termina com `ROLLBACK`. Cobre os três perfis, UID inválido, administrador, inatividade, isolamento de workspace/unidade, deduplicação e conformidades na criação do banco do zero. Execute também `test/sql/vw_conformidade_colaborador.sql` em banco de teste com tabelas, constraints e a view atualizada, para validar seleção e edição do histórico. Nenhum desses arquivos aplica alterações ao banco publicado automaticamente.
 
 ## Como adicionar scripts
 
@@ -553,7 +553,7 @@ Para o **Executar Banco**, o próximo passo é o suporte a **SQL Server** e **My
 
 ## Colaboradores de todos os perfis
 
-`05_vw_colaboradores.sql` inclui COLABORADOR, GESTOR e GESTOR_WORKSPACE, sem filtrar status, cargo ou unidade inativos. `03_vw_cargos.sql` e `02_dim_resumo_funcionario.sql` contam os três perfis ativos; `01_dim_nr_catalogo.sql` inclui seus cargos na composição de NRs por unidade. `07_vw_conformidades.sql` mantém a escolha de um registro por usuário/NR e seus critérios de ordenação e aplicabilidade.
+`05_vw_colaboradores.sql` inclui COLABORADOR, GESTOR e GESTOR_WORKSPACE, sem filtrar status, cargo ou unidade inativos. `03_vw_cargos.sql` e `02_dim_resumo_funcionario.sql` contam os três perfis ativos; `01_dim_nr_catalogo.sql` inclui seus cargos na composição de NRs por unidade. `07_vw_conformidade_colaborador.sql` mantém a escolha de um registro por usuário/NR e seus critérios de ordenação e aplicabilidade.
 
 A API deve manter a restrição de workspace e unidades autorizadas. Na tela de colaboradores, `GET /collaborators?excludeSelf=true` oculta o próprio usuário; a view não filtra identidade e os seletores de conformidades continuam incluindo a própria conta. Listagem e detalhes não ampliam permissões de edição ou alteração de status. Atualizar os arquivos documenta a regra; aplicar as views ao banco e publicar a API são etapas separadas.
 

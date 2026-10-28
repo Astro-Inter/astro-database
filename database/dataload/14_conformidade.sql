@@ -1,6 +1,7 @@
 INSERT INTO conformidade
-    (usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
+    (tipo, usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
 SELECT
+    'COLABORADOR',
     turma_colaborador.usuario_id,
     evento.nr_id,
     TRUE,
@@ -28,7 +29,8 @@ WHERE conclusao.status = 'CONCLUIDO'
   ) OR (gestor.unidade_id = 1 AND participante.unidade_id = 1
         AND participante.email ~ '^[^.]+[.]c689bedf0fc64d4c[.]([1-9][0-9]?|100)@example[.]com$'))
 ON CONFLICT (conclusao_evento_id) DO UPDATE
-SET usuario_id = EXCLUDED.usuario_id,
+SET tipo = EXCLUDED.tipo,
+    usuario_id = EXCLUDED.usuario_id,
     nr_id = EXCLUDED.nr_id,
     aplicavel = EXCLUDED.aplicavel,
     data_validade = EXCLUDED.data_validade,
@@ -37,8 +39,8 @@ SET usuario_id = EXCLUDED.usuario_id,
 -- SCRUM-172: NRs aplicáveis ao cargo ainda sem conclusão permanecem sem validade.
 -- Cada funcionário tem duas NRs aplicáveis: 60 registros por conclusão e 140 por análise.
 INSERT INTO conformidade
-    (usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
-SELECT participante.id_usuario, cargo_nr.nr_id, TRUE, NULL, 'MANUAL', NULL
+    (tipo, usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
+SELECT 'COLABORADOR', participante.id_usuario, cargo_nr.nr_id, TRUE, NULL, 'MANUAL', NULL
 FROM usuario participante
 INNER JOIN cargo_nr cargo_nr ON cargo_nr.cargo_id = participante.cargo_id
 INNER JOIN unidade_nr unidade_nr
@@ -49,4 +51,20 @@ WHERE participante.unidade_id = 1
   AND NOT EXISTS (
       SELECT 1 FROM conformidade existente
       WHERE existente.usuario_id = participante.id_usuario AND existente.nr_id = cargo_nr.nr_id
+  );
+
+-- SCRUM-657: requisitos de unidade começam pendentes, sem simular aprovação de formulário.
+INSERT INTO conformidade
+    (tipo, unidade_id, nr_id, aplicavel, data_validade, origem)
+SELECT 'UNIDADE', unidade.id_unidade, requisito.nr_id, TRUE, NULL, 'MANUAL'
+FROM unidade_nr requisito
+INNER JOIN unidade ON unidade.id_unidade = requisito.unidade_id
+INNER JOIN nr_catalogo nr ON nr.codigo_nr = requisito.nr_id
+WHERE unidade.ativo = TRUE
+  AND nr.revogada = FALSE
+  AND NOT EXISTS (
+      SELECT 1 FROM conformidade existente
+      WHERE existente.tipo = 'UNIDADE'
+        AND existente.unidade_id = unidade.id_unidade
+        AND existente.nr_id = requisito.nr_id
   );

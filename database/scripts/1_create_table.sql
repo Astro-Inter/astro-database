@@ -272,6 +272,9 @@ COMMENT ON COLUMN evidencia.tamanho_byte IS
 
 CREATE TABLE conformidade (
     id_conformidade BIGSERIAL,
+    tipo VARCHAR(20),
+    unidade_id BIGINT,
+    formulario_resposta_id VARCHAR(100),
     usuario_id BIGINT,
     nr_id INTEGER,
     aplicavel BOOLEAN,
@@ -280,13 +283,16 @@ CREATE TABLE conformidade (
     conclusao_evento_id BIGINT
 );
 
-COMMENT ON TABLE conformidade IS 'Estado de conformidade de um usuário em relação a uma Norma Regulamentadora.';
+COMMENT ON TABLE conformidade IS 'Histórico de conformidade de um colaborador ou unidade em relação a uma NR.';
+COMMENT ON COLUMN conformidade.tipo IS 'Destinatário: COLABORADOR ou UNIDADE. Exatamente um dos vínculos usuario_id e unidade_id deve estar preenchido.';
+COMMENT ON COLUMN conformidade.unidade_id IS 'Unidade avaliada, exclusivamente para conformidade do tipo UNIDADE.';
+COMMENT ON COLUMN conformidade.formulario_resposta_id IS 'Identificador do formulário aprovado no MongoDB. A API valida a referência; não há FK entre bancos.';
 COMMENT ON COLUMN conformidade.id_conformidade IS 'Identificador interno e autoincrementado do registro de conformidade.';
 COMMENT ON COLUMN conformidade.usuario_id IS 'Usuário ao qual a conformidade pertence.';
 COMMENT ON COLUMN conformidade.nr_id IS 'Norma Regulamentadora avaliada no registro de conformidade.';
 COMMENT ON COLUMN conformidade.aplicavel IS 'Indica se a NR é aplicável ao usuário no contexto avaliado.';
 COMMENT ON COLUMN conformidade.data_validade IS 'Data limite da conformidade, quando houver validade definida.';
-COMMENT ON COLUMN conformidade.origem IS 'Origem do registro: MANUAL ou EVENTO.';
+COMMENT ON COLUMN conformidade.origem IS 'Origem do registro: MANUAL, EVENTO ou FORMULARIO.';
 COMMENT ON COLUMN conformidade.conclusao_evento_id IS 'Conclusão que originou a conformidade, quando existir.';
 
 CREATE TABLE acesso (
