@@ -9,7 +9,10 @@ CREATE TABLE usuario (
     id_usuario BIGINT PRIMARY KEY, nome VARCHAR(255), unidade_id BIGINT,
     firebase_uid TEXT UNIQUE, tipo VARCHAR(50), status VARCHAR(50)
 );
-CREATE TABLE evento (id_evento BIGINT PRIMARY KEY, titulo VARCHAR(255), status VARCHAR(50));
+CREATE TABLE evento (
+    id_evento BIGINT PRIMARY KEY, titulo VARCHAR(255),
+    status VARCHAR(50), modo_conclusao VARCHAR(50)
+);
 CREATE TABLE turma (id_turma BIGINT PRIMARY KEY, evento_id BIGINT, data_termino TIMESTAMP);
 CREATE TABLE turma_colaborador (
     id_turma_colaborador BIGINT PRIMARY KEY, turma_id BIGINT, usuario_id BIGINT,
@@ -31,7 +34,9 @@ INSERT INTO usuario VALUES
     (5, 'Admin', 1, 'admin', 'ADMIN', 'ATIVO'),
     (6, 'Gestor inativo', 1, 'inativo', 'GESTOR', 'DESATIVADO'),
     (7, 'Sem eventos', 1, 'sem-eventos', 'COLABORADOR', 'PRE_CADASTRADO');
-INSERT INTO evento VALUES (1, 'Treinamento', 'ATIVO'), (2, 'Cancelado', 'CANCELADO');
+INSERT INTO evento VALUES
+    (1, 'Treinamento', 'ATIVO', 'COLABORADOR'),
+    (2, 'Cancelado', 'CANCELADO', 'GESTOR');
 INSERT INTO turma VALUES
     (1, 1, NULL), (2, 1, TIMESTAMP '2020-01-01 12:00:00'),
     (3, 2, TIMESTAMP '2099-01-01 12:00:00');
@@ -43,10 +48,13 @@ INSERT INTO conclusao_evento VALUES (2, 'CONCLUIDO'), (3, 'REJEITADO'), (4, 'PEN
 DO $$ BEGIN
     ASSERT (SELECT COUNT(*) = 3 FROM fn_carrega_evento_colaborador('gestor', 2)),
         'Manter colaborador inativo, múltiplas turmas, evento cancelado e turma encerrada';
-    ASSERT (SELECT row(id_colaborador, nome_colaborador, id_evento, titulo_evento, status_evento)
-                = row(2::BIGINT, 'Ana'::VARCHAR, 1::BIGINT, 'Treinamento'::VARCHAR, 'ATIVO'::VARCHAR)
+    ASSERT (SELECT row(id_colaborador, nome_colaborador, id_evento, titulo_evento, status_evento, modo_conclusao)
+                = row(2::BIGINT, 'Ana'::VARCHAR, 1::BIGINT, 'Treinamento'::VARCHAR, 'ATIVO'::VARCHAR, 'COLABORADOR'::VARCHAR)
             FROM fn_carrega_evento_colaborador('gestor', 2) WHERE data_limite_turma IS NULL),
         'Retornar os campos do colaborador e do evento';
+    ASSERT (SELECT modo_conclusao = 'GESTOR'
+            FROM fn_carrega_evento_colaborador('gestor', 2) WHERE id_evento = 2),
+        'Retornar o modo de conclusão do respectivo evento';
     ASSERT EXISTS (SELECT FROM fn_carrega_evento_colaborador('gestor', 2)
                    WHERE data_limite_turma IS NULL AND status_conclusao IS NULL),
         'Preservar prazo nulo e ausência de conclusão';

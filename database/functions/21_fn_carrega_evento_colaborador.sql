@@ -9,14 +9,15 @@ RETURNS TABLE (
     titulo_evento VARCHAR(255),
     data_limite_turma TIMESTAMP,
     status_conclusao VARCHAR(50),
-    status_evento VARCHAR(50)
+    status_evento VARCHAR(50),
+    modo_conclusao VARCHAR(50)
 )
 LANGUAGE sql
 STABLE
 SECURITY INVOKER
 AS $$
     SELECT u.id_usuario, u.nome, e.id_evento, e.titulo,
-           t.data_termino, ce.status, e.status
+           t.data_termino, ce.status, e.status, e.modo_conclusao
     FROM usuario u
     INNER JOIN unidade un ON un.id_unidade = u.unidade_id
     INNER JOIN turma_colaborador tc ON tc.usuario_id = u.id_usuario
@@ -43,4 +44,4 @@ AS $$
 $$;
 
 COMMENT ON FUNCTION fn_carrega_evento_colaborador(TEXT, BIGINT) IS
-'Lista os eventos do colaborador indicado por ID, restritos ao workspace e às unidades permitidas ao GESTOR ou GESTOR_WORKSPACE ativo identificado pelo Firebase UID. Retorna id_colaborador, nome_colaborador, id_evento, titulo_evento, data_limite_turma, status_conclusao e status_evento, com uma linha por participação em turma e ordenação por evento, turma e participação. Preserva múltiplas turmas do mesmo evento, todos os status do colaborador e do evento, prazos encerrados ou nulos e status_conclusao nulo quando não existe conclusão. Inclui os perfis COLABORADOR, GESTOR e GESTOR_WORKSPACE, permitindo consultar a própria conta. Não restringe eventos ao gestor que os criou. Workspace é derivado do solicitante. Retorna zero linhas para UID ausente, vazio, inexistente, inativo ou de perfil não autorizado, ID nulo ou inexistente, colaborador de outro perfil ou fora do workspace e das unidades autorizadas. O mapeamento para nomes em inglês pertence à API.';
+'Lista os eventos do colaborador indicado por ID, restritos ao workspace e às unidades permitidas ao GESTOR ou GESTOR_WORKSPACE ativo identificado pelo Firebase UID. Retorna id_colaborador, nome_colaborador, id_evento, titulo_evento, data_limite_turma, status_conclusao, status_evento e modo_conclusao do evento, com uma linha por participação em turma e ordenação por evento, turma e participação. Preserva múltiplas turmas do mesmo evento, todos os status do colaborador e do evento, prazos encerrados ou nulos e status_conclusao nulo quando não existe conclusão. Inclui os perfis COLABORADOR, GESTOR e GESTOR_WORKSPACE, permitindo consultar a própria conta. Não restringe eventos ao gestor que os criou. Workspace é derivado do solicitante. Retorna zero linhas para UID ausente, vazio, inexistente, inativo ou de perfil não autorizado, ID nulo ou inexistente, colaborador de outro perfil ou fora do workspace e das unidades autorizadas. O mapeamento para nomes em inglês pertence à API.';
