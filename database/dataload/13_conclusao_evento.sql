@@ -1,6 +1,7 @@
 WITH participacoes AS (
     SELECT
         turma_colaborador.id_turma_colaborador,
+        evento.modo_conclusao,
         turma.data_termino,
         nr.tempo_reciclagem_mes,
         ROW_NUMBER() OVER (
@@ -28,6 +29,7 @@ WITH participacoes AS (
 dados AS (
     SELECT
         id_turma_colaborador,
+        modo_conclusao,
         CASE
             WHEN MOD(ordem, 5) = 0 THEN 'PENDENTE'
             WHEN MOD(ordem, 5) = 1 THEN 'REJEITADO'
@@ -66,6 +68,7 @@ SELECT
     data_validade,
     motivo_rejeicao
 FROM dados
+WHERE NOT (modo_conclusao = 'GESTOR' AND status = 'PENDENTE')
 ON CONFLICT (turma_colaborador_id) DO UPDATE
 SET status = EXCLUDED.status,
     data_conclusao = EXCLUDED.data_conclusao,
@@ -73,7 +76,7 @@ SET status = EXCLUDED.status,
     data_validade = EXCLUDED.data_validade,
     motivo_rejeicao = EXCLUDED.motivo_rejeicao;
 
--- SCRUM-172: 60 conclusões validadas e 40 pendências nos eventos futuros.
+-- SCRUM-172: eventos futuros do tipo GESTOR mantêm a participação sem conclusão.
 INSERT INTO conclusao_evento
     (turma_colaborador_id, status, data_conclusao, data_validacao, data_validade, motivo_rejeicao)
 SELECT
@@ -91,6 +94,7 @@ INNER JOIN evento evento ON evento.id_evento = turma.evento_id
 INNER JOIN usuario gestor ON gestor.id_usuario = evento.gestor_id
 INNER JOIN nr_catalogo nr ON nr.codigo_nr = evento.nr_id
 WHERE participante.unidade_id = 1
+  AND (evento.modo_conclusao <> 'GESTOR' OR evento.status = 'CONCLUIDO')
   AND participante.email ~ '^[^.]+[.]c689bedf0fc64d4c[.]([1-9][0-9]?|100)@example[.]com$'
   AND gestor.unidade_id = 1 AND gestor.tipo IN ('GESTOR', 'GESTOR_WORKSPACE')
   AND evento.titulo IN (
