@@ -1,0 +1,50 @@
+{
+  "id": "viewed-notificacoes",
+  "title": "Visualizações de notificações",
+  "key": "notificacoes:visualizados:{id_usuario}",
+  "type": "Set",
+  "category": "Visualização",
+  "status": "Implementado",
+  "description": "Mantém a leitura individual por usuário, evitando marcar um recurso como visualizado para todos. NotificationController registra e consulta a visualização de notificações do usuário; HomeService usa o mesmo conjunto.",
+  "ttl": "Sem TTL definido no ViewedService; os membros persistem até remoção explícita externa.",
+  "producer": "astro-api · ViewedService.markViewed",
+  "consumer": "astro-api · ViewedService.findViewed e serviços do domínio",
+  "commands": [
+    "SADD notificacoes:visualizados:{id_usuario} <id_item>",
+    "SMISMEMBER notificacoes:visualizados:{id_usuario} <id_item> [<id_item> ...]"
+  ],
+  "fields": [
+    {
+      "name": "id_usuario",
+      "type": "Long",
+      "description": "ID PostgreSQL do usuário autorizado."
+    },
+    {
+      "name": "membro",
+      "type": "String",
+      "description": "ID do item convertido em texto; formulários usam UUID e demais recursos usam seus IDs."
+    }
+  ],
+  "example": [
+    "101",
+    "102"
+  ],
+  "notes": [
+    "Um conjunto evita membros duplicados; a consulta remove IDs repetidos antes do SMISMEMBER.",
+    "IDs Java e campos HTTP continuam em inglês; somente os segmentos da chave Redis usam português.",
+    "Não existe limpeza automática dos IDs de itens removidos. A autorização do recurso é feita no fluxo chamador.",
+    "Os comandos ilustram a estrutura; a existência de uma operação no serviço genérico não comprova que todas as famílias possuam produtor."
+  ],
+  "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/common/service/ViewedService.java",
+      "symbol": "findViewed / markViewed / key"
+    },
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/home/service/HomeService.java",
+      "symbol": "loadHome / loadManagerHome"
+    }
+  ]
+}

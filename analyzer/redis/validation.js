@@ -12,7 +12,7 @@ export function validateRedisDocument(document, modeling = false) {
   }
   if (!text(document, ['id', 'title', 'key', 'type', 'category', 'status', 'description', 'ttl', 'producer', 'consumer'])) throw new Error('Informe id, title, key, type, category, status, description, ttl, producer e consumer como texto não vazio.');
   if (!['Implementado', 'Proposta'].includes(document.status)) throw new Error('status deve ser Implementado ou Proposta.');
-  if (!['List', 'String'].includes(document.type)) throw new Error('type deve ser List ou String.');
+  if (!['List', 'String', 'Set', 'Pub/Sub'].includes(document.type)) throw new Error('type deve ser List, String, Set ou Pub/Sub.');
   for (const key of ['commands', 'notes']) if (!strings(document[key])) throw new Error(`${key} deve ser uma lista de textos.`);
   if (!Array.isArray(document.fields) || !document.fields.every((field) => text(field, ['name', 'type', 'description']))) throw new Error('fields deve conter name, type e description.');
   if (document.example === undefined) throw new Error('Informe um exemplo ilustrativo.');

@@ -1,0 +1,47 @@
+{
+  "id": "chat-unread",
+  "title": "Mensagens não lidas por destinatário",
+  "key": "conversa:nao_lidas:{id_conversa}:{id_usuario}",
+  "type": "String",
+  "category": "Contador",
+  "status": "Implementado",
+  "description": "Mantém o número de mensagens novas de cada participante. A listagem lê vários contadores em lote; abrir a conversa limpa somente o contador do usuário autenticado após autorizar sua participação.",
+  "ttl": "Sem TTL definido; DEL ao marcar a conversa como lida.",
+  "producer": "astro-api · ChatService.send (Lua com INCR)",
+  "consumer": "astro-api · ChatService.listConversations / markAsRead",
+  "commands": [
+    "INCR conversa:nao_lidas:{id_conversa}:{id_usuario}",
+    "MGET <chaves_das_conversas>",
+    "DEL conversa:nao_lidas:{id_conversa}:{id_usuario}"
+  ],
+  "fields": [
+    {
+      "name": "id_conversa",
+      "type": "UUID",
+      "description": "Identificador da conversa em MongoDB."
+    },
+    {
+      "name": "id_usuario",
+      "type": "Long",
+      "description": "ID PostgreSQL do destinatário."
+    },
+    {
+      "name": "valor",
+      "type": "String numérica",
+      "description": "Contador inteiro não negativo; chave ausente equivale a zero."
+    }
+  ],
+  "example": "3",
+  "notes": [
+    "O incremento e o registro de deduplicação executam no mesmo script Lua.",
+    "Falhas Redis são propagadas; o serviço não transforma indisponibilidade em contador zero.",
+    "As mensagens e a participação na conversa permanecem em MongoDB; o contador não substitui o histórico."
+  ],
+  "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/chat/service/ChatService.java",
+      "symbol": "send / unreadKey / markAsRead / listConversations"
+    }
+  ]
+}

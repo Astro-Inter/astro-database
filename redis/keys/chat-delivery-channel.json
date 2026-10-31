@@ -1,0 +1,45 @@
+{
+  "id": "chat-delivery-channel",
+  "title": "Canal de entrega de mensagens",
+  "key": "astro:conversa:entrega:v1",
+  "type": "Pub/Sub",
+  "category": "Canal",
+  "status": "Implementado",
+  "description": "Distribui eventos de mensagens entre as instâncias da API; cada instância encaminha o evento para as sessões WebSocket do destinatário. Nenhum assinante gera falha de entrega tratada pelo fluxo de envio.",
+  "ttl": "Não se aplica: canal Pub/Sub não é chave persistida e não possui TTL ou histórico.",
+  "producer": "astro-api · RedisChatMessagePublisher",
+  "consumer": "astro-api · ChatRedisPubSubConfig e listener correspondente",
+  "commands": [
+    "PUBLISH astro:conversa:entrega:v1 <evento_json>",
+    "SUBSCRIBE astro:conversa:entrega:v1"
+  ],
+  "fields": [
+    {
+      "name": "evento",
+      "type": "JSON",
+      "description": "Contrato interno de entrega; mantém os atributos Java/JSON em inglês para compatibilidade."
+    }
+  ],
+  "example": {
+    "recipientId": 25,
+    "message": {
+      "id": "mensagem-exemplo"
+    }
+  },
+  "notes": [
+    "Pub/Sub não oferece fila, persistência ou repetição para assinantes desconectados.",
+    "Todos os publicadores e assinantes devem usar o mesmo canal. O payload não foi traduzido."
+  ],
+  "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/chat/messaging/RedisChatMessagePublisher.java",
+      "symbol": "publish"
+    },
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/chat/config/ChatRedisPubSubConfig.java",
+      "symbol": "chatRedisMessageListenerContainer"
+    }
+  ]
+}

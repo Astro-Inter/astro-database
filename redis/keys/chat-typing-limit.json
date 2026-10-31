@@ -1,0 +1,40 @@
+{
+  "id": "chat-typing-limit",
+  "title": "Limite de eventos de digitação",
+  "key": "conversa:digitacao:limite:{id_remetente}:{id_destinatario}",
+  "type": "String",
+  "category": "Controle de frequência",
+  "status": "Implementado",
+  "description": "Reduz eventos repetidos enquanto uma pessoa digita, evitando tráfego excessivo no Redis e no WebSocket. O limite é compartilhado pelas instâncias da API.",
+  "ttl": "1500 milissegundos em SET NX; DEL quando typing=false.",
+  "producer": "astro-api · RedisChatTypingPublisher.publish",
+  "consumer": "astro-api · RedisChatTypingPublisher.publish",
+  "commands": [
+    "SET conversa:digitacao:limite:{id_remetente}:{id_destinatario} 1 NX PX 1500",
+    "DEL conversa:digitacao:limite:{id_remetente}:{id_destinatario}"
+  ],
+  "fields": [
+    {
+      "name": "id_remetente / id_destinatario",
+      "type": "Long",
+      "description": "IDs PostgreSQL dos participantes autorizados."
+    },
+    {
+      "name": "valor",
+      "type": "String",
+      "description": "Marcador 1; não contém texto da mensagem."
+    }
+  ],
+  "example": "1",
+  "notes": [
+    "O evento somente é publicado quando o SET NX permite. A expiração libera novas publicações.",
+    "O evento de parada de digitação remove o marcador e é publicado imediatamente."
+  ],
+  "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/chat/messaging/RedisChatTypingPublisher.java",
+      "symbol": "publish"
+    }
+  ]
+}

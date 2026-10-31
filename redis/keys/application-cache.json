@@ -5,7 +5,7 @@
   "type": "String",
   "category": "Cache",
   "status": "Proposta",
-  "description": "Guardar respostas frequentemente consultadas e buscar primeiro no cache, recorrendo à origem quando a chave não existir. Nenhuma família de chaves Redis de cache foi localizada.",
+  "description": "Proposta de cache genérico de consultas. O cache concreto de fotos já está implementado e possui contrato próprio usuario:foto:{id_usuario}; esta proposta não representa esse cache.",
   "ttl": "A definir por recurso; proposta exige expiração e regra de invalidação.",
   "producer": "Serviço responsável pela consulta · a definir",
   "consumer": "Serviço responsável pela consulta · a definir",
