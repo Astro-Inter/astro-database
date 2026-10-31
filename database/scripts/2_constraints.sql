@@ -361,3 +361,91 @@ ALTER TABLE evento_astro
     ALTER COLUMN criado_em SET NOT NULL,
     ALTER COLUMN criado_em SET DEFAULT CURRENT_DATE,
     ADD CONSTRAINT pk_evento_astro PRIMARY KEY (id_evento);
+
+-- A regra depende de quatro tabelas e não pode ser expressa por um CHECK local.
+CREATE OR REPLACE FUNCTION fn_impedir_conclusao_pendente_gestor()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_modo_conclusao VARCHAR(50);
+    v_pendente BOOLEAN := FALSE;
+BEGIN
+    IF TG_TABLE_NAME = 'conclusao_evento' THEN
+        IF NEW.status <> 'PENDENTE' THEN
+            RETURN NEW;
+        END IF;
+
+        -- Impede que os vínculos ou o modo mudem durante a validação.
+        SELECT e.modo_conclusao INTO v_modo_conclusao
+        FROM turma_colaborador tc
+        INNER JOIN turma t ON t.id_turma = tc.turma_id
+        INNER JOIN evento e ON e.id_evento = t.evento_id
+        WHERE tc.id_turma_colaborador = NEW.turma_colaborador_id
+        FOR SHARE OF tc, t, e;
+
+        v_pendente := v_modo_conclusao = 'GESTOR';
+    ELSIF TG_TABLE_NAME = 'evento' THEN
+        IF NEW.modo_conclusao <> 'GESTOR' THEN
+            RETURN NEW;
+        END IF;
+
+        SELECT EXISTS (
+            SELECT 1 FROM conclusao_evento ce
+            INNER JOIN turma_colaborador tc ON tc.id_turma_colaborador = ce.turma_colaborador_id
+            INNER JOIN turma t ON t.id_turma = tc.turma_id
+            WHERE t.evento_id = NEW.id_evento AND ce.status = 'PENDENTE'
+        ) INTO v_pendente;
+    ELSIF TG_TABLE_NAME = 'turma' THEN
+        SELECT e.modo_conclusao INTO v_modo_conclusao
+        FROM evento e WHERE e.id_evento = NEW.evento_id
+        FOR SHARE;
+
+        IF v_modo_conclusao = 'GESTOR' THEN
+            SELECT EXISTS (
+                SELECT 1 FROM conclusao_evento ce
+                INNER JOIN turma_colaborador tc ON tc.id_turma_colaborador = ce.turma_colaborador_id
+                WHERE tc.turma_id = NEW.id_turma AND ce.status = 'PENDENTE'
+            ) INTO v_pendente;
+        END IF;
+    ELSIF TG_TABLE_NAME = 'turma_colaborador' THEN
+        SELECT e.modo_conclusao INTO v_modo_conclusao
+        FROM turma t
+        INNER JOIN evento e ON e.id_evento = t.evento_id
+        WHERE t.id_turma = NEW.turma_id
+        FOR SHARE OF t, e;
+
+        IF v_modo_conclusao = 'GESTOR' THEN
+            SELECT EXISTS (
+                SELECT 1 FROM conclusao_evento ce
+                WHERE ce.turma_colaborador_id = NEW.id_turma_colaborador
+                  AND ce.status = 'PENDENTE'
+            ) INTO v_pendente;
+        END IF;
+    END IF;
+
+    IF v_pendente THEN
+        RAISE EXCEPTION USING
+            ERRCODE = '23514',
+            CONSTRAINT = 'ck_conclusao_evento_gestor_sem_pendencia',
+            MESSAGE = 'Eventos com modo de conclusão GESTOR não permitem conclusões PENDENTE.';
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_conclusao_evento_gestor_sem_pendencia
+BEFORE INSERT OR UPDATE OF status, turma_colaborador_id ON conclusao_evento
+FOR EACH ROW EXECUTE FUNCTION fn_impedir_conclusao_pendente_gestor();
+
+CREATE TRIGGER trg_evento_gestor_sem_pendencia
+BEFORE UPDATE OF modo_conclusao ON evento
+FOR EACH ROW EXECUTE FUNCTION fn_impedir_conclusao_pendente_gestor();
+
+CREATE TRIGGER trg_turma_gestor_sem_pendencia
+BEFORE UPDATE OF evento_id ON turma
+FOR EACH ROW EXECUTE FUNCTION fn_impedir_conclusao_pendente_gestor();
+
+CREATE TRIGGER trg_turma_colaborador_gestor_sem_pendencia
+BEFORE UPDATE OF turma_id ON turma_colaborador
+FOR EACH ROW EXECUTE FUNCTION fn_impedir_conclusao_pendente_gestor();
