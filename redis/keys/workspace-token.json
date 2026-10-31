@@ -1,7 +1,7 @@
 {
   "id": "workspace-token",
-  "title": "Código de acesso ao espaço de trabalho",
-  "key": "processamento:email:espaco_trabalho:chave_acesso:{email_normalizado}",
+  "title": "Código de acesso ao workspace",
+  "key": "processamento:email:workspace:chave_acesso:{email_normalizado}",
   "type": "String",
   "category": "Código de acesso",
   "status": "Implementado",
@@ -10,8 +10,8 @@
   "producer": "astro-email-worker · createWorkspaceAccessToken",
   "consumer": "astro-api · UserService.verifyAccessKey",
   "commands": [
-    "SET processamento:email:espaco_trabalho:chave_acesso:<email_normalizado> <codigo>",
-    "GET processamento:email:espaco_trabalho:chave_acesso:<email_normalizado>"
+    "SET processamento:email:workspace:chave_acesso:<email_normalizado> <codigo>",
+    "GET processamento:email:workspace:chave_acesso:<email_normalizado>"
   ],
   "fields": [
     {
@@ -27,7 +27,7 @@
   ],
   "example": "123456",
   "notes": [
-    "WORKSPACE_ACCESS_TOKEN_PREFIX deve ter o mesmo valor em API e worker. O padrão documentado é processamento:email:espaco_trabalho:chave_acesso:; os nomes das variáveis de ambiente permanecem os mesmos.",
+    "WORKSPACE_ACCESS_TOKEN_PREFIX deve ter o mesmo valor em API e worker. O padrão documentado é processamento:email:workspace:chave_acesso:; os nomes das variáveis de ambiente permanecem os mesmos.",
     "Um novo SET substitui o código anterior. A API apenas compara o código; não faz DEL nem consome o código uma única vez.",
     "No fluxo COLABORADOR, a API exige usuário COLABORADOR/PRE_CADASTRADO; no fluxo GESTOR_WORKSPACE, a consulta não exige cadastro PostgreSQL.",
     "Não registrar o valor do código ou copiar dados reais para exemplos."

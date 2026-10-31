@@ -10,7 +10,7 @@
     },
     {
       "title": "Nomes e formatos",
-      "description": "Segmentos persistidos usam português, sem acentos, separados por dois-pontos. IDs e e-mails não são traduzidos. DTOs, nomes Java, propriedades JSON e variáveis de ambiente continuam com seus contratos existentes. Campos descritivos id/key/type destes documentos pertencem ao catálogo, não a hashes no Redis."
+      "description": "Segmentos persistidos usam português, sem acentos, separados por dois-pontos; workspace é uma exceção permitida e mantém esse nome. IDs e e-mails não são traduzidos. DTOs, nomes Java, propriedades JSON e variáveis de ambiente continuam com seus contratos existentes. Campos descritivos id/key/type destes documentos pertencem ao catálogo, não a hashes no Redis."
     },
     {
       "title": "Configuração compartilhada",
@@ -28,11 +28,11 @@
   "decisions": [
     {
       "title": "Validade e consumo dos códigos",
-      "description": "O código de espaço de trabalho é salvo sem TTL. A API compara os códigos sem removê-los após validação. Prazo e uso único são decisões de negócio ainda pendentes; não são garantias atuais."
+      "description": "O código de workspace é salvo sem TTL. A API compara os códigos sem removê-los após validação. Prazo e uso único são decisões de negócio ainda pendentes; não são garantias atuais."
     },
     {
       "title": "Entrega das filas",
-      "description": "LPOP remove o item antes do SMTP. O fluxo de colaboradores registra falha sem devolver o item; o de espaço de trabalho devolve em falha conhecida, mas continua vulnerável a interrupções. Definir confirmação e retentativas antes de prometer entrega garantida."
+      "description": "LPOP remove o item antes do SMTP. O fluxo de colaboradores registra falha sem devolver o item; o de workspace devolve em falha conhecida, mas continua vulnerável a interrupções. Definir confirmação e retentativas antes de prometer entrega garantida."
     },
     {
       "title": "Retenção de conjuntos",
@@ -77,7 +77,7 @@
     },
     {
       "id": "workspace-access",
-      "title": "Acesso ao espaço de trabalho",
+      "title": "Acesso ao workspace",
       "status": "Implementado",
       "steps": [
         {

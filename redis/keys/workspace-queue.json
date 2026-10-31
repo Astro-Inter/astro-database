@@ -1,17 +1,17 @@
 {
   "id": "workspace-queue",
-  "title": "Fila de acesso ao espaço de trabalho",
-  "key": "processamento:email:espaco_trabalho",
+  "title": "Fila de acesso ao workspace",
+  "key": "processamento:email:workspace",
   "type": "List",
   "category": "Fila",
   "status": "Implementado",
-  "description": "Solicita o envio do código para iniciar o cadastro do gestor de um espaço de trabalho. Mantém SMTP fora da requisição de cadastro.",
+  "description": "Solicita o envio do código para iniciar o cadastro do gestor de um workspace. Mantém SMTP fora da requisição de cadastro.",
   "ttl": "Sem TTL definido; o consumidor remove cada item com LPOP.",
   "producer": "astro-api · PreRegistrationQueueService.enqueueManagerEmail",
   "consumer": "astro-email-worker · processWorkspaceEmailQueue; configurar WORKSPACE_EMAIL_QUEUE_KEY com este nome",
   "commands": [
-    "RPUSH processamento:email:espaco_trabalho <email>",
-    "LPOP processamento:email:espaco_trabalho"
+    "RPUSH processamento:email:workspace <email>",
+    "LPOP processamento:email:workspace"
   ],
   "fields": [
     {

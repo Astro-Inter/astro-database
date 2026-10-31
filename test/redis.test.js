@@ -24,6 +24,8 @@ test('catálogo separa contratos implementados e propostas e preserva TTL e payl
   assert.equal(data.keys.find((key) => key.id === 'chat-delivery-channel').type, 'Pub/Sub');
   assert.equal(data.keys.find((key) => key.id === 'chat-unread').key, 'conversa:nao_lidas:{id_conversa}:{id_usuario}');
   assert.equal(data.keys.find((key) => key.id === 'user-avatar').key, 'usuario:foto:{id_usuario}');
+  assert.equal(data.keys.find((key) => key.id === 'workspace-queue').key, 'processamento:email:workspace');
+  assert.equal(data.keys.find((key) => key.id === 'workspace-token').key, 'processamento:email:workspace:chave_acesso:{email_normalizado}');
   assert.match(employee.example[0], /@/);
   assert.match(data.keys.find((key) => key.id === 'user-avatar').ttl, /PXAT/);
   assert.ok(redisMatches(employee, 'FILA'));

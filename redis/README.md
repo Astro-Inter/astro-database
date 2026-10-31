@@ -13,14 +13,14 @@ PostgreSQL mantém os cadastros, MongoDB guarda conversas e mensagens e R2 armaz
 - `analyzer/redis/`: validação de String, List, Set e Pub/Sub e geração de `generated/redis.json`.
 - `site/components/redis/`: catálogo, busca, fluxos e decisões apresentados pelo site.
 
-Os segmentos das chaves usam português sem acentos; IDs e e-mails não são traduzidos. Os campos dos documentos deste catálogo e os contratos Java/HTTP continuam em inglês. Canais Pub/Sub não são chaves armazenadas e não aparecem em SCAN.
+Os segmentos das chaves usam português sem acentos, preservando workspace como exceção; IDs e e-mails não são traduzidos. Os campos dos documentos deste catálogo e os contratos Java/HTTP continuam em inglês. Canais Pub/Sub não são chaves armazenadas e não aparecem em SCAN.
 
-API e worker precisam concordar nos prefixos `ACCESS_TOKEN_PREFIX` e `WORKSPACE_ACCESS_TOKEN_PREFIX`. O worker deve configurar `REDIS_QUEUE_KEY=processamento:email:colaborador` e `WORKSPACE_EMAIL_QUEUE_KEY=processamento:email:espaco_trabalho`. Os prefixos de código constam no catálogo; as variáveis mantêm seus nomes existentes.
+API e worker precisam concordar nos prefixos `ACCESS_TOKEN_PREFIX` e `WORKSPACE_ACCESS_TOKEN_PREFIX`. O worker deve configurar `REDIS_QUEUE_KEY=processamento:email:colaborador` e `WORKSPACE_EMAIL_QUEUE_KEY=processamento:email:workspace`. Os prefixos de código constam no catálogo; as variáveis mantêm seus nomes existentes.
 
 ## Base da revisão
 
 Contratos conferidos no código da API Astro e do astro-email-worker em 30/10/2026. O catálogo tem 14 contratos implementados no código e duas propostas (sessão de chatbot e cache genérico). Esse estado não confirma implantação ou configuração de produção. Não foi localizado ranking Redis.
 
-O levantamento anterior descrevia IDs nas filas de colaboradores e tokens por ID. O código atual usa e-mails normalizados em ambos. A validação dos códigos está em `UserService.verifyAccessKey`; ela compara o valor sem removê-lo. O código de espaço de trabalho continua sem TTL no worker. As limitações de entrega, retenção e produtores não localizados estão em Decisões de uso.
+O levantamento anterior descrevia IDs nas filas de colaboradores e tokens por ID. O código atual usa e-mails normalizados em ambos. A validação dos códigos está em `UserService.verifyAccessKey`; ela compara o valor sem removê-lo. O código de workspace continua sem TTL no worker. As limitações de entrega, retenção e produtores não localizados estão em Decisões de uso.
 
 Este módulo documenta contratos; não conecta ao Redis nem executa os comandos dos exemplos. Nenhuma credencial, código real ou dado pessoal foi copiado. Para validar, use `node --test test/redis.test.js`; para gerar o site, use `npm run build`.
