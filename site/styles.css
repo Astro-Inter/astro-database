@@ -49,23 +49,43 @@
 .mongo-area .sidebar-nav a.active .icon { color: #62cc8b; }
 .mongo-detail { min-width: 0; }
 .mongo-model-toolbar, .mongo-model-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.mongo-model-toolbar { margin: 18px 0; }
+.mongo-model-toolbar { margin: 16px 0; }
+.mongo-model-card > .card-head .eyebrow { color: #176338; margin: 0 0 6px; }
+.mongo-model-card > .card-head h2 { margin: 0; }
+.mongo-model-card > .card-head .muted { margin-bottom: 0; }
+.mongo-model-overview { display: flex; flex-wrap: wrap; gap: 12px 26px; padding: 18px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.mongo-model-overview strong { color: #176338; font-size: 17px; margin-right: 4px; font-variant-numeric: tabular-nums; }
+.mongo-model-navigation { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-top: 18px; }
+.mongo-model-switch { display: flex; padding: 4px; border-radius: 9px; background: #edf2ef; }
+.mongo-model-switch button { border: 0; background: transparent; padding: 10px 14px; border-radius: 6px; color: #506459; font: inherit; font-size: 12px; cursor: pointer; }
+.mongo-model-switch button[aria-pressed="true"] { background: #fff; color: #176338; box-shadow: 0 1px 5px #183c2020; font-weight: 650; }
+.mongo-model-switch button:focus-visible, .mongo-model-scope select:focus-visible { outline: 2px solid #176338; outline-offset: 3px; }
+.mongo-model-navigation-note { color: var(--muted); font-size: 11px; }
+.mongo-model-scope { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+.mongo-model-scope select { max-width: 250px; padding: 9px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink); }
 .mongo-model-controls { margin-left: auto; }
 .mongo-model-controls .icon-button { padding: 10px; }
 .mongo-model-controls output { font-size: 12px; min-width: 38px; text-align: center; }
-.mongo-model-canvas { height: 540px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: radial-gradient(#d9e1dc 1px, transparent 1px) 0 0 / 20px 20px #f7faf8; cursor: grab; touch-action: none; }
+.mongo-model-canvas { height: 600px; overflow: auto; border: 1px solid #d8e4dc; border-radius: 12px; background: radial-gradient(#d9e1dc 1px, transparent 1px) 0 0 / 20px 20px #f7faf8; cursor: grab; touch-action: none; }
 .mongo-model-canvas:active { cursor: grabbing; }
 .mongo-model-card.expanded .mongo-model-canvas { height: 75vh; }
 .mongo-model-svg { display: block; max-width: none; user-select: none; }
 .mongo-model-node { cursor: grab; }
-.mongo-model-node rect { fill: white; stroke: #c9d8cf; stroke-width: 1.5; }
+.mongo-model-node rect { fill: white; stroke: #c9d8cf; stroke-width: 1.5; filter: drop-shadow(0 3px 5px #173d2010); }
 .mongo-model-node.embedded rect { fill: #edf7f0; stroke-dasharray: 5 3; }
+.mongo-model-node:hover rect { stroke: #288d50; }
+.mongo-model-node line { stroke: #e3ece6; }
 .mongo-model-node.selected rect, .mongo-model-node:focus-visible rect { stroke: #176338; stroke-width: 3; }
-.mongo-model-node.dimmed { opacity: .28; }
-.mongo-model-kind { fill: #61776a; font: 9px sans-serif; letter-spacing: .08em; }
-.mongo-model-name { fill: #176338; font: bold 14px sans-serif; }
+.mongo-model-node.dimmed, .mongo-model-edge.dimmed { opacity: .22; }
+.mongo-model-kind { fill: #61776a; font: 10px Inter, sans-serif; letter-spacing: .1em; }
+.mongo-model-name { fill: #176338; font: 600 14px Consolas, monospace; }
+.mongo-model-subtitle { fill: var(--ink); font: 13px Inter, sans-serif; }
+.mongo-model-summary { fill: #61776a; font: 11px Inter, sans-serif; }
+.mongo-model-hint { fill: #506459; font: 10px Consolas, monospace; }
 .mongo-model-field { fill: var(--ink); font: 11px Consolas, monospace; }
-.mongo-model-type { fill: #62766a; font: 9px Consolas, monospace; }
+.mongo-model-type { fill: #62766a; font: 10px Consolas, monospace; }
+.mongo-model-edge text { fill: #416a9a; font: 10px Consolas, monospace; paint-order: stroke; stroke: #f7faf8; stroke-width: 5px; stroke-linejoin: round; }
+.mongo-model-edge.embedded text { fill: #176338; }
 .mongo-model-edge path { fill: none; stroke: #288d50; stroke-width: 1.8; }
 .mongo-model-edge.reference path { stroke: #416a9a; stroke-dasharray: 6 4; }
 #mongo-model-arrow path { fill: #288d50; }
@@ -74,8 +94,12 @@
 .mongo-model-legend i { display: inline-block; width: 22px; border-top: 2px solid #288d50; }
 .mongo-model-legend i.reference { border-top: 2px dashed #416a9a; }
 .mongo-model-note { color: var(--muted); font-size: 11px; line-height: 1.6; }
-.mongo-model-selection { display: flex; align-items: center; gap: 16px; justify-content: space-between; flex-wrap: wrap; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.mongo-model-selection { display: flex; align-items: center; gap: 16px; justify-content: space-between; flex-wrap: wrap; min-height: 85px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.mongo-model-selection > div:first-child { flex: 1; min-width: 200px; }
+.mongo-model-selection strong { font: 600 13px Consolas, monospace; overflow-wrap: anywhere; }
+.mongo-model-selection .eyebrow { font-size: 9px; margin: 0 0 7px; }
 .mongo-model-selection p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+@media (max-width: 650px) { .mongo-model-controls { margin-left: 0; } .mongo-model-toolbar > .search-box { width: 100%; } .mongo-model-canvas { height: 480px; } .mongo-model-switch { width: 100%; } .mongo-model-switch button { flex: 1; } .mongo-model-navigation-note { display: none; } .mongo-model-scope { max-width: 100%; } }
 .mongo-detail section { margin-top: 25px; scroll-margin-top: 85px; }
 .mongo-detail td { vertical-align: top; }
 .mongo-json.code { overflow: auto; max-height: 480px; padding: 16px 0; background: #121020; color: #e8e5ef; font-size: 13px; line-height: 1.8; }
