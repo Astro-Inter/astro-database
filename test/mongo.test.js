@@ -8,7 +8,14 @@ import { mongoMatches, mongoView } from '../site/components/mongo/mongo-view.js'
 
 test('catálogo documenta as propostas e preserva decisões em aberto', async () => {
   const data = await analyzeMongo({ write: false });
-  assert.equal(data.collections.length, 9);
+  assert.deepEqual(data.collections.map(collection => collection.name).sort(), [
+    'configuracoes_paineis', 'conversas', 'fila_entregas_chat', 'formularios', 'mensagens',
+    'notificacoes', 'nrs', 'nrs_pendentes', 'sessoes', 'sincronizacoes_catalogo_nrs',
+  ]);
+  const panels = data.collections.find(collection => collection.name === 'configuracoes_paineis');
+  assert.ok(panels.fields.some(field => field.name === 'estilo'));
+  assert.ok(panels.fields.some(field => field.name === 'configuracao.graficos[].consulta.metrica.campo'));
+  assert.equal(panels.example.estilo, 'trends');
   assert.deepEqual(data.issues, []);
   assert.ok(data.collections.every((collection) => collection.file.startsWith('mongo/collections/')));
   assert.ok(data.collections.find((collection) => collection.name === 'formularios').notes.some((note) => note.includes('Não há uma coleção')));
