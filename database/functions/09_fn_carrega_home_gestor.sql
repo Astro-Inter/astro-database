@@ -35,13 +35,15 @@ AS $$
             ON ce.turma_colaborador_id = tf.id_turma_colaborador
         WHERE u.tipo IN ('COLABORADOR', 'GESTOR', 'GESTOR_WORKSPACE') AND u.status = 'ATIVO'
     ), validacoes AS (
-        SELECT id_conclusao_evento, collaborator_name, titulo, data_conclusao
+        SELECT id_conclusao_evento, id_evento, id_usuario,
+               collaborator_name, titulo, data_conclusao
         FROM participacoes
         WHERE status_conclusao = 'PENDENTE'
           AND data_conclusao IS NOT NULL
           AND data_validacao IS NULL
     ), primeiras_validacoes AS (
-        SELECT id_conclusao_evento, collaborator_name, titulo, data_conclusao
+        SELECT id_conclusao_evento, id_evento, id_usuario,
+               collaborator_name, titulo, data_conclusao
         FROM validacoes
         ORDER BY data_conclusao, id_conclusao_evento
         LIMIT 3
@@ -63,6 +65,8 @@ AS $$
         'pending_validations', COALESCE((
             SELECT JSONB_AGG(JSONB_BUILD_OBJECT(
                 'id', v.id_conclusao_evento,
+                'event_id', v.id_evento,
+                'user_id', v.id_usuario,
                 'collaborator_name', v.collaborator_name,
                 'event_title', v.titulo
             ) ORDER BY v.data_conclusao, v.id_conclusao_evento)
