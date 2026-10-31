@@ -1,7 +1,268 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T02:51:50.675Z",
+  "generatedAt": "2026-10-31T18:17:37.307Z",
   "collections": [
+    {
+      "name": "configuracoes_paineis",
+      "title": "Configurações de painéis",
+      "description": "Configurações pessoais por usuário e workspace persistidas pela astro-dashboard-api. Dados analíticos continuam no Databricks.",
+      "status": "Implementação preparada; publicação pendente",
+      "pattern": "Documento por painel",
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string",
+          "description": "Chave composta de workspace, usuário e UUID do painel.",
+          "required": "Sim"
+        },
+        {
+          "name": "painel_id",
+          "type": "string",
+          "description": "UUID estável do painel.",
+          "required": "Sim"
+        },
+        {
+          "name": "usuario_id",
+          "type": "string",
+          "description": "Identificador do usuário Astro confirmado no servidor.",
+          "required": "Sim"
+        },
+        {
+          "name": "workspace_id",
+          "type": "string",
+          "description": "Workspace atual confirmado pelo PostgreSQL.",
+          "required": "Sim"
+        },
+        {
+          "name": "nome",
+          "type": "string",
+          "description": "Nome limpo sem marcador de aparência.",
+          "required": "Sim"
+        },
+        {
+          "name": "estilo",
+          "type": "string",
+          "description": "Identificador da ilustração do card.",
+          "required": "Sim"
+        },
+        {
+          "name": "versao",
+          "type": "number",
+          "description": "Versão incrementada atomicamente a cada edição.",
+          "required": "Sim"
+        },
+        {
+          "name": "criado_em",
+          "type": "date",
+          "description": "Data BSON de criação.",
+          "required": "Sim"
+        },
+        {
+          "name": "atualizado_em",
+          "type": "date",
+          "description": "Data BSON da última edição.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao",
+          "type": "object",
+          "description": "Filtros e gráficos editáveis; não contém resultados analíticos.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.filtros",
+          "type": "object",
+          "description": "inicio, fim e granularidade.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos",
+          "type": "array",
+          "description": "grafico_id, base_id, titulo, tipo, largura e consulta opcional.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos[].consulta",
+          "type": "object",
+          "description": "base, agrupamento, serie, metrica (campo, operacao), formula (operador, operando), condicoes (campo, operador, valor).",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.filtros.inicio",
+          "type": "string",
+          "description": "Data inicial inclusiva, no formato YYYY-MM-DD.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.filtros.fim",
+          "type": "string",
+          "description": "Data final inclusiva, no formato YYYY-MM-DD; intervalo de até 366 dias.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.filtros.granularidade",
+          "type": "string",
+          "description": "dia, semana, mes ou ano.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos[].grafico_id",
+          "type": "string",
+          "description": "UUID do gráfico, único dentro do painel.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos[].base_id",
+          "type": "string",
+          "description": "Identificador do indicador pronto ou custom para cálculo personalizado.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos[].titulo",
+          "type": "string",
+          "description": "Título do gráfico, até 120 caracteres.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos[].tipo",
+          "type": "string",
+          "description": "line, bar ou pie, conforme o catálogo.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos[].largura",
+          "type": "string",
+          "description": "half ou full.",
+          "required": "Sim"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.base",
+          "type": "string",
+          "description": "Identificador técnico da base autorizada.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.agrupamento",
+          "type": "string",
+          "description": "Campo autorizado para agrupamento ou none.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.serie",
+          "type": "string",
+          "description": "Campo autorizado para série opcional.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.metrica",
+          "type": "object",
+          "description": "Agregação com campo e operacao.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.metrica.campo",
+          "type": "string",
+          "description": "Campo autorizado da base.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.metrica.operacao",
+          "type": "string",
+          "description": "count, distinct, sum, avg, min ou max.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.formula",
+          "type": "object",
+          "description": "Cálculo opcional com operador e operando.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.formula.operador",
+          "type": "string",
+          "description": "add, subtract, multiply, divide ou percentage.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.formula.operando",
+          "type": "object",
+          "description": "Segunda agregação com campo e operacao, da mesma base.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.formula.operando.campo",
+          "type": "string",
+          "description": "Campo autorizado da segunda agregação.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.formula.operando.operacao",
+          "type": "string",
+          "description": "Operação de agregação permitida para o campo.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.condicoes",
+          "type": "array",
+          "description": "Até três condições opcionais.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.condicoes[].campo",
+          "type": "string",
+          "description": "Campo textual ou identificador autorizado.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.condicoes[].operador",
+          "type": "string",
+          "description": "equals ou not_equals.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.graficos[].consulta.condicoes[].valor",
+          "type": "string",
+          "description": "Valor textual limitado a 120 caracteres.",
+          "required": "Não"
+        }
+      ],
+      "example": {
+        "_id": "2:1:00000000-0000-4000-8000-000000000001",
+        "painel_id": "00000000-0000-4000-8000-000000000001",
+        "usuario_id": "1",
+        "workspace_id": "2",
+        "nome": "Indicadores",
+        "estilo": "trends",
+        "configuracao": {
+          "filtros": {
+            "inicio": "2026-10-01",
+            "fim": "2026-10-31",
+            "granularidade": "mes"
+          },
+          "graficos": []
+        },
+        "versao": 1,
+        "criado_em": {
+          "$date": "2026-10-31T12:00:00Z"
+        },
+        "atualizado_em": {
+          "$date": "2026-10-31T12:00:00Z"
+        }
+      },
+      "notes": [
+        "Proprietário e workspace vêm da autenticação e autorização atuais; não são aceitos no corpo HTTP.",
+        "Atualização e exclusão exigem a versão atual; conflito retorna 409.",
+        "Estilos: overview, trends, bars, donut, area, progress, comparison, scatter, activity e metrics.",
+        "O web importa o armazenamento local uma vez por conta/workspace e conserva uma cópia local. Nomes são limpos; o estilo tem campo próprio.",
+        "Contratos HTTP continuam em inglês e são convertidos na persistência.",
+        "Coleção criada na primeira gravação após configurar MONGODB_URI e MONGODB_DATABASE no Worker."
+      ],
+      "indexes": [
+        "_id_: único; chave composta garante isolamento e unicidade do painel.",
+        "Recomendado: usuario_id + workspace_id + atualizado_em (decrescente), para listagem. Ainda não provisionado."
+      ],
+      "file": "mongo/collections/configuracoes_paineis.json"
+    },
     {
       "name": "conversas",
       "title": "Conversas",

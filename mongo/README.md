@@ -12,6 +12,7 @@ Nomes dos arquivos `collections/*.json` correspondem às coleções. As chaves `
 
 | Coleção de destino | Finalidade |
 | --- | --- |
+| configuracoes_paineis | Configurações pessoais de painéis, incluindo estilo, filtros e gráficos |
 | formularios | Uma coleção compartilhada, documento por formulário, com perguntas, respostas e configuracao embutidas |
 | conversas | Participantes do chat |
 | mensagens | Mensagens vinculadas a conversas ou a remetente/destinatário explícitos |
@@ -35,3 +36,7 @@ O marcador legado `[ac1:f:i:c]` é convertido pela migração, usando as posiç�
 Consulte [o procedimento e as limitações](docs/migracao-padronizacao.md). `migrations/padronizar_documentos.py` inicia em simulação e não carrega variáveis em logs. Requer Python e pymongo. O modo de escrita exige backup vazio e declaração explícita de que os escritores estão interrompidos.
 
 Após editar o catálogo, execute `node --input-type=module -e "import { analyzeMongo } from './analyzer/mongo/index.js'; await analyzeMongo();"`. O snapshot `generated/mongo.json` é usado pelo site. Os scripts SQL, Redis e Neo4j são independentes desta alteração.
+
+## Painéis
+
+A astro-dashboard-api salva configurações na coleção `configuracoes_paineis`, com campos portugueses e referências `usuario_id` e `workspace_id`. A configuração é pessoal dentro do workspace. O web importa as visões locais uma vez, conserva a cópia antiga e passa a ler e gravar via API. O estilo fica em `estilo`, separado do nome. O Worker exige os secrets MONGODB_URI e MONGODB_DATABASE antes da publicação. Dados analíticos permanecem no Databricks.

@@ -121,7 +121,7 @@ def run():
         target = COLLECTIONS.get(source, source)
         if source != target and target in names:
             raise ValueError(f'Coleções {source} e {target} coexistem; mesclagem automática recusada.')
-        if target not in {'formularios','conversas','mensagens','notificacoes','sessoes','nrs','nrs_pendentes','fila_entregas_chat','sincronizacoes_catalogo_nrs'}:
+        if target not in {'configuracoes_paineis','formularios','conversas','mensagens','notificacoes','sessoes','nrs','nrs_pendentes','fila_entregas_chat','sincronizacoes_catalogo_nrs'}:
             raise ValueError(f'Coleção sem mapeamento revisado: {source}.')
         changed = 0
         count = 0
