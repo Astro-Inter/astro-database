@@ -1,0 +1,133 @@
+{
+  "name": "fila_entregas_chat",
+  "title": "Fila de entregas do chat",
+  "description": "Fila de entrega push produzida e consumida pela API Java.",
+  "status": "Implementada",
+  "pattern": "Documentos e referências",
+  "fields": [
+    {
+      "name": "_id",
+      "type": "string",
+      "description": "Identificador da entrega.",
+      "required": "Sim"
+    },
+    {
+      "name": "concluida",
+      "type": "boolean",
+      "description": "Indica entrega concluída.",
+      "required": "Não"
+    },
+    {
+      "name": "tentativas",
+      "type": "number",
+      "description": "Tentativas realizadas.",
+      "required": "Não"
+    },
+    {
+      "name": "proxima_tentativa_em",
+      "type": "date",
+      "description": "Próxima tentativa.",
+      "required": "Não"
+    },
+    {
+      "name": "expira_em",
+      "type": "date",
+      "description": "Expiração da entrada.",
+      "required": "Não"
+    },
+    {
+      "name": "reserva_token",
+      "type": "string",
+      "description": "Reserva da tentativa em processamento.",
+      "required": "Não"
+    },
+    {
+      "name": "evento",
+      "type": "object",
+      "description": "Evento pendente de entrega; removido ao concluir.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.versao",
+      "type": "number",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.mensagem_id",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.conversa_id",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.remetente_id",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.destinatario_id",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.workspace_id",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.destinatario_uid",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.nome_remetente",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.previa",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    },
+    {
+      "name": "evento.criado_em",
+      "type": "string",
+      "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+      "required": "Não"
+    }
+  ],
+  "example": {
+    "_id": "entrega-ficticia",
+    "concluida": false,
+    "tentativas": 0,
+    "proxima_tentativa_em": {
+      "$date": "2026-10-30T15:00:00Z"
+    },
+    "expira_em": {
+      "$date": "2026-11-01T15:00:00Z"
+    }
+  },
+  "notes": [
+    "Produtor e consumidor: ChatPushOutbox/ChatPushDispatcher na API Java atualizada.",
+    "Os campos Mongo são portugueses; o evento HTTP enviado ao serviço de notificações mantém o contrato camelCase.",
+    "Entrada concluída remove evento e reserva_token; o TTL de expira_em preserva a expiração original.",
+    "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+  ],
+  "indexes": [
+    "_id: único.",
+    "concluida + proxima_tentativa_em para seleção.",
+    "expira_em: TTL expireAfterSeconds=0."
+  ]
+}

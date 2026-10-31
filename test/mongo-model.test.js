@@ -6,10 +6,10 @@ import { createMongoModelState, mongoGraph, mongoModelLayout, mongoModelView } f
 test('modelagem deriva documentos embutidos dos campos sem inventar referências por IDs', async () => {
   const data = await analyzeMongo({ write: false });
   const graph = mongoGraph(data.collections);
-  assert.equal(graph.nodes.filter((node) => node.type === 'collection').length, 5);
+  assert.equal(graph.nodes.filter((node) => node.type === 'collection').length, 9);
   assert.ok(graph.edges.some((edge) => edge.from === 'sessoes' && edge.to === 'sessoes::mensagens'));
-  assert.ok(graph.edges.some((edge) => edge.from === 'forms' && edge.to === 'forms::perguntas'));
-  assert.equal(graph.edges.filter((edge) => edge.type === 'reference').length, 0);
+  assert.ok(graph.edges.some((edge) => edge.from === 'formularios' && edge.to === 'formularios::perguntas'));
+  assert.ok(graph.edges.some((edge) => edge.type === 'reference' && edge.from === 'mensagens' && edge.to === 'conversas'));
   const layout = mongoModelLayout(graph);
   for (const node of graph.nodes) assert.ok(layout.positions[node.id]);
 });

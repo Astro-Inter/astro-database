@@ -1,116 +1,272 @@
 {
   "name": "sessoes",
   "title": "Sessões de chatbot",
-  "description": "Sessões do chatbot com usuário, datas, mensagens embutidas, resumo, status, última rota e controle de ação pendente.",
-  "pattern": "Embedding · sessão",
-  "notes": [
-    "A collection se chama sessoes. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
-    "id_user é uma string. As mensagens usam role e content; o exemplo mostra os papéis human e assistant.",
-    "acao_pendente aparece como null na referência. O formato de uma ação preenchida ainda precisa ser documentado.",
-    "O exemplo mostra status ativa, ultima_rota direta, resumo vazio e resumo_indexado false. Os demais valores e as transições ainda precisam ser definidos.",
-    "A referência indica cinco índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
-    "Confirmar com o frontend se o histórico completo ou apenas a última conversa será exibido.",
-    "Definir a divisão de sessões extensas para evitar crescimento ilimitado do documento."
-  ],
+  "description": "Histórico por proprietário, mensagens e controle dos resumos.",
+  "status": "Implementada",
+  "pattern": "Documentos e referências",
   "fields": [
     {
       "name": "_id",
       "type": "string",
-      "description": "Identificador textual da sessão, em formato UUID na referência.",
-      "required": "A definir"
+      "description": "UUID da sessão.",
+      "required": "Sim"
     },
     {
-      "name": "id_user",
+      "name": "usuario_id",
       "type": "string",
-      "description": "Identificador textual do usuário associado à sessão.",
-      "required": "A definir"
-    },
-    {
-      "name": "acao_pendente",
-      "type": "null | a definir",
-      "description": "Ação pendente da sessão; null no exemplo. O tipo e a estrutura quando preenchida ainda precisam de definição.",
-      "required": "A definir"
+      "description": "UID Firebase do proprietário; não é o ID numérico PostgreSQL.",
+      "required": "Sim"
     },
     {
       "name": "iniciada_em",
       "type": "date",
       "description": "Início da sessão.",
-      "required": "A definir"
+      "required": "Não"
     },
     {
       "name": "atualizada_em",
       "type": "date",
-      "description": "Última interação.",
-      "required": "A definir"
+      "description": "Última atualização.",
+      "required": "Não"
     },
     {
-      "name": "resumo",
+      "name": "ultima_mensagem_em",
+      "type": "date",
+      "description": "Última mensagem; base da inatividade.",
+      "required": "Não"
+    },
+    {
+      "name": "encerrada_em",
+      "type": "date",
+      "description": "Encerramento quando aplicável.",
+      "required": "Não"
+    },
+    {
+      "name": "titulo",
       "type": "string",
-      "description": "Resumo da sessão.",
-      "required": "A definir"
+      "description": "Título resumido da conversa.",
+      "required": "Não"
     },
     {
-      "name": "resumo_indexado",
-      "type": "boolean",
-      "description": "Indica se o resumo foi indexado; false no exemplo.",
-      "required": "A definir"
+      "name": "ultima_mensagem_previa",
+      "type": "string",
+      "description": "Prévia para listagem.",
+      "required": "Não"
     },
     {
       "name": "status",
       "type": "string",
-      "description": "Estado da sessão; ativa no exemplo. Demais valores ainda a definir.",
-      "required": "A definir"
+      "description": "ativa, encerrando ou encerrada.",
+      "required": "Não"
     },
     {
       "name": "ultima_rota",
       "type": "string",
-      "description": "Última rota utilizada pelo chatbot; direta no exemplo. Demais valores ainda a definir.",
-      "required": "A definir"
+      "description": "Última rota do agente.",
+      "required": "Não"
+    },
+    {
+      "name": "acao_pendente",
+      "type": "object | null",
+      "description": "Rascunho de ação que exige confirmação explícita; mensagem_id, remetente_id, destinatario_id e sessao_id quando presentes.",
+      "required": "Não"
     },
     {
       "name": "mensagens",
       "type": "array<object>",
-      "description": "Mensagens embutidas.",
-      "required": "A definir"
+      "description": "Histórico embutido.",
+      "required": "Sim"
     },
     {
-      "name": "mensagens[].role",
+      "name": "mensagens[].papel",
       "type": "string",
-      "description": "Papel de quem enviou a mensagem; human e assistant no exemplo.",
-      "required": "A definir"
+      "description": "human ou assistant; valores do protocolo interno.",
+      "required": "Não"
     },
     {
-      "name": "mensagens[].content",
+      "name": "mensagens[].conteudo",
       "type": "string",
-      "description": "Conteúdo da mensagem.",
-      "required": "A definir"
+      "description": "Texto da mensagem.",
+      "required": "Não"
+    },
+    {
+      "name": "mensagens[].blocos",
+      "type": "array<object>",
+      "description": "Blocos estruturados em português: tipo, conteudo, titulo, dados etc.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo",
+      "type": "string",
+      "description": "Resumo da conversa.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_parcial",
+      "type": "string",
+      "description": "Checkpoint do resumo manual.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_ate",
+      "type": "number",
+      "description": "Posição do resumo manual.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_indexado",
+      "type": "boolean",
+      "description": "Resumo atual indexado no serviço vetorial.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_mensagens",
+      "type": "number",
+      "description": "Quantidade de mensagens representadas pelo resumo.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_ultima_mensagem_em",
+      "type": "date",
+      "description": "Versão temporal resumida.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_gerado_em",
+      "type": "date",
+      "description": "Geração do resumo.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_origem",
+      "type": "string",
+      "description": "Origem, como automatico.",
+      "required": "Não"
+    },
+    {
+      "name": "reserva_token",
+      "type": "string",
+      "description": "Token temporário de exclusão mútua.",
+      "required": "Não"
+    },
+    {
+      "name": "reserva_ate",
+      "type": "date",
+      "description": "Validade da reserva do chat.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_tarefa_token",
+      "type": "string",
+      "description": "Token da tarefa.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_tarefa_ate",
+      "type": "date",
+      "description": "Validade da reserva.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_tarefa_tentativas",
+      "type": "number",
+      "description": "Quantidade de tentativas.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_tarefa_proxima_tentativa",
+      "type": "date",
+      "description": "Próxima tentativa permitida.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_tarefa_erro",
+      "type": "string",
+      "description": "Código sanitizado da falha.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_automatico_parcial",
+      "type": "string",
+      "description": "Checkpoint do serviço de resumo automático.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_automatico_ate",
+      "type": "number",
+      "description": "Checkpoint do serviço de resumo automático.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_automatico_base_em",
+      "type": "date",
+      "description": "Checkpoint do serviço de resumo automático.",
+      "required": "Não"
+    },
+    {
+      "name": "resumo_automatico_base_total",
+      "type": "number",
+      "description": "Checkpoint do serviço de resumo automático.",
+      "required": "Não"
+    },
+    {
+      "name": "consulta_rh",
+      "type": "object",
+      "description": "Estado da última consulta RH: consulta, tipos, status, cargo, nome, pagina e limite.",
+      "required": "Não"
+    },
+    {
+      "name": "ultimo_pdf",
+      "type": "object",
+      "description": "Último documento gerado.",
+      "required": "Não"
+    },
+    {
+      "name": "ultimo_pdf.url",
+      "type": "string",
+      "description": "URL temporária de download.",
+      "required": "Não"
+    },
+    {
+      "name": "ultimo_pdf.expira_em",
+      "type": "date | string",
+      "description": "Validade do download, preservando o formato do produtor.",
+      "required": "Não"
     }
   ],
   "example": {
     "_id": "11111111-2222-4333-8444-555555555555",
-    "id_user": "usuario-exemplo",
-    "acao_pendente": null,
-    "atualizada_em": {
-      "$date": "2026-09-16T21:37:20.334Z"
-    },
+    "usuario_id": "uid-ficticio",
     "iniciada_em": {
-      "$date": "2026-09-16T21:37:15.298Z"
+      "$date": "2026-10-30T15:00:00Z"
     },
+    "atualizada_em": {
+      "$date": "2026-10-30T15:00:00Z"
+    },
+    "ultima_mensagem_em": {
+      "$date": "2026-10-30T15:00:00Z"
+    },
+    "status": "ativa",
+    "acao_pendente": null,
     "mensagens": [
       {
-        "role": "human",
-        "content": "oi quem é você?"
-      },
-      {
-        "role": "assistant",
-        "content": "Olá! Sou o Agente do Astro, seu assistente virtual. Posso ajudar a direcionar suas solicitações para as áreas corretas."
+        "papel": "human",
+        "conteudo": "Olá!"
       }
     ],
     "resumo": "",
-    "resumo_indexado": false,
-    "status": "ativa",
-    "ultima_rota": "direta"
+    "resumo_indexado": false
   },
-  "status": "Documentada",
-  "indexes": []
+  "notes": [
+    "Escritores: astro-ai-api e astro-session-summary-service; ambos precisam da mesma versão do esquema.",
+    "id_user vira usuario_id; role/content viram papel/conteudo somente nas mensagens persistidas.",
+    "O contrato HTTP e os payloads do provedor LLM/Qdrant continuam com seus nomes próprios; o repositório faz a tradução.",
+    "lock_token/lock_ate viram reserva_token/reserva_ate; resumo_job_* vira resumo_tarefa_*.",
+    "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+  ],
+  "indexes": [
+    "usuario_id + status + atualizada_em decrescente.",
+    "usuario_id + atualizada_em decrescente + _id decrescente.",
+    "status + ultima_mensagem_em; status + atualizada_em para sessões antigas."
+  ]
 }

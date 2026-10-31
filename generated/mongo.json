@@ -1,360 +1,750 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-16T16:08:50.706Z",
+  "generatedAt": "2026-10-31T02:51:50.675Z",
   "collections": [
     {
-      "name": "forms",
-      "title": "Formulários",
-      "description": "Formulários vinculados ao workspace, com gestores, prazo, status, perguntas, opções e respostas embutidas.",
-      "pattern": "Embedding",
-      "notes": [
-        "A modelagem propõe uma collection para cada formulário com a mesma estrutura. forms é o nome documental deste modelo, não uma decisão de collection única.",
-        "As respostas ficam em perguntas[].resposta, iniciado como array vazio para todos os tipos. O formato dos itens após o preenchimento ainda precisa ser definido.",
-        "O exemplo contempla perguntas dos tipos alternativa, texto, foto e data. Perguntas de alternativa incluem multipla_escolha e opções com id_opcao, texto e outra; outra identifica a opção Outros.",
-        "Perguntas de foto podem informar maximo_arquivos e tamanho_maximo_mb; o exemplo permite até 3 arquivos de até 10 MB cada.",
-        "data_limite usa uma string no formato YYYY-MM-DD, sem horário. criado_em usa uma data BSON representada com $date; respondido_em inicia como null e registra a data da resposta quando preenchido.",
-        "PENDENTE é o status apresentado no exemplo. Os demais status, as transições, a obrigatoriedade dos campos e a organização física das collections ainda precisam de validação."
-      ],
+      "name": "conversas",
+      "title": "Conversas",
+      "description": "Vínculo entre os dois participantes do chat.",
+      "status": "Implementada",
+      "pattern": "Documentos e referências",
       "fields": [
         {
           "name": "_id",
-          "type": "number",
-          "description": "Identificador do formulário.",
-          "required": "A definir"
+          "type": "string",
+          "description": "UUID da conversa.",
+          "required": "Sim"
         },
         {
-          "name": "id_workspace",
-          "type": "number",
-          "description": "Workspace ao qual o formulário pertence.",
-          "required": "A definir"
+          "name": "participantes_ids",
+          "type": "array<number>",
+          "description": "IDs PostgreSQL dos dois usuários.",
+          "required": "Sim"
+        }
+      ],
+      "example": {
+        "_id": "11111111-2222-4333-8444-555555555555",
+        "participantes_ids": [
+          1,
+          2
+        ]
+      },
+      "notes": [
+        "A API autoriza o acesso pela participação; não aceita consultar conversas alheias.",
+        "participantes_ids substitui participantes; IDs da conversa permanecem estáveis."
+      ],
+      "indexes": [
+        "_id: único.",
+        "Recomendado: participantes_ids para listar conversas por usuário."
+      ],
+      "file": "mongo/collections/conversas.json"
+    },
+    {
+      "name": "fila_entregas_chat",
+      "title": "Fila de entregas do chat",
+      "description": "Fila de entrega push produzida e consumida pela API Java.",
+      "status": "Implementada",
+      "pattern": "Documentos e referências",
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string",
+          "description": "Identificador da entrega.",
+          "required": "Sim"
         },
         {
-          "name": "id_gestor_remetente",
-          "type": "number",
-          "description": "Gestor que envia o formulário.",
-          "required": "A definir"
-        },
-        {
-          "name": "id_gestor",
-          "type": "number",
-          "description": "Gestor destinatário responsável pelo formulário.",
-          "required": "A definir"
-        },
-        {
-          "name": "nr",
-          "type": "number",
-          "description": "NR vinculada.",
+          "name": "concluida",
+          "type": "boolean",
+          "description": "Indica entrega concluída.",
           "required": "Não"
         },
         {
-          "name": "id_unidade",
+          "name": "tentativas",
           "type": "number",
-          "description": "Unidade vinculada.",
+          "description": "Tentativas realizadas.",
+          "required": "Não"
+        },
+        {
+          "name": "proxima_tentativa_em",
+          "type": "date",
+          "description": "Próxima tentativa.",
+          "required": "Não"
+        },
+        {
+          "name": "expira_em",
+          "type": "date",
+          "description": "Expiração da entrada.",
+          "required": "Não"
+        },
+        {
+          "name": "reserva_token",
+          "type": "string",
+          "description": "Reserva da tentativa em processamento.",
+          "required": "Não"
+        },
+        {
+          "name": "evento",
+          "type": "object",
+          "description": "Evento pendente de entrega; removido ao concluir.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.versao",
+          "type": "number",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.mensagem_id",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.conversa_id",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.remetente_id",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.destinatario_id",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.workspace_id",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.destinatario_uid",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.nome_remetente",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.previa",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        },
+        {
+          "name": "evento.criado_em",
+          "type": "string",
+          "description": "Metadado do evento de entrega; IDs mantêm representação textual.",
+          "required": "Não"
+        }
+      ],
+      "example": {
+        "_id": "entrega-ficticia",
+        "concluida": false,
+        "tentativas": 0,
+        "proxima_tentativa_em": {
+          "$date": "2026-10-30T15:00:00Z"
+        },
+        "expira_em": {
+          "$date": "2026-11-01T15:00:00Z"
+        }
+      },
+      "notes": [
+        "Produtor e consumidor: ChatPushOutbox/ChatPushDispatcher na API Java atualizada.",
+        "Os campos Mongo são portugueses; o evento HTTP enviado ao serviço de notificações mantém o contrato camelCase.",
+        "Entrada concluída remove evento e reserva_token; o TTL de expira_em preserva a expiração original.",
+        "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+      ],
+      "indexes": [
+        "_id: único.",
+        "concluida + proxima_tentativa_em para seleção.",
+        "expira_em: TTL expireAfterSeconds=0."
+      ],
+      "file": "mongo/collections/fila_entregas_chat.json"
+    },
+    {
+      "name": "formularios",
+      "title": "Formulários",
+      "description": "Uma coleção física compartilhada, com escopo por workspace e um documento por formulário.",
+      "status": "Implementada",
+      "pattern": "Documentos e referências",
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string",
+          "description": "UUID do formulário.",
+          "required": "Sim"
+        },
+        {
+          "name": "workspace_id",
+          "type": "number",
+          "description": "Workspace PostgreSQL do formulário.",
+          "required": "Sim"
+        },
+        {
+          "name": "gestor_remetente_id",
+          "type": "number",
+          "description": "Usuário gestor que criou o formulário.",
+          "required": "Sim"
+        },
+        {
+          "name": "gestor_id",
+          "type": "number | null",
+          "description": "Usuário gestor destinatário; obrigatório ao publicar.",
+          "required": "Não"
+        },
+        {
+          "name": "nr_id",
+          "type": "number | null",
+          "description": "Código da NR vinculada.",
+          "required": "Não",
+          "references": "nrs"
+        },
+        {
+          "name": "unidade_id",
+          "type": "number | null",
+          "description": "Unidade PostgreSQL vinculada.",
           "required": "Não"
         },
         {
           "name": "titulo",
           "type": "string",
-          "description": "Título do formulário.",
-          "required": "A definir"
+          "description": "Título limpo, até 100 caracteres; sem marcador ac1.",
+          "required": "Sim"
         },
         {
           "name": "descricao",
           "type": "string",
-          "description": "Descrição do formulário.",
-          "required": "A definir"
+          "description": "Descrição, até 240 caracteres.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao",
+          "type": "object | null",
+          "description": "Configuração visual opcional embutida.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.icone",
+          "type": "string",
+          "description": "Identificador permitido do ícone; contrato HTTP appearance.icon.",
+          "required": "Não"
+        },
+        {
+          "name": "configuracao.cor",
+          "type": "string",
+          "description": "Identificador permitido da cor; contrato HTTP appearance.color.",
+          "required": "Não"
         },
         {
           "name": "data_limite",
-          "type": "string",
-          "description": "Data limite para responder, no formato YYYY-MM-DD e sem horário.",
-          "required": "A definir"
+          "type": "date | null",
+          "description": "Data BSON correspondente ao início do dia em America/Sao_Paulo; a API expõe YYYY-MM-DD.",
+          "required": "Não"
         },
         {
           "name": "status",
           "type": "string",
-          "description": "Situação do formulário. O exemplo usa PENDENTE; demais valores ainda a definir.",
-          "required": "A definir"
+          "description": "RASCUNHO, PENDENTE ou CONCLUIDO.",
+          "required": "Sim"
+        },
+        {
+          "name": "versao",
+          "type": "number",
+          "description": "Controle de concorrência das alterações.",
+          "required": "Não"
+        },
+        {
+          "name": "envio_id",
+          "type": "string | null",
+          "description": "UUID da tentativa de resposta para idempotência.",
+          "required": "Não"
         },
         {
           "name": "criado_em",
           "type": "date",
-          "description": "Data e hora de criação; representada com $date no exemplo JSON.",
-          "required": "A definir"
+          "description": "Criação do documento.",
+          "required": "Sim"
+        },
+        {
+          "name": "atualizado_em",
+          "type": "date",
+          "description": "Última alteração.",
+          "required": "Não"
         },
         {
           "name": "respondido_em",
           "type": "date | null",
-          "description": "Data e hora da resposta; null enquanto o formulário ainda não foi respondido.",
-          "required": "A definir"
+          "description": "Instante da resposta; null antes do envio.",
+          "required": "Não"
         },
         {
           "name": "perguntas",
           "type": "array<object>",
-          "description": "Perguntas embutidas.",
-          "required": "A definir"
+          "description": "Definições e respostas embutidas.",
+          "required": "Sim"
         },
         {
-          "name": "perguntas[].id_pergunta",
+          "name": "perguntas[].pergunta_id",
           "type": "number",
-          "description": "Identificador da pergunta.",
-          "required": "A definir"
+          "description": "Identificador local da pergunta.",
+          "required": "Sim"
         },
         {
           "name": "perguntas[].tipo",
           "type": "string",
-          "description": "Tipo da pergunta: alternativa, texto, foto ou data, conforme o exemplo.",
-          "required": "A definir"
+          "description": "texto, alternativa, foto ou data.",
+          "required": "Sim"
         },
         {
           "name": "perguntas[].pergunta",
           "type": "string",
-          "description": "Texto da pergunta.",
-          "required": "A definir"
+          "description": "Enunciado de até 140 caracteres.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].obrigatoria",
           "type": "boolean",
-          "description": "Indica se a pergunta precisa ser respondida.",
-          "required": "A definir"
+          "description": "Exige resposta no envio.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].multipla_escolha",
-          "type": "boolean",
-          "description": "Em perguntas de alternativa, indica se permite selecionar mais de uma opção. false no exemplo.",
-          "required": "A definir"
+          "type": "boolean | null",
+          "description": "Permite várias opções em alternativa.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].opcoes",
           "type": "array<object>",
-          "description": "Opções embutidas nas perguntas de alternativa.",
-          "required": "A definir"
+          "description": "Opções da pergunta de alternativa.",
+          "required": "Não"
         },
         {
-          "name": "perguntas[].opcoes[].id_opcao",
+          "name": "perguntas[].opcoes[].opcao_id",
           "type": "number",
-          "description": "Identificador da opção dentro da pergunta.",
-          "required": "A definir"
+          "description": "Identificador local da opção.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].opcoes[].texto",
           "type": "string",
-          "description": "Texto exibido para a opção.",
-          "required": "A definir"
+          "description": "Rótulo da opção, até 80 caracteres.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].opcoes[].outra",
           "type": "boolean",
-          "description": "Identifica a opção Outros; true para essa opção no exemplo.",
-          "required": "A definir"
+          "description": "Identifica Outros.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].maximo_arquivos",
-          "type": "number",
-          "description": "Quantidade máxima de arquivos para perguntas de foto. 3 no exemplo.",
-          "required": "A definir"
+          "type": "number | null",
+          "description": "De 1 a 10 arquivos para foto.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].tamanho_maximo_mb",
-          "type": "number",
-          "description": "Tamanho máximo de cada arquivo, em MB, para perguntas de foto. 10 no exemplo.",
-          "required": "A definir"
+          "type": "number | null",
+          "description": "5, 10, 20, 50 ou 100 MB por arquivo.",
+          "required": "Não"
         },
         {
           "name": "perguntas[].resposta",
           "type": "array",
-          "description": "Respostas da pergunta, inicialmente []. A estrutura dos itens preenchidos ainda está a definir.",
-          "required": "A definir"
+          "description": "Texto/data ISO; IDs numéricos de opções; objeto outro_texto; metadados de foto.",
+          "required": "Não"
+        },
+        {
+          "name": "perguntas[].resposta[].outro_texto",
+          "type": "string",
+          "description": "Texto digitado para Outros.",
+          "required": "Não"
+        },
+        {
+          "name": "perguntas[].resposta[].imagem_id",
+          "type": "string",
+          "description": "UUID da imagem.",
+          "required": "Não"
+        },
+        {
+          "name": "perguntas[].resposta[].chave_objeto",
+          "type": "string",
+          "description": "Chave privada R2; não exposta na resposta pública.",
+          "required": "Não"
+        },
+        {
+          "name": "perguntas[].resposta[].nome",
+          "type": "string",
+          "description": "Nome do arquivo.",
+          "required": "Não"
+        },
+        {
+          "name": "perguntas[].resposta[].tipo_conteudo",
+          "type": "string",
+          "description": "MIME da foto.",
+          "required": "Não"
+        },
+        {
+          "name": "perguntas[].resposta[].tamanho_bytes",
+          "type": "number",
+          "description": "Tamanho do arquivo em bytes.",
+          "required": "Não"
+        },
+        {
+          "name": "analise",
+          "type": "object | null",
+          "description": "Análise do remetente após receber respostas.",
+          "required": "Não"
+        },
+        {
+          "name": "analise.status",
+          "type": "string",
+          "description": "Resultado da análise, conforme enum do domínio.",
+          "required": "Não"
+        },
+        {
+          "name": "analise.gestor_revisor_id",
+          "type": "number",
+          "description": "Gestor responsável pela análise.",
+          "required": "Não"
+        },
+        {
+          "name": "analise.analisado_em",
+          "type": "date",
+          "description": "Data da análise.",
+          "required": "Não"
+        },
+        {
+          "name": "analise.descricao",
+          "type": "string",
+          "description": "Justificativa quando aplicável.",
+          "required": "Não"
+        },
+        {
+          "name": "consentimento_localizacao",
+          "type": "boolean | null",
+          "description": "Consentimento para coleta de localização.",
+          "required": "Não"
+        },
+        {
+          "name": "localizacoes",
+          "type": "array<object>",
+          "description": "Leituras de localização, quando persistidas.",
+          "required": "Não"
+        },
+        {
+          "name": "localizacoes[].latitude",
+          "type": "number",
+          "description": "Latitude da leitura.",
+          "required": "Não"
+        },
+        {
+          "name": "localizacoes[].longitude",
+          "type": "number",
+          "description": "Longitude da leitura.",
+          "required": "Não"
+        },
+        {
+          "name": "localizacoes[].precisao_metros",
+          "type": "number",
+          "description": "Precisão informada pelo dispositivo.",
+          "required": "Não"
+        },
+        {
+          "name": "localizacoes[].registrado_em",
+          "type": "date",
+          "description": "Instante da leitura.",
+          "required": "Não"
+        },
+        {
+          "name": "validacao_localizacao",
+          "type": "object | null",
+          "description": "Resultado da validação geográfica.",
+          "required": "Não"
+        },
+        {
+          "name": "validacao_localizacao.unidade_id",
+          "type": "number",
+          "description": "Unidade da validação.",
+          "required": "Não"
+        },
+        {
+          "name": "validacao_localizacao.latitude_unidade",
+          "type": "number",
+          "description": "Latitude da unidade.",
+          "required": "Não"
+        },
+        {
+          "name": "validacao_localizacao.longitude_unidade",
+          "type": "number",
+          "description": "Longitude da unidade.",
+          "required": "Não"
+        },
+        {
+          "name": "validacao_localizacao.raio_metros",
+          "type": "number",
+          "description": "Raio permitido.",
+          "required": "Não"
+        },
+        {
+          "name": "validacao_localizacao.distancia_metros",
+          "type": "number",
+          "description": "Distância calculada.",
+          "required": "Não"
+        },
+        {
+          "name": "validacao_localizacao.leitura",
+          "type": "object",
+          "description": "Leitura utilizada: latitude, longitude, precisao_metros e registrado_em.",
+          "required": "Não"
         }
       ],
       "example": {
-        "_id": 1,
-        "id_workspace": 1,
-        "id_gestor_remetente": 10,
-        "id_gestor": 20,
+        "_id": "11111111-2222-4333-8444-555555555555",
+        "workspace_id": 1,
+        "gestor_remetente_id": 10,
+        "gestor_id": 20,
+        "nr_id": 6,
+        "unidade_id": 3,
         "titulo": "Inspeção de segurança",
-        "descricao": "Verificação das condições de segurança da unidade.",
-        "nr": 6,
-        "id_unidade": 3,
-        "data_limite": "2026-10-30",
+        "descricao": "Verificação das condições da unidade.",
+        "configuracao": {
+          "icone": "security",
+          "cor": "teal"
+        },
+        "data_limite": {
+          "$date": "2026-10-31T03:00:00Z"
+        },
         "status": "PENDENTE",
+        "versao": 0,
         "criado_em": {
-          "$date": "2026-10-15T15:00:00Z"
+          "$date": "2026-10-30T15:00:00Z"
+        },
+        "atualizado_em": {
+          "$date": "2026-10-30T15:00:00Z"
         },
         "respondido_em": null,
         "perguntas": [
           {
-            "id_pergunta": 1,
-            "tipo": "alternativa",
-            "pergunta": "Os colaboradores estão utilizando os EPIs?",
-            "obrigatoria": true,
-            "multipla_escolha": false,
-            "opcoes": [
-              {
-                "id_opcao": 1,
-                "texto": "Sim",
-                "outra": false
-              },
-              {
-                "id_opcao": 2,
-                "texto": "Não",
-                "outra": false
-              },
-              {
-                "id_opcao": 3,
-                "texto": "Outros",
-                "outra": true
-              }
-            ],
-            "resposta": []
-          },
-          {
-            "id_pergunta": 2,
+            "pergunta_id": 1,
             "tipo": "texto",
-            "pergunta": "Descreva as condições de segurança observadas.",
+            "pergunta": "Descreva as condições observadas.",
             "obrigatoria": true,
-            "resposta": []
-          },
-          {
-            "id_pergunta": 3,
-            "tipo": "foto",
-            "pergunta": "Anexe fotos do local inspecionado.",
-            "obrigatoria": false,
-            "maximo_arquivos": 3,
-            "tamanho_maximo_mb": 10,
-            "resposta": []
-          },
-          {
-            "id_pergunta": 4,
-            "tipo": "data",
-            "pergunta": "Em qual data a inspeção foi realizada?",
-            "obrigatoria": true,
+            "opcoes": [],
             "resposta": []
           }
         ]
       },
-      "status": "Proposta",
-      "indexes": [],
-      "file": "mongo/collections/forms.json"
+      "notes": [
+        "Substitui a coleção legada forms; executar a migração antes de disponibilizar os novos serviços.",
+        "Nomes Java e contratos HTTP permanecem em inglês/camelCase; @Field e os mappers definem o armazenamento português.",
+        "Cores e ícones usam identificadores do catálogo do frontend; nomes de campos são portugueses.",
+        "Não há uma coleção para cada formulário. Respostas permanecem no documento do formulário.",
+        "Omitir appearance em uma edição preserva a configuração existente; null também preserva. Sem configuração, o frontend usa seus padrões.",
+        "Ícones: document, calendar, feedback, person-outline, security, check, building, collaborators, position, clock. Cores: purple, pink, blue, green, teal, indigo, orange, rose, violet, slate."
+      ],
+      "indexes": [
+        "_id: único, criado pelo Mongo.",
+        "Recomendado: workspace_id + gestor_remetente_id + criado_em + _id; avaliar conforme consultas.",
+        "Recomendado: workspace_id + gestor_id + status + criado_em + _id; avaliar conforme consultas."
+      ],
+      "file": "mongo/collections/formularios.json"
     },
     {
       "name": "mensagens",
       "title": "Mensagens de chat",
-      "description": "Mensagens de chat com remetente, destinatário, texto e data de envio, em um documento por mensagem.",
-      "pattern": "Referências",
-      "notes": [
-        "A collection se chama mensagens. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
-        "A referência contém documentos com _id em string no formato UUID e documentos com _id do tipo ObjectId. O exemplo usa uma string; em JSON estendido, um ObjectId pode ser representado como {\"$oid\": \"000000000000000000000001\"}.",
-        "id_envia e id_recebe são identificadores numéricos do remetente e do destinatário. A mensagem é uma string e data é uma data BSON, representada com $date no exemplo JSON.",
-        "A referência indica três índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
-        "O documento exibido não contém campo de leitura nem identificador de sessão. Definir o registro de leitura e avaliar a organização por sessão."
-      ],
+      "description": "Mensagens do chat com referência à conversa e ao remetente.",
+      "status": "Implementada",
+      "pattern": "Documentos e referências",
       "fields": [
         {
           "name": "_id",
           "type": "string | ObjectId",
-          "description": "Identificador da mensagem. A referência mostra string em formato UUID e ObjectId em documentos distintos.",
-          "required": "A definir"
+          "description": "Identificador da mensagem.",
+          "required": "Sim"
         },
         {
-          "name": "id_envia",
-          "type": "number",
-          "description": "Identificador numérico do remetente.",
-          "required": "A definir"
+          "name": "conversa_id",
+          "type": "string",
+          "description": "Conversa à qual a mensagem pertence.",
+          "required": "Não",
+          "references": "conversas"
         },
         {
-          "name": "id_recebe",
+          "name": "remetente_id",
           "type": "number",
-          "description": "Identificador numérico do destinatário.",
-          "required": "A definir"
+          "description": "Usuário PostgreSQL remetente.",
+          "required": "Sim"
+        },
+        {
+          "name": "destinatario_id",
+          "type": "number",
+          "description": "Destinatário explícito de mensagens produzidas pela ferramenta de IA.",
+          "required": "Não"
+        },
+        {
+          "name": "resposta_mensagem_id",
+          "type": "string | null",
+          "description": "Mensagem à qual responde.",
+          "required": "Não",
+          "references": "mensagens"
         },
         {
           "name": "mensagem",
           "type": "string",
           "description": "Texto da mensagem.",
-          "required": "A definir"
+          "required": "Sim"
         },
         {
           "name": "data",
           "type": "date",
-          "description": "Data e hora do envio, em BSON date; representada com $date no exemplo JSON.",
-          "required": "A definir"
+          "description": "Instante do envio.",
+          "required": "Sim"
         }
       ],
       "example": {
-        "_id": "11111111-2222-4333-8444-555555555555",
-        "id_envia": 1,
-        "id_recebe": 2,
+        "_id": "22222222-2222-4333-8444-555555555555",
+        "conversa_id": "11111111-2222-4333-8444-555555555555",
+        "remetente_id": 1,
+        "destinatario_id": 2,
         "mensagem": "Olá!",
+        "resposta_mensagem_id": null,
         "data": {
-          "$date": "2026-09-12T21:53:55.934Z"
+          "$date": "2026-10-30T15:00:00Z"
         }
       },
-      "status": "Documentada",
-      "indexes": [],
+      "notes": [
+        "Campos legados id_conversa/id_remetente e id_envia/id_recebe são migrados sem inventar vínculo de conversa ausente.",
+        "A ferramenta de IA usa remetente/destinatário explícitos; a API Java lista por conversa. Essa diferença funcional já existia e não é resolvida apenas renomeando campos.",
+        "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+      ],
+      "indexes": [
+        "_id: único.",
+        "Recomendado: conversa_id + data decrescente + _id decrescente.",
+        "Ferramenta IA: remetente_id + destinatario_id + data; destinatario_id + remetente_id + data."
+      ],
       "file": "mongo/collections/mensagens.json"
     },
     {
       "name": "notificacoes",
       "title": "Notificações",
-      "description": "Proposta de notificações destinadas a usuários, com mensagem, data de criação, evento vinculado e título do alerta.",
-      "pattern": "Referências",
-      "notes": [
-        "O armazenamento em MongoDB ou Redis ainda está em aberto.",
-        "O campo id_evento é opcional e pode ser omitido quando a notificação não estiver vinculada a um evento.",
-        "titulo contém o título do alerta, separado do texto de mensagem. O exemplo notifica sobre o prazo de um evento próximo do fim.",
-        "Definir a responsabilidade pela automação dos alertas no backend."
-      ],
+      "description": "Alertas persistidos por usuário; Redis pode apoiar a entrega, sem substituir o documento Mongo.",
+      "status": "Implementada",
+      "pattern": "Documentos e referências",
       "fields": [
         {
           "name": "_id",
-          "type": "number",
+          "type": "number | string | ObjectId",
           "description": "Identificador da notificação.",
-          "required": "A definir"
+          "required": "Sim"
         },
         {
-          "name": "id_usuario",
+          "name": "usuario_id",
           "type": "number",
-          "description": "Destinatário.",
-          "required": "A definir"
+          "description": "Usuário destinatário.",
+          "required": "Sim"
         },
         {
-          "name": "mensagem",
-          "type": "string",
-          "description": "Texto da notificação.",
-          "required": "A definir"
-        },
-        {
-          "name": "data_criacao",
-          "type": "date",
-          "description": "Data de criação.",
-          "required": "A definir"
-        },
-        {
-          "name": "id_evento",
+          "name": "workspace_id",
           "type": "number",
-          "description": "Identificador opcional do evento vinculado à notificação; pode ser omitido quando não houver evento associado.",
+          "description": "Workspace associado quando informado.",
+          "required": "Não"
+        },
+        {
+          "name": "evento_id",
+          "type": "number",
+          "description": "Evento associado, quando houver.",
           "required": "Não"
         },
         {
           "name": "titulo",
           "type": "string",
-          "description": "Título do alerta exibido ao destinatário.",
-          "required": "A definir"
+          "description": "Título do alerta.",
+          "required": "Não"
+        },
+        {
+          "name": "mensagem",
+          "type": "string",
+          "description": "Texto da notificação.",
+          "required": "Sim"
+        },
+        {
+          "name": "data_criacao",
+          "type": "date",
+          "description": "Instante de criação.",
+          "required": "Sim"
+        },
+        {
+          "name": "tipo",
+          "type": "string",
+          "description": "Categoria do alerta, quando informada.",
+          "required": "Não"
+        },
+        {
+          "name": "chave_deduplicacao",
+          "type": "string",
+          "description": "Chave de idempotência quando usada pelo produtor.",
+          "required": "Não"
+        },
+        {
+          "name": "recurso",
+          "type": "object | string",
+          "description": "Referência de recurso fornecida pelo produtor.",
+          "required": "Não"
+        },
+        {
+          "name": "regra_versao",
+          "type": "number",
+          "description": "Versão da regra de geração.",
+          "required": "Não"
+        },
+        {
+          "name": "recurso.recurso_id",
+          "type": "number | string",
+          "description": "Identificador do recurso vinculado; substitui recurso.id nos documentos legados.",
+          "required": "Não"
+        },
+        {
+          "name": "recurso.tipo",
+          "type": "string",
+          "description": "Tipo do recurso vinculado.",
+          "required": "Não"
         }
       ],
       "example": {
         "_id": 1,
-        "id_usuario": 2,
-        "mensagem": "Conclua o treinamento pendente.",
+        "usuario_id": 2,
+        "evento_id": 1,
+        "titulo": "Treinamento pendente",
+        "mensagem": "Conclua o treinamento.",
         "data_criacao": {
-          "$date": "2026-06-25T12:19:40.233Z"
-        },
-        "id_evento": 1,
-        "titulo": "Prazo de evento próximo do fim"
+          "$date": "2026-10-30T15:00:00Z"
+        }
       },
-      "status": "Proposta",
-      "indexes": [],
+      "notes": [
+        "O Mongo é o armazenamento usado pela API Java e pelo produtor de notificações.",
+        "id_usuario vira usuario_id; id_evento/event_id viram evento_id; title vira titulo. Valores conflitantes impedem a migração.",
+        "Atualizar astro-notification-service junto da API e da ferramenta de IA.",
+        "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+      ],
+      "indexes": [
+        "_id: único.",
+        "usuario_id + data_criacao decrescente + _id decrescente.",
+        "chave_deduplicacao: índice único parcial para strings quando configurado pelo produtor."
+      ],
       "file": "mongo/collections/notificacoes.json"
     },
     {
@@ -363,7 +753,8 @@
       "description": "Conteúdo descritivo e atributos das NRs.",
       "pattern": "Documento",
       "notes": [
-        "A modelagem prevê guardar em três partes; a divisão ainda precisa ser definida."
+        "Catálogo publicado consumido pela API; _id é o código da NR.",
+        "A coleção nrs_pendentes usa a mesma estrutura para revisão antes da publicação."
       ],
       "fields": [
         {
@@ -443,171 +834,449 @@
         },
         "revogada": false
       },
-      "status": "Proposta",
+      "status": "Implementada",
       "indexes": [],
       "file": "mongo/collections/nrs.json"
     },
     {
-      "name": "sessoes",
-      "title": "Sessões de chatbot",
-      "description": "Sessões do chatbot com usuário, datas, mensagens embutidas, resumo, status, última rota e controle de ação pendente.",
-      "pattern": "Embedding · sessão",
+      "name": "nrs_pendentes",
+      "title": "NRs pendentes",
+      "description": "Conteúdo aguardando revisão administrativa.",
+      "pattern": "Documento",
       "notes": [
-        "A collection se chama sessoes. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
-        "id_user é uma string. As mensagens usam role e content; o exemplo mostra os papéis human e assistant.",
-        "acao_pendente aparece como null na referência. O formato de uma ação preenchida ainda precisa ser documentado.",
-        "O exemplo mostra status ativa, ultima_rota direta, resumo vazio e resumo_indexado false. Os demais valores e as transições ainda precisam ser definidos.",
-        "A referência indica cinco índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
-        "Confirmar com o frontend se o histórico completo ou apenas a última conversa será exibido.",
-        "Definir a divisão de sessões extensas para evitar crescimento ilimitado do documento."
+        "A aprovação publica o documento em nrs e agenda a sincronização SQL."
       ],
       "fields": [
         {
           "name": "_id",
-          "type": "string",
-          "description": "Identificador textual da sessão, em formato UUID na referência.",
+          "type": "number",
+          "description": "Código da NR.",
           "required": "A definir"
         },
         {
-          "name": "id_user",
+          "name": "nome",
           "type": "string",
-          "description": "Identificador textual do usuário associado à sessão.",
+          "description": "Nome da norma.",
           "required": "A definir"
         },
         {
-          "name": "acao_pendente",
-          "type": "null | a definir",
-          "description": "Ação pendente da sessão; null no exemplo. O tipo e a estrutura quando preenchida ainda precisam de definição.",
+          "name": "tempo_reciclagem_meses",
+          "type": "number",
+          "description": "Intervalo de reciclagem.",
           "required": "A definir"
+        },
+        {
+          "name": "descricao",
+          "type": "string",
+          "description": "Descrição da norma.",
+          "required": "A definir"
+        },
+        {
+          "name": "objetivo",
+          "type": "string",
+          "description": "Objetivo da norma.",
+          "required": "A definir"
+        },
+        {
+          "name": "aplicabilidade",
+          "type": "string",
+          "description": "Âmbito de aplicação.",
+          "required": "A definir"
+        },
+        {
+          "name": "usabilidade",
+          "type": "string",
+          "description": "Funcionário ou empresa; valores a validar.",
+          "required": "A definir"
+        },
+        {
+          "name": "data_criacao",
+          "type": "date",
+          "description": "Data de criação.",
+          "required": "A definir"
+        },
+        {
+          "name": "ultima_atualizacao",
+          "type": "date",
+          "description": "Última atualização.",
+          "required": "A definir"
+        },
+        {
+          "name": "revogada",
+          "type": "boolean",
+          "description": "Situação da norma.",
+          "required": "A definir"
+        }
+      ],
+      "example": {
+        "_id": 35,
+        "nome": "Trabalho em Altura",
+        "tempo_reciclagem_meses": 24,
+        "descricao": "Exemplo de descrição",
+        "objetivo": "Exemplo de objetivo",
+        "aplicabilidade": "A definir",
+        "usabilidade": "A definir",
+        "data_criacao": {
+          "$date": "2026-06-25T12:19:40.233Z"
+        },
+        "ultima_atualizacao": {
+          "$date": "2026-06-25T12:19:40.233Z"
+        },
+        "revogada": false
+      },
+      "status": "Implementada",
+      "indexes": [],
+      "file": "mongo/collections/nrs_pendentes.json"
+    },
+    {
+      "name": "sessoes",
+      "title": "Sessões de chatbot",
+      "description": "Histórico por proprietário, mensagens e controle dos resumos.",
+      "status": "Implementada",
+      "pattern": "Documentos e referências",
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string",
+          "description": "UUID da sessão.",
+          "required": "Sim"
+        },
+        {
+          "name": "usuario_id",
+          "type": "string",
+          "description": "UID Firebase do proprietário; não é o ID numérico PostgreSQL.",
+          "required": "Sim"
         },
         {
           "name": "iniciada_em",
           "type": "date",
           "description": "Início da sessão.",
-          "required": "A definir"
+          "required": "Não"
         },
         {
           "name": "atualizada_em",
           "type": "date",
-          "description": "Última interação.",
-          "required": "A definir"
+          "description": "Última atualização.",
+          "required": "Não"
         },
         {
-          "name": "resumo",
+          "name": "ultima_mensagem_em",
+          "type": "date",
+          "description": "Última mensagem; base da inatividade.",
+          "required": "Não"
+        },
+        {
+          "name": "encerrada_em",
+          "type": "date",
+          "description": "Encerramento quando aplicável.",
+          "required": "Não"
+        },
+        {
+          "name": "titulo",
           "type": "string",
-          "description": "Resumo da sessão.",
-          "required": "A definir"
+          "description": "Título resumido da conversa.",
+          "required": "Não"
         },
         {
-          "name": "resumo_indexado",
-          "type": "boolean",
-          "description": "Indica se o resumo foi indexado; false no exemplo.",
-          "required": "A definir"
+          "name": "ultima_mensagem_previa",
+          "type": "string",
+          "description": "Prévia para listagem.",
+          "required": "Não"
         },
         {
           "name": "status",
           "type": "string",
-          "description": "Estado da sessão; ativa no exemplo. Demais valores ainda a definir.",
-          "required": "A definir"
+          "description": "ativa, encerrando ou encerrada.",
+          "required": "Não"
         },
         {
           "name": "ultima_rota",
           "type": "string",
-          "description": "Última rota utilizada pelo chatbot; direta no exemplo. Demais valores ainda a definir.",
-          "required": "A definir"
+          "description": "Última rota do agente.",
+          "required": "Não"
+        },
+        {
+          "name": "acao_pendente",
+          "type": "object | null",
+          "description": "Rascunho de ação que exige confirmação explícita; mensagem_id, remetente_id, destinatario_id e sessao_id quando presentes.",
+          "required": "Não"
         },
         {
           "name": "mensagens",
           "type": "array<object>",
-          "description": "Mensagens embutidas.",
-          "required": "A definir"
+          "description": "Histórico embutido.",
+          "required": "Sim"
         },
         {
-          "name": "mensagens[].role",
+          "name": "mensagens[].papel",
           "type": "string",
-          "description": "Papel de quem enviou a mensagem; human e assistant no exemplo.",
-          "required": "A definir"
+          "description": "human ou assistant; valores do protocolo interno.",
+          "required": "Não"
         },
         {
-          "name": "mensagens[].content",
+          "name": "mensagens[].conteudo",
           "type": "string",
-          "description": "Conteúdo da mensagem.",
-          "required": "A definir"
+          "description": "Texto da mensagem.",
+          "required": "Não"
+        },
+        {
+          "name": "mensagens[].blocos",
+          "type": "array<object>",
+          "description": "Blocos estruturados em português: tipo, conteudo, titulo, dados etc.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo",
+          "type": "string",
+          "description": "Resumo da conversa.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_parcial",
+          "type": "string",
+          "description": "Checkpoint do resumo manual.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_ate",
+          "type": "number",
+          "description": "Posição do resumo manual.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_indexado",
+          "type": "boolean",
+          "description": "Resumo atual indexado no serviço vetorial.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_mensagens",
+          "type": "number",
+          "description": "Quantidade de mensagens representadas pelo resumo.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_ultima_mensagem_em",
+          "type": "date",
+          "description": "Versão temporal resumida.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_gerado_em",
+          "type": "date",
+          "description": "Geração do resumo.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_origem",
+          "type": "string",
+          "description": "Origem, como automatico.",
+          "required": "Não"
+        },
+        {
+          "name": "reserva_token",
+          "type": "string",
+          "description": "Token temporário de exclusão mútua.",
+          "required": "Não"
+        },
+        {
+          "name": "reserva_ate",
+          "type": "date",
+          "description": "Validade da reserva do chat.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_tarefa_token",
+          "type": "string",
+          "description": "Token da tarefa.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_tarefa_ate",
+          "type": "date",
+          "description": "Validade da reserva.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_tarefa_tentativas",
+          "type": "number",
+          "description": "Quantidade de tentativas.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_tarefa_proxima_tentativa",
+          "type": "date",
+          "description": "Próxima tentativa permitida.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_tarefa_erro",
+          "type": "string",
+          "description": "Código sanitizado da falha.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_automatico_parcial",
+          "type": "string",
+          "description": "Checkpoint do serviço de resumo automático.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_automatico_ate",
+          "type": "number",
+          "description": "Checkpoint do serviço de resumo automático.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_automatico_base_em",
+          "type": "date",
+          "description": "Checkpoint do serviço de resumo automático.",
+          "required": "Não"
+        },
+        {
+          "name": "resumo_automatico_base_total",
+          "type": "number",
+          "description": "Checkpoint do serviço de resumo automático.",
+          "required": "Não"
+        },
+        {
+          "name": "consulta_rh",
+          "type": "object",
+          "description": "Estado da última consulta RH: consulta, tipos, status, cargo, nome, pagina e limite.",
+          "required": "Não"
+        },
+        {
+          "name": "ultimo_pdf",
+          "type": "object",
+          "description": "Último documento gerado.",
+          "required": "Não"
+        },
+        {
+          "name": "ultimo_pdf.url",
+          "type": "string",
+          "description": "URL temporária de download.",
+          "required": "Não"
+        },
+        {
+          "name": "ultimo_pdf.expira_em",
+          "type": "date | string",
+          "description": "Validade do download, preservando o formato do produtor.",
+          "required": "Não"
         }
       ],
       "example": {
         "_id": "11111111-2222-4333-8444-555555555555",
-        "id_user": "usuario-exemplo",
-        "acao_pendente": null,
-        "atualizada_em": {
-          "$date": "2026-09-16T21:37:20.334Z"
-        },
+        "usuario_id": "uid-ficticio",
         "iniciada_em": {
-          "$date": "2026-09-16T21:37:15.298Z"
+          "$date": "2026-10-30T15:00:00Z"
         },
+        "atualizada_em": {
+          "$date": "2026-10-30T15:00:00Z"
+        },
+        "ultima_mensagem_em": {
+          "$date": "2026-10-30T15:00:00Z"
+        },
+        "status": "ativa",
+        "acao_pendente": null,
         "mensagens": [
           {
-            "role": "human",
-            "content": "oi quem é você?"
-          },
-          {
-            "role": "assistant",
-            "content": "Olá! Sou o Agente do Astro, seu assistente virtual. Posso ajudar a direcionar suas solicitações para as áreas corretas."
+            "papel": "human",
+            "conteudo": "Olá!"
           }
         ],
         "resumo": "",
-        "resumo_indexado": false,
-        "status": "ativa",
-        "ultima_rota": "direta"
+        "resumo_indexado": false
       },
-      "status": "Documentada",
-      "indexes": [],
+      "notes": [
+        "Escritores: astro-ai-api e astro-session-summary-service; ambos precisam da mesma versão do esquema.",
+        "id_user vira usuario_id; role/content viram papel/conteudo somente nas mensagens persistidas.",
+        "O contrato HTTP e os payloads do provedor LLM/Qdrant continuam com seus nomes próprios; o repositório faz a tradução.",
+        "lock_token/lock_ate viram reserva_token/reserva_ate; resumo_job_* vira resumo_tarefa_*.",
+        "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+      ],
+      "indexes": [
+        "usuario_id + status + atualizada_em decrescente.",
+        "usuario_id + atualizada_em decrescente + _id decrescente.",
+        "status + ultima_mensagem_em; status + atualizada_em para sessões antigas."
+      ],
       "file": "mongo/collections/sessoes.json"
+    },
+    {
+      "name": "sincronizacoes_catalogo_nrs",
+      "title": "Sincronizações do catálogo de NRs",
+      "description": "Fila transacional de sincronização do catálogo Mongo com o PostgreSQL.",
+      "status": "Implementada",
+      "pattern": "Documentos e referências",
+      "fields": [
+        {
+          "name": "_id",
+          "type": "string",
+          "description": "ID da tarefa.",
+          "required": "Sim"
+        },
+        {
+          "name": "nr_id",
+          "type": "number",
+          "description": "Código da NR a sincronizar.",
+          "required": "Sim",
+          "references": "nrs"
+        },
+        {
+          "name": "criado_em",
+          "type": "date",
+          "description": "Criação da tarefa.",
+          "required": "Sim"
+        }
+      ],
+      "example": {
+        "_id": "tarefa-ficticia",
+        "nr_id": 6,
+        "criado_em": {
+          "$date": "2026-10-30T15:00:00Z"
+        }
+      },
+      "notes": [
+        "Substitui nr_catalog_sql_sync; nrId vira nr_id e createdAt vira criado_em.",
+        "O consumidor remove a tarefa após confirmar a sincronização SQL."
+      ],
+      "indexes": [
+        "_id: único.",
+        "Recomendado: criado_em para processar tarefas mais antigas primeiro."
+      ],
+      "file": "mongo/collections/sincronizacoes_catalogo_nrs.json"
     }
   ],
   "modeling": {
     "principles": [
       {
-        "title": "Agregados e contextos",
-        "description": "Avaliar contextos delimitados e raízes de agregação. Entidades internas podem ser embutidas; cada domínio não implica uma collection."
+        "title": "Nomes físicos",
+        "description": "Coleções e campos em português, snake_case. Referências terminam em _id; listas de referências em _ids. _id, _class e operadores BSON são metadados técnicos preservados."
       },
       {
-        "title": "Embedding e referências",
-        "description": "Escolher a organização conforme acesso, frequência de atualização e regras de exclusão. A proposta também contempla modelagem híbrida."
+        "title": "Contratos e mapeamento",
+        "description": "A convenção física do Mongo não obriga renomear Java, DTOs HTTP, protocolos LLM ou payloads Qdrant. Mapear explicitamente na persistência."
       },
       {
-        "title": "Sessões e crescimento",
-        "description": "Organizar históricos por sessão e planejar a divisão de documentos extensos. A modelagem contempla os padrões Bucket e Outlier."
+        "title": "Formulários",
+        "description": "Uma coleção formularios, com um documento por formulário, perguntas/respostas/configuracao embutidas e escopo por workspace."
       },
       {
-        "title": "Hierarquias",
-        "description": "O padrão Tree é uma possibilidade para representar relações entre pais e filhos."
+        "title": "Datas e identificadores",
+        "description": "Datas de instante em BSON date; preservar tipos de IDs. usuario_id de sessão é UID Firebase; usuario_id de notificação é ID numérico PostgreSQL."
       }
     ],
     "decisions": [
       {
-        "title": "Histórico de chatbot",
-        "description": "Exibir todo o histórico ou somente a última conversa? Alinhar com o frontend."
+        "title": "Migração coordenada",
+        "description": "Simular e verificar conflitos, interromper todos os escritores, preservar backup BSON e índices, migrar e disponibilizar versões compatíveis. Não executar contra serviços antigos ativos."
       },
       {
-        "title": "Leitura de mensagens",
-        "description": "A collection mensagens documenta remetente, destinatário, texto e data de envio. O documento exibido não possui campo de leitura; definir como registrar essa informação."
+        "title": "Mensagens da IA",
+        "description": "A ferramenta IA usa remetente/destinatário; a API Java usa conversa_id. A padronização não inventa conversas para registros legados sem esse vínculo."
       },
       {
-        "title": "Collections de formulários",
-        "description": "Validar a proposta de uma collection por formulário. O modelo documenta respostas embutidas em perguntas[].resposta, inicialmente como arrays vazios; a estrutura dos itens preenchidos, os demais status e suas transições ainda precisam de definição."
-      },
-      {
-        "title": "Destino das notificações",
-        "description": "Escolher MongoDB ou Redis e definir a automação dos alertas."
-      },
-      {
-        "title": "Organização das NRs",
-        "description": "Especificar as três partes previstas para o catálogo."
-      },
-      {
-        "title": "Índices e validação",
-        "description": "Índices, tipos definitivos e campos obrigatórios ainda não foram especificados na documentação."
+        "title": "Dashboards",
+        "description": "Fora desta etapa; nenhuma coleção de dashboards foi criada."
       }
     ]
   },

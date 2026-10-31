@@ -1,46 +1,34 @@
 {
   "principles": [
     {
-      "title": "Agregados e contextos",
-      "description": "Avaliar contextos delimitados e raízes de agregação. Entidades internas podem ser embutidas; cada domínio não implica uma collection."
+      "title": "Nomes físicos",
+      "description": "Coleções e campos em português, snake_case. Referências terminam em _id; listas de referências em _ids. _id, _class e operadores BSON são metadados técnicos preservados."
     },
     {
-      "title": "Embedding e referências",
-      "description": "Escolher a organização conforme acesso, frequência de atualização e regras de exclusão. A proposta também contempla modelagem híbrida."
+      "title": "Contratos e mapeamento",
+      "description": "A convenção física do Mongo não obriga renomear Java, DTOs HTTP, protocolos LLM ou payloads Qdrant. Mapear explicitamente na persistência."
     },
     {
-      "title": "Sessões e crescimento",
-      "description": "Organizar históricos por sessão e planejar a divisão de documentos extensos. A modelagem contempla os padrões Bucket e Outlier."
+      "title": "Formulários",
+      "description": "Uma coleção formularios, com um documento por formulário, perguntas/respostas/configuracao embutidas e escopo por workspace."
     },
     {
-      "title": "Hierarquias",
-      "description": "O padrão Tree é uma possibilidade para representar relações entre pais e filhos."
+      "title": "Datas e identificadores",
+      "description": "Datas de instante em BSON date; preservar tipos de IDs. usuario_id de sessão é UID Firebase; usuario_id de notificação é ID numérico PostgreSQL."
     }
   ],
   "decisions": [
     {
-      "title": "Histórico de chatbot",
-      "description": "Exibir todo o histórico ou somente a última conversa? Alinhar com o frontend."
+      "title": "Migração coordenada",
+      "description": "Simular e verificar conflitos, interromper todos os escritores, preservar backup BSON e índices, migrar e disponibilizar versões compatíveis. Não executar contra serviços antigos ativos."
     },
     {
-      "title": "Leitura de mensagens",
-      "description": "A collection mensagens documenta remetente, destinatário, texto e data de envio. O documento exibido não possui campo de leitura; definir como registrar essa informação."
+      "title": "Mensagens da IA",
+      "description": "A ferramenta IA usa remetente/destinatário; a API Java usa conversa_id. A padronização não inventa conversas para registros legados sem esse vínculo."
     },
     {
-      "title": "Collections de formulários",
-      "description": "Validar a proposta de uma collection por formulário. O modelo documenta respostas embutidas em perguntas[].resposta, inicialmente como arrays vazios; a estrutura dos itens preenchidos, os demais status e suas transições ainda precisam de definição."
-    },
-    {
-      "title": "Destino das notificações",
-      "description": "Escolher MongoDB ou Redis e definir a automação dos alertas."
-    },
-    {
-      "title": "Organização das NRs",
-      "description": "Especificar as três partes previstas para o catálogo."
-    },
-    {
-      "title": "Índices e validação",
-      "description": "Índices, tipos definitivos e campos obrigatórios ainda não foram especificados na documentação."
+      "title": "Dashboards",
+      "description": "Fora desta etapa; nenhuma coleção de dashboards foi criada."
     }
   ]
 }

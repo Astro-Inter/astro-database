@@ -8,11 +8,11 @@ import { mongoMatches, mongoView } from '../site/components/mongo/mongo-view.js'
 
 test('catálogo documenta as propostas e preserva decisões em aberto', async () => {
   const data = await analyzeMongo({ write: false });
-  assert.equal(data.collections.length, 5);
+  assert.equal(data.collections.length, 9);
   assert.deepEqual(data.issues, []);
   assert.ok(data.collections.every((collection) => collection.file.startsWith('mongo/collections/')));
-  assert.ok(data.collections.find((collection) => collection.name === 'forms').notes.some((note) => note.includes('cada formulário')));
-  assert.ok(data.collections.find((collection) => collection.name === 'notificacoes').notes.some((note) => note.includes('Redis')));
+  assert.ok(data.collections.find((collection) => collection.name === 'formularios').notes.some((note) => note.includes('Não há uma coleção')));
+  assert.ok(data.collections.find((collection) => collection.name === 'notificacoes').notes.some((note) => note.includes('Mongo')));
   assert.ok(mongoMatches(data.collections.find((collection) => collection.name === 'sessoes'), 'mensagens'));
   assert.ok(mongoMatches(data.collections.find((collection) => collection.name === 'notificacoes'), 'notificações'));
 });

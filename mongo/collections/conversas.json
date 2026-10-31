@@ -1,0 +1,36 @@
+{
+  "name": "conversas",
+  "title": "Conversas",
+  "description": "Vínculo entre os dois participantes do chat.",
+  "status": "Implementada",
+  "pattern": "Documentos e referências",
+  "fields": [
+    {
+      "name": "_id",
+      "type": "string",
+      "description": "UUID da conversa.",
+      "required": "Sim"
+    },
+    {
+      "name": "participantes_ids",
+      "type": "array<number>",
+      "description": "IDs PostgreSQL dos dois usuários.",
+      "required": "Sim"
+    }
+  ],
+  "example": {
+    "_id": "11111111-2222-4333-8444-555555555555",
+    "participantes_ids": [
+      1,
+      2
+    ]
+  },
+  "notes": [
+    "A API autoriza o acesso pela participação; não aceita consultar conversas alheias.",
+    "participantes_ids substitui participantes; IDs da conversa permanecem estáveis."
+  ],
+  "indexes": [
+    "_id: único.",
+    "Recomendado: participantes_ids para listar conversas por usuário."
+  ]
+}
