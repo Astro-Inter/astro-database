@@ -4,7 +4,8 @@
   "description": "Conteúdo descritivo e atributos das NRs.",
   "pattern": "Documento",
   "notes": [
-    "A modelagem prevê guardar em três partes; a divisão ainda precisa ser definida."
+    "Catálogo publicado consumido pela API; _id é o código da NR.",
+    "A coleção nrs_pendentes usa a mesma estrutura para revisão antes da publicação."
   ],
   "fields": [
     {
@@ -84,6 +85,6 @@
     },
     "revogada": false
   },
-  "status": "Proposta",
+  "status": "Implementada",
   "indexes": []
 }

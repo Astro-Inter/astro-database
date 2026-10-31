@@ -1,62 +1,108 @@
 {
   "name": "notificacoes",
   "title": "Notificações",
-  "description": "Proposta de notificações destinadas a usuários, com mensagem, data de criação, evento vinculado e título do alerta.",
-  "pattern": "Referências",
-  "notes": [
-    "O armazenamento em MongoDB ou Redis ainda está em aberto.",
-    "O campo id_evento é opcional e pode ser omitido quando a notificação não estiver vinculada a um evento.",
-    "titulo contém o título do alerta, separado do texto de mensagem. O exemplo notifica sobre o prazo de um evento próximo do fim.",
-    "Definir a responsabilidade pela automação dos alertas no backend."
-  ],
+  "description": "Alertas persistidos por usuário; Redis pode apoiar a entrega, sem substituir o documento Mongo.",
+  "status": "Implementada",
+  "pattern": "Documentos e referências",
   "fields": [
     {
       "name": "_id",
-      "type": "number",
+      "type": "number | string | ObjectId",
       "description": "Identificador da notificação.",
-      "required": "A definir"
+      "required": "Sim"
     },
     {
-      "name": "id_usuario",
+      "name": "usuario_id",
       "type": "number",
-      "description": "Destinatário.",
-      "required": "A definir"
+      "description": "Usuário destinatário.",
+      "required": "Sim"
     },
     {
-      "name": "mensagem",
-      "type": "string",
-      "description": "Texto da notificação.",
-      "required": "A definir"
-    },
-    {
-      "name": "data_criacao",
-      "type": "date",
-      "description": "Data de criação.",
-      "required": "A definir"
-    },
-    {
-      "name": "id_evento",
+      "name": "workspace_id",
       "type": "number",
-      "description": "Identificador opcional do evento vinculado à notificação; pode ser omitido quando não houver evento associado.",
+      "description": "Workspace associado quando informado.",
+      "required": "Não"
+    },
+    {
+      "name": "evento_id",
+      "type": "number",
+      "description": "Evento associado, quando houver.",
       "required": "Não"
     },
     {
       "name": "titulo",
       "type": "string",
-      "description": "Título do alerta exibido ao destinatário.",
-      "required": "A definir"
+      "description": "Título do alerta.",
+      "required": "Não"
+    },
+    {
+      "name": "mensagem",
+      "type": "string",
+      "description": "Texto da notificação.",
+      "required": "Sim"
+    },
+    {
+      "name": "data_criacao",
+      "type": "date",
+      "description": "Instante de criação.",
+      "required": "Sim"
+    },
+    {
+      "name": "tipo",
+      "type": "string",
+      "description": "Categoria do alerta, quando informada.",
+      "required": "Não"
+    },
+    {
+      "name": "chave_deduplicacao",
+      "type": "string",
+      "description": "Chave de idempotência quando usada pelo produtor.",
+      "required": "Não"
+    },
+    {
+      "name": "recurso",
+      "type": "object | string",
+      "description": "Referência de recurso fornecida pelo produtor.",
+      "required": "Não"
+    },
+    {
+      "name": "regra_versao",
+      "type": "number",
+      "description": "Versão da regra de geração.",
+      "required": "Não"
+    },
+    {
+      "name": "recurso.recurso_id",
+      "type": "number | string",
+      "description": "Identificador do recurso vinculado; substitui recurso.id nos documentos legados.",
+      "required": "Não"
+    },
+    {
+      "name": "recurso.tipo",
+      "type": "string",
+      "description": "Tipo do recurso vinculado.",
+      "required": "Não"
     }
   ],
   "example": {
     "_id": 1,
-    "id_usuario": 2,
-    "mensagem": "Conclua o treinamento pendente.",
+    "usuario_id": 2,
+    "evento_id": 1,
+    "titulo": "Treinamento pendente",
+    "mensagem": "Conclua o treinamento.",
     "data_criacao": {
-      "$date": "2026-06-25T12:19:40.233Z"
-    },
-    "id_evento": 1,
-    "titulo": "Prazo de evento próximo do fim"
+      "$date": "2026-10-30T15:00:00Z"
+    }
   },
-  "status": "Proposta",
-  "indexes": []
+  "notes": [
+    "O Mongo é o armazenamento usado pela API Java e pelo produtor de notificações.",
+    "id_usuario vira usuario_id; id_evento/event_id viram evento_id; title vira titulo. Valores conflitantes impedem a migração.",
+    "Atualizar astro-notification-service junto da API e da ferramenta de IA.",
+    "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+  ],
+  "indexes": [
+    "_id: único.",
+    "usuario_id + data_criacao decrescente + _id decrescente.",
+    "chave_deduplicacao: índice único parcial para strings quando configurado pelo produtor."
+  ]
 }

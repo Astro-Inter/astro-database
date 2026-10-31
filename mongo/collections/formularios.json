@@ -1,0 +1,389 @@
+{
+  "name": "formularios",
+  "title": "Formulários",
+  "description": "Uma coleção física compartilhada, com escopo por workspace e um documento por formulário.",
+  "status": "Implementada",
+  "pattern": "Documentos e referências",
+  "fields": [
+    {
+      "name": "_id",
+      "type": "string",
+      "description": "UUID do formulário.",
+      "required": "Sim"
+    },
+    {
+      "name": "workspace_id",
+      "type": "number",
+      "description": "Workspace PostgreSQL do formulário.",
+      "required": "Sim"
+    },
+    {
+      "name": "gestor_remetente_id",
+      "type": "number",
+      "description": "Usuário gestor que criou o formulário.",
+      "required": "Sim"
+    },
+    {
+      "name": "gestor_id",
+      "type": "number | null",
+      "description": "Usuário gestor destinatário; obrigatório ao publicar.",
+      "required": "Não"
+    },
+    {
+      "name": "nr_id",
+      "type": "number | null",
+      "description": "Código da NR vinculada.",
+      "required": "Não",
+      "references": "nrs"
+    },
+    {
+      "name": "unidade_id",
+      "type": "number | null",
+      "description": "Unidade PostgreSQL vinculada.",
+      "required": "Não"
+    },
+    {
+      "name": "titulo",
+      "type": "string",
+      "description": "Título limpo, até 100 caracteres; sem marcador ac1.",
+      "required": "Sim"
+    },
+    {
+      "name": "descricao",
+      "type": "string",
+      "description": "Descrição, até 240 caracteres.",
+      "required": "Não"
+    },
+    {
+      "name": "configuracao",
+      "type": "object | null",
+      "description": "Configuração visual opcional embutida.",
+      "required": "Não"
+    },
+    {
+      "name": "configuracao.icone",
+      "type": "string",
+      "description": "Identificador permitido do ícone; contrato HTTP appearance.icon.",
+      "required": "Não"
+    },
+    {
+      "name": "configuracao.cor",
+      "type": "string",
+      "description": "Identificador permitido da cor; contrato HTTP appearance.color.",
+      "required": "Não"
+    },
+    {
+      "name": "data_limite",
+      "type": "date | null",
+      "description": "Data BSON correspondente ao início do dia em America/Sao_Paulo; a API expõe YYYY-MM-DD.",
+      "required": "Não"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "description": "RASCUNHO, PENDENTE ou CONCLUIDO.",
+      "required": "Sim"
+    },
+    {
+      "name": "versao",
+      "type": "number",
+      "description": "Controle de concorrência das alterações.",
+      "required": "Não"
+    },
+    {
+      "name": "envio_id",
+      "type": "string | null",
+      "description": "UUID da tentativa de resposta para idempotência.",
+      "required": "Não"
+    },
+    {
+      "name": "criado_em",
+      "type": "date",
+      "description": "Criação do documento.",
+      "required": "Sim"
+    },
+    {
+      "name": "atualizado_em",
+      "type": "date",
+      "description": "Última alteração.",
+      "required": "Não"
+    },
+    {
+      "name": "respondido_em",
+      "type": "date | null",
+      "description": "Instante da resposta; null antes do envio.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas",
+      "type": "array<object>",
+      "description": "Definições e respostas embutidas.",
+      "required": "Sim"
+    },
+    {
+      "name": "perguntas[].pergunta_id",
+      "type": "number",
+      "description": "Identificador local da pergunta.",
+      "required": "Sim"
+    },
+    {
+      "name": "perguntas[].tipo",
+      "type": "string",
+      "description": "texto, alternativa, foto ou data.",
+      "required": "Sim"
+    },
+    {
+      "name": "perguntas[].pergunta",
+      "type": "string",
+      "description": "Enunciado de até 140 caracteres.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].obrigatoria",
+      "type": "boolean",
+      "description": "Exige resposta no envio.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].multipla_escolha",
+      "type": "boolean | null",
+      "description": "Permite várias opções em alternativa.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].opcoes",
+      "type": "array<object>",
+      "description": "Opções da pergunta de alternativa.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].opcoes[].opcao_id",
+      "type": "number",
+      "description": "Identificador local da opção.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].opcoes[].texto",
+      "type": "string",
+      "description": "Rótulo da opção, até 80 caracteres.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].opcoes[].outra",
+      "type": "boolean",
+      "description": "Identifica Outros.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].maximo_arquivos",
+      "type": "number | null",
+      "description": "De 1 a 10 arquivos para foto.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].tamanho_maximo_mb",
+      "type": "number | null",
+      "description": "5, 10, 20, 50 ou 100 MB por arquivo.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].resposta",
+      "type": "array",
+      "description": "Texto/data ISO; IDs numéricos de opções; objeto outro_texto; metadados de foto.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].resposta[].outro_texto",
+      "type": "string",
+      "description": "Texto digitado para Outros.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].resposta[].imagem_id",
+      "type": "string",
+      "description": "UUID da imagem.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].resposta[].chave_objeto",
+      "type": "string",
+      "description": "Chave privada R2; não exposta na resposta pública.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].resposta[].nome",
+      "type": "string",
+      "description": "Nome do arquivo.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].resposta[].tipo_conteudo",
+      "type": "string",
+      "description": "MIME da foto.",
+      "required": "Não"
+    },
+    {
+      "name": "perguntas[].resposta[].tamanho_bytes",
+      "type": "number",
+      "description": "Tamanho do arquivo em bytes.",
+      "required": "Não"
+    },
+    {
+      "name": "analise",
+      "type": "object | null",
+      "description": "Análise do remetente após receber respostas.",
+      "required": "Não"
+    },
+    {
+      "name": "analise.status",
+      "type": "string",
+      "description": "Resultado da análise, conforme enum do domínio.",
+      "required": "Não"
+    },
+    {
+      "name": "analise.gestor_revisor_id",
+      "type": "number",
+      "description": "Gestor responsável pela análise.",
+      "required": "Não"
+    },
+    {
+      "name": "analise.analisado_em",
+      "type": "date",
+      "description": "Data da análise.",
+      "required": "Não"
+    },
+    {
+      "name": "analise.descricao",
+      "type": "string",
+      "description": "Justificativa quando aplicável.",
+      "required": "Não"
+    },
+    {
+      "name": "consentimento_localizacao",
+      "type": "boolean | null",
+      "description": "Consentimento para coleta de localização.",
+      "required": "Não"
+    },
+    {
+      "name": "localizacoes",
+      "type": "array<object>",
+      "description": "Leituras de localização, quando persistidas.",
+      "required": "Não"
+    },
+    {
+      "name": "localizacoes[].latitude",
+      "type": "number",
+      "description": "Latitude da leitura.",
+      "required": "Não"
+    },
+    {
+      "name": "localizacoes[].longitude",
+      "type": "number",
+      "description": "Longitude da leitura.",
+      "required": "Não"
+    },
+    {
+      "name": "localizacoes[].precisao_metros",
+      "type": "number",
+      "description": "Precisão informada pelo dispositivo.",
+      "required": "Não"
+    },
+    {
+      "name": "localizacoes[].registrado_em",
+      "type": "date",
+      "description": "Instante da leitura.",
+      "required": "Não"
+    },
+    {
+      "name": "validacao_localizacao",
+      "type": "object | null",
+      "description": "Resultado da validação geográfica.",
+      "required": "Não"
+    },
+    {
+      "name": "validacao_localizacao.unidade_id",
+      "type": "number",
+      "description": "Unidade da validação.",
+      "required": "Não"
+    },
+    {
+      "name": "validacao_localizacao.latitude_unidade",
+      "type": "number",
+      "description": "Latitude da unidade.",
+      "required": "Não"
+    },
+    {
+      "name": "validacao_localizacao.longitude_unidade",
+      "type": "number",
+      "description": "Longitude da unidade.",
+      "required": "Não"
+    },
+    {
+      "name": "validacao_localizacao.raio_metros",
+      "type": "number",
+      "description": "Raio permitido.",
+      "required": "Não"
+    },
+    {
+      "name": "validacao_localizacao.distancia_metros",
+      "type": "number",
+      "description": "Distância calculada.",
+      "required": "Não"
+    },
+    {
+      "name": "validacao_localizacao.leitura",
+      "type": "object",
+      "description": "Leitura utilizada: latitude, longitude, precisao_metros e registrado_em.",
+      "required": "Não"
+    }
+  ],
+  "example": {
+    "_id": "11111111-2222-4333-8444-555555555555",
+    "workspace_id": 1,
+    "gestor_remetente_id": 10,
+    "gestor_id": 20,
+    "nr_id": 6,
+    "unidade_id": 3,
+    "titulo": "Inspeção de segurança",
+    "descricao": "Verificação das condições da unidade.",
+    "configuracao": {
+      "icone": "security",
+      "cor": "teal"
+    },
+    "data_limite": {
+      "$date": "2026-10-31T03:00:00Z"
+    },
+    "status": "PENDENTE",
+    "versao": 0,
+    "criado_em": {
+      "$date": "2026-10-30T15:00:00Z"
+    },
+    "atualizado_em": {
+      "$date": "2026-10-30T15:00:00Z"
+    },
+    "respondido_em": null,
+    "perguntas": [
+      {
+        "pergunta_id": 1,
+        "tipo": "texto",
+        "pergunta": "Descreva as condições observadas.",
+        "obrigatoria": true,
+        "opcoes": [],
+        "resposta": []
+      }
+    ]
+  },
+  "notes": [
+    "Substitui a coleção legada forms; executar a migração antes de disponibilizar os novos serviços.",
+    "Nomes Java e contratos HTTP permanecem em inglês/camelCase; @Field e os mappers definem o armazenamento português.",
+    "Cores e ícones usam identificadores do catálogo do frontend; nomes de campos são portugueses.",
+    "Não há uma coleção para cada formulário. Respostas permanecem no documento do formulário.",
+    "Omitir appearance em uma edição preserva a configuração existente; null também preserva. Sem configuração, o frontend usa seus padrões.",
+    "Ícones: document, calendar, feedback, person-outline, security, check, building, collaborators, position, clock. Cores: purple, pink, blue, green, teal, indigo, orange, rose, violet, slate."
+  ],
+  "indexes": [
+    "_id: único, criado pelo Mongo.",
+    "Recomendado: workspace_id + gestor_remetente_id + criado_em + _id; avaliar conforme consultas.",
+    "Recomendado: workspace_id + gestor_id + status + criado_em + _id; avaliar conforme consultas."
+  ]
+}

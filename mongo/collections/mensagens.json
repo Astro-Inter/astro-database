@@ -1,56 +1,74 @@
 {
   "name": "mensagens",
   "title": "Mensagens de chat",
-  "description": "Mensagens de chat com remetente, destinatário, texto e data de envio, em um documento por mensagem.",
-  "pattern": "Referências",
-  "notes": [
-    "A collection se chama mensagens. A estrutura documentada corresponde aos campos exibidos na referência do MongoDB Compass.",
-    "A referência contém documentos com _id em string no formato UUID e documentos com _id do tipo ObjectId. O exemplo usa uma string; em JSON estendido, um ObjectId pode ser representado como {\"$oid\": \"000000000000000000000001\"}.",
-    "id_envia e id_recebe são identificadores numéricos do remetente e do destinatário. A mensagem é uma string e data é uma data BSON, representada com $date no exemplo JSON.",
-    "A referência indica três índices, mas não mostra suas definições; os campos e as opções desses índices ainda precisam ser documentados.",
-    "O documento exibido não contém campo de leitura nem identificador de sessão. Definir o registro de leitura e avaliar a organização por sessão."
-  ],
+  "description": "Mensagens do chat com referência à conversa e ao remetente.",
+  "status": "Implementada",
+  "pattern": "Documentos e referências",
   "fields": [
     {
       "name": "_id",
       "type": "string | ObjectId",
-      "description": "Identificador da mensagem. A referência mostra string em formato UUID e ObjectId em documentos distintos.",
-      "required": "A definir"
+      "description": "Identificador da mensagem.",
+      "required": "Sim"
     },
     {
-      "name": "id_envia",
-      "type": "number",
-      "description": "Identificador numérico do remetente.",
-      "required": "A definir"
+      "name": "conversa_id",
+      "type": "string",
+      "description": "Conversa à qual a mensagem pertence.",
+      "required": "Não",
+      "references": "conversas"
     },
     {
-      "name": "id_recebe",
+      "name": "remetente_id",
       "type": "number",
-      "description": "Identificador numérico do destinatário.",
-      "required": "A definir"
+      "description": "Usuário PostgreSQL remetente.",
+      "required": "Sim"
+    },
+    {
+      "name": "destinatario_id",
+      "type": "number",
+      "description": "Destinatário explícito de mensagens produzidas pela ferramenta de IA.",
+      "required": "Não"
+    },
+    {
+      "name": "resposta_mensagem_id",
+      "type": "string | null",
+      "description": "Mensagem à qual responde.",
+      "required": "Não",
+      "references": "mensagens"
     },
     {
       "name": "mensagem",
       "type": "string",
       "description": "Texto da mensagem.",
-      "required": "A definir"
+      "required": "Sim"
     },
     {
       "name": "data",
       "type": "date",
-      "description": "Data e hora do envio, em BSON date; representada com $date no exemplo JSON.",
-      "required": "A definir"
+      "description": "Instante do envio.",
+      "required": "Sim"
     }
   ],
   "example": {
-    "_id": "11111111-2222-4333-8444-555555555555",
-    "id_envia": 1,
-    "id_recebe": 2,
+    "_id": "22222222-2222-4333-8444-555555555555",
+    "conversa_id": "11111111-2222-4333-8444-555555555555",
+    "remetente_id": 1,
+    "destinatario_id": 2,
     "mensagem": "Olá!",
+    "resposta_mensagem_id": null,
     "data": {
-      "$date": "2026-09-12T21:53:55.934Z"
+      "$date": "2026-10-30T15:00:00Z"
     }
   },
-  "status": "Documentada",
-  "indexes": []
+  "notes": [
+    "Campos legados id_conversa/id_remetente e id_envia/id_recebe são migrados sem inventar vínculo de conversa ausente.",
+    "A ferramenta de IA usa remetente/destinatário explícitos; a API Java lista por conversa. Essa diferença funcional já existia e não é resolvida apenas renomeando campos.",
+    "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+  ],
+  "indexes": [
+    "_id: único.",
+    "Recomendado: conversa_id + data decrescente + _id decrescente.",
+    "Ferramenta IA: remetente_id + destinatario_id + data; destinatario_id + remetente_id + data."
+  ]
 }

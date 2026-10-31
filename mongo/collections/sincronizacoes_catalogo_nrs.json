@@ -1,0 +1,43 @@
+{
+  "name": "sincronizacoes_catalogo_nrs",
+  "title": "Sincronizações do catálogo de NRs",
+  "description": "Fila transacional de sincronização do catálogo Mongo com o PostgreSQL.",
+  "status": "Implementada",
+  "pattern": "Documentos e referências",
+  "fields": [
+    {
+      "name": "_id",
+      "type": "string",
+      "description": "ID da tarefa.",
+      "required": "Sim"
+    },
+    {
+      "name": "nr_id",
+      "type": "number",
+      "description": "Código da NR a sincronizar.",
+      "required": "Sim",
+      "references": "nrs"
+    },
+    {
+      "name": "criado_em",
+      "type": "date",
+      "description": "Criação da tarefa.",
+      "required": "Sim"
+    }
+  ],
+  "example": {
+    "_id": "tarefa-ficticia",
+    "nr_id": 6,
+    "criado_em": {
+      "$date": "2026-10-30T15:00:00Z"
+    }
+  },
+  "notes": [
+    "Substitui nr_catalog_sql_sync; nrId vira nr_id e createdAt vira criado_em.",
+    "O consumidor remove a tarefa após confirmar a sincronização SQL."
+  ],
+  "indexes": [
+    "_id: único.",
+    "Recomendado: criado_em para processar tarefas mais antigas primeiro."
+  ]
+}
