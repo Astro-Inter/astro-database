@@ -1,7 +1,7 @@
 {
   "id": "chat-session",
   "title": "Retomada de sessão do chatbot",
-  "key": "chat:usuario:{id}",
+  "key": "conversa:usuario:{id}",
   "type": "String",
   "category": "Sessão",
   "status": "Proposta",
@@ -10,8 +10,8 @@
   "producer": "Chatbot · a definir",
   "consumer": "Chatbot · a definir",
   "commands": [
-    "SET chat:usuario:{id} <session_id>",
-    "EXPIRE chat:usuario:{id} <segundos>"
+    "SET conversa:usuario:{id} <id_sessao>",
+    "EXPIRE conversa:usuario:{id} <segundos>"
   ],
   "fields": [
     {

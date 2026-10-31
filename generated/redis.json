@@ -1,191 +1,663 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-26T17:32:31.547Z",
+  "generatedAt": "2026-10-31T01:21:52.401Z",
   "keys": [
     {
+      "id": "chat-delivery-channel",
+      "title": "Canal de entrega de mensagens",
+      "key": "astro:conversa:entrega:v1",
+      "type": "Pub/Sub",
+      "category": "Canal",
+      "status": "Implementado",
+      "description": "Distribui eventos de mensagens entre as instâncias da API; cada instância encaminha o evento para as sessões WebSocket do destinatário. Nenhum assinante gera falha de entrega tratada pelo fluxo de envio.",
+      "ttl": "Não se aplica: canal Pub/Sub não é chave persistida e não possui TTL ou histórico.",
+      "producer": "astro-api · RedisChatMessagePublisher",
+      "consumer": "astro-api · ChatRedisPubSubConfig e listener correspondente",
+      "commands": [
+        "PUBLISH astro:conversa:entrega:v1 <evento_json>",
+        "SUBSCRIBE astro:conversa:entrega:v1"
+      ],
+      "fields": [
+        {
+          "name": "evento",
+          "type": "JSON",
+          "description": "Contrato interno de entrega; mantém os atributos Java/JSON em inglês para compatibilidade."
+        }
+      ],
+      "example": {
+        "recipientId": 25,
+        "message": {
+          "id": "mensagem-exemplo"
+        }
+      },
+      "notes": [
+        "Pub/Sub não oferece fila, persistência ou repetição para assinantes desconectados.",
+        "Todos os publicadores e assinantes devem usar o mesmo canal. O payload não foi traduzido."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/chat/messaging/RedisChatMessagePublisher.java",
+          "symbol": "publish"
+        },
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/chat/config/ChatRedisPubSubConfig.java",
+          "symbol": "chatRedisMessageListenerContainer"
+        }
+      ],
+      "file": "redis/keys/chat-delivery-channel.json"
+    },
+    {
+      "id": "chat-processed",
+      "title": "Deduplicação do contador de mensagens",
+      "key": "conversa:nao_lidas:processadas:{id_conversa}",
+      "type": "Set",
+      "category": "Deduplicação",
+      "status": "Implementado",
+      "description": "Registra os IDs das mensagens já contabilizadas. Impede que a repetição do envio de uma mesma mensagem aumente novamente o contador do destinatário.",
+      "ttl": "Sem TTL ou limpeza automática definidos.",
+      "producer": "astro-api · ChatService.send",
+      "consumer": "astro-api · INCREMENT_UNREAD_ONCE",
+      "commands": [
+        "SISMEMBER conversa:nao_lidas:processadas:{id_conversa} <id_mensagem>",
+        "SADD conversa:nao_lidas:processadas:{id_conversa} <id_mensagem>"
+      ],
+      "fields": [
+        {
+          "name": "membro",
+          "type": "String",
+          "description": "ID da mensagem persistida em MongoDB."
+        }
+      ],
+      "example": [
+        "11111111-2222-4333-8444-555555555555"
+      ],
+      "notes": [
+        "O script verifica SISMEMBER antes de INCR; mensagem repetida retorna zero sem novo incremento.",
+        "Marcar como lida remove apenas o contador. Preservar o conjunto impede recontagem de mensagens antigas após reenvio.",
+        "O conjunto cresce com a conversa; uma política de retenção exige preservar a janela de idempotência."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/chat/service/ChatService.java",
+          "symbol": "INCREMENT_UNREAD_ONCE / UNREAD_PROCESSED_KEY_PREFIX"
+        }
+      ],
+      "file": "redis/keys/chat-processed.json"
+    },
+    {
+      "id": "chat-typing-channel",
+      "title": "Canal de eventos de digitação",
+      "key": "astro:conversa:digitacao:v1",
+      "type": "Pub/Sub",
+      "category": "Canal",
+      "status": "Implementado",
+      "description": "Distribui início e fim de digitação entre as instâncias; o listener encaminha o evento ao destinatário. O marcador de frequência é uma chave separada.",
+      "ttl": "Não se aplica: canal Pub/Sub não é chave persistida e não possui TTL ou histórico.",
+      "producer": "astro-api · RedisChatTypingPublisher",
+      "consumer": "astro-api · ChatRedisPubSubConfig e listener correspondente",
+      "commands": [
+        "PUBLISH astro:conversa:digitacao:v1 <evento_json>",
+        "SUBSCRIBE astro:conversa:digitacao:v1"
+      ],
+      "fields": [
+        {
+          "name": "evento",
+          "type": "JSON",
+          "description": "Contrato interno de entrega; mantém os atributos Java/JSON em inglês para compatibilidade."
+        }
+      ],
+      "example": {
+        "recipientId": 25,
+        "event": {
+          "senderId": 12,
+          "typing": true
+        }
+      },
+      "notes": [
+        "Pub/Sub não oferece fila, persistência ou repetição para assinantes desconectados.",
+        "Todos os publicadores e assinantes devem usar o mesmo canal. O payload não foi traduzido."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/chat/messaging/RedisChatTypingPublisher.java",
+          "symbol": "publish"
+        },
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/chat/config/ChatRedisPubSubConfig.java",
+          "symbol": "chatRedisMessageListenerContainer"
+        }
+      ],
+      "file": "redis/keys/chat-typing-channel.json"
+    },
+    {
+      "id": "chat-typing-limit",
+      "title": "Limite de eventos de digitação",
+      "key": "conversa:digitacao:limite:{id_remetente}:{id_destinatario}",
+      "type": "String",
+      "category": "Controle de frequência",
+      "status": "Implementado",
+      "description": "Reduz eventos repetidos enquanto uma pessoa digita, evitando tráfego excessivo no Redis e no WebSocket. O limite é compartilhado pelas instâncias da API.",
+      "ttl": "1500 milissegundos em SET NX; DEL quando typing=false.",
+      "producer": "astro-api · RedisChatTypingPublisher.publish",
+      "consumer": "astro-api · RedisChatTypingPublisher.publish",
+      "commands": [
+        "SET conversa:digitacao:limite:{id_remetente}:{id_destinatario} 1 NX PX 1500",
+        "DEL conversa:digitacao:limite:{id_remetente}:{id_destinatario}"
+      ],
+      "fields": [
+        {
+          "name": "id_remetente / id_destinatario",
+          "type": "Long",
+          "description": "IDs PostgreSQL dos participantes autorizados."
+        },
+        {
+          "name": "valor",
+          "type": "String",
+          "description": "Marcador 1; não contém texto da mensagem."
+        }
+      ],
+      "example": "1",
+      "notes": [
+        "O evento somente é publicado quando o SET NX permite. A expiração libera novas publicações.",
+        "O evento de parada de digitação remove o marcador e é publicado imediatamente."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/chat/messaging/RedisChatTypingPublisher.java",
+          "symbol": "publish"
+        }
+      ],
+      "file": "redis/keys/chat-typing-limit.json"
+    },
+    {
+      "id": "chat-unread",
+      "title": "Mensagens não lidas por destinatário",
+      "key": "conversa:nao_lidas:{id_conversa}:{id_usuario}",
+      "type": "String",
+      "category": "Contador",
+      "status": "Implementado",
+      "description": "Mantém o número de mensagens novas de cada participante. A listagem lê vários contadores em lote; abrir a conversa limpa somente o contador do usuário autenticado após autorizar sua participação.",
+      "ttl": "Sem TTL definido; DEL ao marcar a conversa como lida.",
+      "producer": "astro-api · ChatService.send (Lua com INCR)",
+      "consumer": "astro-api · ChatService.listConversations / markAsRead",
+      "commands": [
+        "INCR conversa:nao_lidas:{id_conversa}:{id_usuario}",
+        "MGET <chaves_das_conversas>",
+        "DEL conversa:nao_lidas:{id_conversa}:{id_usuario}"
+      ],
+      "fields": [
+        {
+          "name": "id_conversa",
+          "type": "UUID",
+          "description": "Identificador da conversa em MongoDB."
+        },
+        {
+          "name": "id_usuario",
+          "type": "Long",
+          "description": "ID PostgreSQL do destinatário."
+        },
+        {
+          "name": "valor",
+          "type": "String numérica",
+          "description": "Contador inteiro não negativo; chave ausente equivale a zero."
+        }
+      ],
+      "example": "3",
+      "notes": [
+        "O incremento e o registro de deduplicação executam no mesmo script Lua.",
+        "Falhas Redis são propagadas; o serviço não transforma indisponibilidade em contador zero.",
+        "As mensagens e a participação na conversa permanecem em MongoDB; o contador não substitui o histórico."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/chat/service/ChatService.java",
+          "symbol": "send / unreadKey / markAsRead / listConversations"
+        }
+      ],
+      "file": "redis/keys/chat-unread.json"
+    },
+    {
       "id": "employee-queue",
-      "title": "Fila de primeiro acesso",
-      "key": "<REDIS_QUEUE_KEY>",
+      "title": "Fila de acesso de colaboradores",
+      "key": "processamento:email:colaborador",
       "type": "List",
       "category": "Fila",
       "status": "Implementado",
-      "description": "Contém IDs de usuários pré-cadastrados para envio do e-mail de primeiro acesso. O worker consulta o PostgreSQL antes de gerar o token e enviar a mensagem.",
-      "ttl": "Sem TTL definido pelo worker. Cada item é removido por LPOP.",
-      "producer": "Aplicação que cadastra colaboradores; produtor não localizado nos repositórios consultados.",
-      "consumer": "astro-email-worker · processEmailQueue",
+      "description": "Desacopla o cadastro e o reenvio de acesso do envio SMTP. Cada item contém o e-mail de um colaborador pré-cadastrado; a API confirma o cadastro sem aguardar o processamento do e-mail.",
+      "ttl": "Sem TTL definido pela API ou pelo worker; cada item é removido por LPOP.",
+      "producer": "astro-api · PreRegistrationQueueService (cadastro após commit e reenvio explícito)",
+      "consumer": "astro-email-worker · processEmailQueue, usando REDIS_QUEUE_KEY com este mesmo nome",
       "commands": [
-        "LPOP <REDIS_QUEUE_KEY>"
+        "RPUSH processamento:email:colaborador <email>",
+        "LPOP processamento:email:colaborador"
       ],
       "fields": [
         {
           "name": "item",
           "type": "String",
-          "description": "ID de usuario.id_usuario; não é um objeto com e-mail e ID."
+          "description": "E-mail do colaborador; o worker aplica trim e minúsculas e consulta PostgreSQL pelo e-mail."
         }
       ],
       "example": [
-        "123",
-        "456"
+        "colaborador@exemplo.com"
       ],
       "notes": [
-        "O worker aceita somente usuários do tipo COLABORADOR e status PRE_CADASTRADO; usuários ausentes ou incompatíveis são ignorados.",
-        "A execução termina quando a fila esvazia; não há BRPOP bloqueante.",
-        "Falha na geração do token ou envio do e-mail é registrada, mas o ID removido não é devolvido à fila. Não há confirmação ou fila de falhas implementada.",
-        "A ordem depende do comando do produtor: RPUSH com LPOP mantém FIFO. O produtor deve confirmar o contrato."
+        "RPUSH e LPOP mantêm FIFO. Reenvios podem gerar itens duplicados.",
+        "O worker exige COLABORADOR / PRE_CADASTRADO; registros ausentes ou incompatíveis são ignorados.",
+        "Após commit, falhas de enfileiramento são registradas sem desfazer PostgreSQL. O reenvio exige confirmação do Redis e propaga falhas.",
+        "Falhas de geração ou SMTP no worker de colaboradores não devolvem o item à fila. Não há garantia de entrega nem transação distribuída.",
+        "REDIS_QUEUE_KEY deve coincidir com o nome fixo usado na API; a cópia local do ambiente do worker ainda aponta para uma fila de funcionário, divergência de configuração a corrigir na implantação."
       ],
       "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/workspace/service/PreRegistrationQueueService.java",
+          "symbol": "enqueueAfterCommit / enqueueCollaboratorEmail"
+        },
         {
           "repo": "astro-email-worker",
           "file": "src/workers/emailQueueWorker.js",
           "symbol": "processEmailQueue"
-        },
-        {
-          "repo": "astro-email-worker",
-          "file": "src/services/userService.js",
-          "symbol": "getEmployeeById"
-        },
-        {
-          "repo": "astro-email-worker",
-          "file": "src/repositories/userRepository.js",
-          "symbol": "findUserById"
         }
       ],
       "file": "redis/keys/employee-queue.json"
     },
     {
       "id": "employee-token",
-      "title": "Token de primeiro acesso",
-      "key": "<ACCESS_TOKEN_PREFIX>{id_usuario}",
+      "title": "Código de acesso de colaborador",
+      "key": "processamento:email:colaborador:chave_acesso:{email_normalizado}",
       "type": "String",
-      "category": "Token",
+      "category": "Código de acesso",
       "status": "Implementado",
-      "description": "Código de seis dígitos associado ao ID de usuário do PostgreSQL. É gerado pelo worker e incluído no e-mail de primeiro acesso.",
-      "ttl": "ACCESS_TOKEN_TTL_SECONDS (segundos), aplicado em SET com EX. Valor depende da configuração.",
-      "producer": "astro-email-worker · createAccessToken",
-      "consumer": "Aplicação que valida o primeiro acesso; validação não localizada nos repositórios consultados.",
+      "description": "Permite conferir o código de seis dígitos enviado por e-mail sem armazená-lo no cadastro relacional. A chave é formada pelo prefixo configurado mais o e-mail normalizado, não pelo ID do usuário.",
+      "ttl": "ACCESS_TOKEN_TTL_SECONDS em segundos, aplicado pelo worker em SET com EX. O prazo depende da configuração.",
+      "producer": "astro-email-worker · saveAccessToken",
+      "consumer": "astro-api · UserService.verifyAccessKey",
       "commands": [
-        "SET <ACCESS_TOKEN_PREFIX>{id_usuario} <codigo> EX <ACCESS_TOKEN_TTL_SECONDS>"
+        "SET processamento:email:colaborador:chave_acesso:<email_normalizado> <codigo> EX <ACCESS_TOKEN_TTL_SECONDS>",
+        "GET processamento:email:colaborador:chave_acesso:<email_normalizado>"
       ],
       "fields": [
         {
-          "name": "sufixo da chave",
-          "type": "ID",
-          "description": "ID de usuário recebido pelo worker."
+          "name": "email_normalizado",
+          "type": "String",
+          "description": "E-mail com trim e minúsculas."
         },
         {
           "name": "valor",
           "type": "String",
-          "description": "Código aleatório de seis dígitos."
+          "description": "Código de seis dígitos, tratado como segredo."
         }
       ],
       "example": "123456",
       "notes": [
-        "Novo SET na mesma chave substitui o código anterior e renova a expiração.",
-        "A geração usa crypto.randomInt(100000, 1000000).",
-        "Consumo único e remoção após validação precisam ser confirmados na aplicação consumidora."
+        "ACCESS_TOKEN_PREFIX deve ter o mesmo valor em API e worker. O padrão documentado é processamento:email:colaborador:chave_acesso:; os nomes das variáveis de ambiente permanecem os mesmos.",
+        "Um novo SET substitui o código anterior. A API apenas compara o código; não faz DEL nem consome o código uma única vez.",
+        "No fluxo COLABORADOR, a API exige usuário COLABORADOR/PRE_CADASTRADO; no fluxo GESTOR_WORKSPACE, a consulta não exige cadastro PostgreSQL.",
+        "Não registrar o valor do código ou copiar dados reais para exemplos."
       ],
       "evidence": [
         {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/user/service/UserService.java",
+          "symbol": "verifyAccessKey"
+        },
+        {
           "repo": "astro-email-worker",
           "file": "src/services/tokenService.js",
-          "symbol": "generateAccessToken / saveAccessToken / createAccessToken"
+          "symbol": "saveAccessToken"
         }
       ],
       "file": "redis/keys/employee-token.json"
     },
     {
+      "id": "user-avatar",
+      "title": "Cache de fotos dos usuários",
+      "key": "usuario:foto:{id_usuario}",
+      "type": "String",
+      "category": "Cache",
+      "status": "Implementado",
+      "description": "Guarda a URL de download assinada de uma foto do R2. Evita consultas e assinaturas repetidas ao carregar perfis, colaboradores, gestores e conversas.",
+      "ttl": "Expiração absoluta em milissegundos igual ao prazo da URL assinada (PXAT). Nunca estende a validade do link.",
+      "producer": "astro-api · UserAvatarService.cache",
+      "consumer": "astro-api · UserAvatarService.findUrls / findUrl",
+      "commands": [
+        "MGET usuario:foto:{id_usuario} [<outras_chaves> ...]",
+        "SET usuario:foto:{id_usuario} <url_assinada> PXAT <expiracao>",
+        "DEL usuario:foto:{id_usuario}"
+      ],
+      "fields": [
+        {
+          "name": "id_usuario",
+          "type": "Long",
+          "description": "ID PostgreSQL do usuário."
+        },
+        {
+          "name": "valor",
+          "type": "String",
+          "description": "URL assinada para download; não contém a imagem em binário."
+        }
+      ],
+      "example": "https://arquivos.exemplo.com/foto-assinada",
+      "notes": [
+        "Os chamadores autorizam os IDs antes da consulta ao cache compartilhado.",
+        "Faltas de cache são buscadas em lote no PostgreSQL; a origem da foto é UserProfilePhoto e o arquivo fica no R2.",
+        "A troca da foto invalida a chave. Usuários sem foto não são armazenados no cache.",
+        "Falha de leitura/gravação do cache permite devolver URL recém-gerada; falha na invalidação é propagada.",
+        "URLs assinadas são temporárias e não devem aparecer em logs ou exemplos reais."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/user/service/UserAvatarService.java",
+          "symbol": "findUrls / cache / invalidate"
+        },
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/user/service/UserService.java",
+          "symbol": "updateProfilePhoto"
+        }
+      ],
+      "file": "redis/keys/user-avatar.json"
+    },
+    {
+      "id": "viewed-eventos",
+      "title": "Visualizações de eventos",
+      "key": "eventos:visualizados:{id_usuario}",
+      "type": "Set",
+      "category": "Visualização",
+      "status": "Implementado",
+      "description": "Mantém a leitura individual por usuário, evitando marcar um recurso como visualizado para todos. EventService e HomeService consultam os eventos já visualizados para montar listagens e a página inicial do colaborador.",
+      "ttl": "Sem TTL definido no ViewedService; os membros persistem até remoção explícita externa.",
+      "producer": "Não localizado produtor desta família na API; ViewedService oferece a operação genérica markViewed.",
+      "consumer": "astro-api · ViewedService.findViewed e serviços do domínio",
+      "commands": [
+        "SADD eventos:visualizados:{id_usuario} <id_item>",
+        "SMISMEMBER eventos:visualizados:{id_usuario} <id_item> [<id_item> ...]"
+      ],
+      "fields": [
+        {
+          "name": "id_usuario",
+          "type": "Long",
+          "description": "ID PostgreSQL do usuário autorizado."
+        },
+        {
+          "name": "membro",
+          "type": "String",
+          "description": "ID do item convertido em texto; formulários usam UUID e demais recursos usam seus IDs."
+        }
+      ],
+      "example": [
+        "101",
+        "102"
+      ],
+      "notes": [
+        "Um conjunto evita membros duplicados; a consulta remove IDs repetidos antes do SMISMEMBER.",
+        "IDs Java e campos HTTP continuam em inglês; somente os segmentos da chave Redis usam português.",
+        "Não existe limpeza automática dos IDs de itens removidos. A autorização do recurso é feita no fluxo chamador.",
+        "Os comandos ilustram a estrutura; a existência de uma operação no serviço genérico não comprova que todas as famílias possuam produtor."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/common/service/ViewedService.java",
+          "symbol": "findViewed / markViewed / key"
+        },
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/home/service/HomeService.java",
+          "symbol": "loadHome / loadManagerHome"
+        }
+      ],
+      "file": "redis/keys/viewed-eventos.json"
+    },
+    {
+      "id": "viewed-formularios",
+      "title": "Visualizações de formulários",
+      "key": "formularios:visualizados:{id_usuario}",
+      "type": "Set",
+      "category": "Visualização",
+      "status": "Implementado",
+      "description": "Mantém a leitura individual por usuário, evitando marcar um recurso como visualizado para todos. FormResponseService registra a abertura dos detalhes do formulário pelo gestor e consulta o estado na listagem. HomeService reutiliza o conjunto.",
+      "ttl": "Sem TTL definido no ViewedService; os membros persistem até remoção explícita externa.",
+      "producer": "astro-api · ViewedService.markViewed",
+      "consumer": "astro-api · ViewedService.findViewed e serviços do domínio",
+      "commands": [
+        "SADD formularios:visualizados:{id_usuario} <id_item>",
+        "SMISMEMBER formularios:visualizados:{id_usuario} <id_item> [<id_item> ...]"
+      ],
+      "fields": [
+        {
+          "name": "id_usuario",
+          "type": "Long",
+          "description": "ID PostgreSQL do usuário autorizado."
+        },
+        {
+          "name": "membro",
+          "type": "String",
+          "description": "ID do item convertido em texto; formulários usam UUID e demais recursos usam seus IDs."
+        }
+      ],
+      "example": [
+        "11111111-2222-4333-8444-555555555555"
+      ],
+      "notes": [
+        "Um conjunto evita membros duplicados; a consulta remove IDs repetidos antes do SMISMEMBER.",
+        "IDs Java e campos HTTP continuam em inglês; somente os segmentos da chave Redis usam português.",
+        "Não existe limpeza automática dos IDs de itens removidos. A autorização do recurso é feita no fluxo chamador.",
+        "Os comandos ilustram a estrutura; a existência de uma operação no serviço genérico não comprova que todas as famílias possuam produtor."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/common/service/ViewedService.java",
+          "symbol": "findViewed / markViewed / key"
+        },
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/home/service/HomeService.java",
+          "symbol": "loadHome / loadManagerHome"
+        }
+      ],
+      "file": "redis/keys/viewed-formularios.json"
+    },
+    {
+      "id": "viewed-notificacoes",
+      "title": "Visualizações de notificações",
+      "key": "notificacoes:visualizados:{id_usuario}",
+      "type": "Set",
+      "category": "Visualização",
+      "status": "Implementado",
+      "description": "Mantém a leitura individual por usuário, evitando marcar um recurso como visualizado para todos. NotificationController registra e consulta a visualização de notificações do usuário; HomeService usa o mesmo conjunto.",
+      "ttl": "Sem TTL definido no ViewedService; os membros persistem até remoção explícita externa.",
+      "producer": "astro-api · ViewedService.markViewed",
+      "consumer": "astro-api · ViewedService.findViewed e serviços do domínio",
+      "commands": [
+        "SADD notificacoes:visualizados:{id_usuario} <id_item>",
+        "SMISMEMBER notificacoes:visualizados:{id_usuario} <id_item> [<id_item> ...]"
+      ],
+      "fields": [
+        {
+          "name": "id_usuario",
+          "type": "Long",
+          "description": "ID PostgreSQL do usuário autorizado."
+        },
+        {
+          "name": "membro",
+          "type": "String",
+          "description": "ID do item convertido em texto; formulários usam UUID e demais recursos usam seus IDs."
+        }
+      ],
+      "example": [
+        "101",
+        "102"
+      ],
+      "notes": [
+        "Um conjunto evita membros duplicados; a consulta remove IDs repetidos antes do SMISMEMBER.",
+        "IDs Java e campos HTTP continuam em inglês; somente os segmentos da chave Redis usam português.",
+        "Não existe limpeza automática dos IDs de itens removidos. A autorização do recurso é feita no fluxo chamador.",
+        "Os comandos ilustram a estrutura; a existência de uma operação no serviço genérico não comprova que todas as famílias possuam produtor."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/common/service/ViewedService.java",
+          "symbol": "findViewed / markViewed / key"
+        },
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/home/service/HomeService.java",
+          "symbol": "loadHome / loadManagerHome"
+        }
+      ],
+      "file": "redis/keys/viewed-notificacoes.json"
+    },
+    {
+      "id": "viewed-validacoes",
+      "title": "Visualizações de validações",
+      "key": "validacoes:visualizados:{id_usuario}",
+      "type": "Set",
+      "category": "Visualização",
+      "status": "Implementado",
+      "description": "Mantém a leitura individual por usuário, evitando marcar um recurso como visualizado para todos. HomeService consulta os IDs das validações pendentes do gestor. Não foi localizado chamador markViewed para validations na API; o conjunto é consultado, mas esta revisão não atribui um produtor inexistente.",
+      "ttl": "Sem TTL definido no ViewedService; os membros persistem até remoção explícita externa.",
+      "producer": "Não localizado produtor desta família na API; ViewedService oferece a operação genérica markViewed.",
+      "consumer": "astro-api · ViewedService.findViewed e serviços do domínio",
+      "commands": [
+        "SADD validacoes:visualizados:{id_usuario} <id_item>",
+        "SMISMEMBER validacoes:visualizados:{id_usuario} <id_item> [<id_item> ...]"
+      ],
+      "fields": [
+        {
+          "name": "id_usuario",
+          "type": "Long",
+          "description": "ID PostgreSQL do usuário autorizado."
+        },
+        {
+          "name": "membro",
+          "type": "String",
+          "description": "ID do item convertido em texto; formulários usam UUID e demais recursos usam seus IDs."
+        }
+      ],
+      "example": [
+        "101",
+        "102"
+      ],
+      "notes": [
+        "Um conjunto evita membros duplicados; a consulta remove IDs repetidos antes do SMISMEMBER.",
+        "IDs Java e campos HTTP continuam em inglês; somente os segmentos da chave Redis usam português.",
+        "Não existe limpeza automática dos IDs de itens removidos. A autorização do recurso é feita no fluxo chamador.",
+        "Os comandos ilustram a estrutura; a existência de uma operação no serviço genérico não comprova que todas as famílias possuam produtor."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/common/service/ViewedService.java",
+          "symbol": "findViewed / markViewed / key"
+        },
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/home/service/HomeService.java",
+          "symbol": "loadHome / loadManagerHome"
+        }
+      ],
+      "file": "redis/keys/viewed-validacoes.json"
+    },
+    {
       "id": "workspace-queue",
-      "title": "Fila de criação de workspace",
-      "key": "<WORKSPACE_EMAIL_QUEUE_KEY>",
+      "title": "Fila de acesso ao espaço de trabalho",
+      "key": "processamento:email:espaco_trabalho",
       "type": "List",
       "category": "Fila",
       "status": "Implementado",
-      "description": "Fila de e-mails para iniciar a criação de um workspace. O processo gera um código e envia a mensagem sem consultar o PostgreSQL.",
-      "ttl": "Sem TTL definido pelo worker. Cada item é removido por LPOP.",
-      "producer": "Aplicação que solicita criação de workspace; produtor não localizado. README demonstra RPUSH.",
-      "consumer": "astro-email-worker · processWorkspaceEmailQueue",
+      "description": "Solicita o envio do código para iniciar o cadastro do gestor de um espaço de trabalho. Mantém SMTP fora da requisição de cadastro.",
+      "ttl": "Sem TTL definido; o consumidor remove cada item com LPOP.",
+      "producer": "astro-api · PreRegistrationQueueService.enqueueManagerEmail",
+      "consumer": "astro-email-worker · processWorkspaceEmailQueue; configurar WORKSPACE_EMAIL_QUEUE_KEY com este nome",
       "commands": [
-        "RPUSH <WORKSPACE_EMAIL_QUEUE_KEY> <email>",
-        "LPOP <WORKSPACE_EMAIL_QUEUE_KEY>"
+        "RPUSH processamento:email:espaco_trabalho <email>",
+        "LPOP processamento:email:espaco_trabalho"
       ],
       "fields": [
         {
           "name": "item",
           "type": "String",
-          "description": "Endereço de e-mail; normalizado com trim e letras minúsculas antes de gerar o código."
+          "description": "E-mail do gestor; o consumidor normaliza espaços externos e caixa."
         }
       ],
       "example": [
-        "pessoa@example.com"
+        "gestor@exemplo.com"
       ],
       "notes": [
-        "Exemplo de nome no README: astro:workspace:email:queue. O nome efetivo vem da variável de ambiente.",
-        "E-mail inválido é descartado.",
-        "Falha no token ou envio devolve o item original com RPUSH e encerra a execução com erro para uma nova tentativa.",
-        "O processo termina ao esvaziar a fila. A devolução após erro não protege contra queda entre LPOP e processamento."
+        "Em erro de geração/envio, o consumidor devolve o item original com RPUSH e encerra com erro.",
+        "A interrupção entre LPOP e reenvio pode perder um item; não há confirmação de processamento implementada.",
+        "O nome configurado no consumidor precisa coincidir com o contrato da API."
       ],
       "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/workspace/service/PreRegistrationQueueService.java",
+          "symbol": "enqueueManagerEmail"
+        },
         {
           "repo": "astro-email-worker",
           "file": "src/workers/workspaceEmailQueueWorker.js",
           "symbol": "processWorkspaceEmailQueue"
-        },
-        {
-          "repo": "astro-email-worker",
-          "file": "README.md",
-          "symbol": "Configuração do acesso ao workspace"
         }
       ],
       "file": "redis/keys/workspace-queue.json"
     },
     {
       "id": "workspace-token",
-      "title": "Código de acesso ao workspace",
-      "key": "<WORKSPACE_ACCESS_TOKEN_PREFIX>{email_normalizado}",
+      "title": "Código de acesso ao espaço de trabalho",
+      "key": "processamento:email:espaco_trabalho:chave_acesso:{email_normalizado}",
       "type": "String",
-      "category": "Token",
+      "category": "Código de acesso",
       "status": "Implementado",
-      "description": "Código de seis dígitos salvo por e-mail para iniciar a criação de workspace. O mesmo código é enviado por e-mail.",
-      "ttl": "Sem expiração automática: o SET atual não usa EX ou EXPIRE.",
+      "description": "Permite conferir o código de seis dígitos enviado por e-mail sem armazená-lo no cadastro relacional. A chave é formada pelo prefixo configurado mais o e-mail normalizado, não pelo ID do usuário.",
+      "ttl": "Sem expiração automática: o SET atual do worker não aplica EX ou EXPIRE.",
       "producer": "astro-email-worker · createWorkspaceAccessToken",
-      "consumer": "Aplicação que valida o código de workspace; consumidor não localizado.",
+      "consumer": "astro-api · UserService.verifyAccessKey",
       "commands": [
-        "SET <WORKSPACE_ACCESS_TOKEN_PREFIX>{email_normalizado} <codigo>"
+        "SET processamento:email:espaco_trabalho:chave_acesso:<email_normalizado> <codigo>",
+        "GET processamento:email:espaco_trabalho:chave_acesso:<email_normalizado>"
       ],
       "fields": [
         {
-          "name": "sufixo da chave",
+          "name": "email_normalizado",
           "type": "String",
-          "description": "E-mail sem espaços externos e em minúsculas."
+          "description": "E-mail com trim e minúsculas."
         },
         {
           "name": "valor",
           "type": "String",
-          "description": "Código de seis dígitos."
+          "description": "Código de seis dígitos, tratado como segredo."
         }
       ],
-      "example": "654321",
+      "example": "123456",
       "notes": [
-        "Exemplo de prefixo no README: astro:workspace:access:token:. Não é um nome fixo no código.",
-        "Um novo pedido para o mesmo e-mail substitui o código anterior.",
-        "O README atribui a remoção após uso à aplicação principal; essa remoção não é feita pelo worker.",
-        "Definir prazo de validade é uma decisão em aberto, pois este código não tem TTL atualmente."
+        "WORKSPACE_ACCESS_TOKEN_PREFIX deve ter o mesmo valor em API e worker. O padrão documentado é processamento:email:espaco_trabalho:chave_acesso:; os nomes das variáveis de ambiente permanecem os mesmos.",
+        "Um novo SET substitui o código anterior. A API apenas compara o código; não faz DEL nem consome o código uma única vez.",
+        "No fluxo COLABORADOR, a API exige usuário COLABORADOR/PRE_CADASTRADO; no fluxo GESTOR_WORKSPACE, a consulta não exige cadastro PostgreSQL.",
+        "Não registrar o valor do código ou copiar dados reais para exemplos."
       ],
       "evidence": [
+        {
+          "repo": "astro-api",
+          "file": "src/main/java/com/astro/api/user/service/UserService.java",
+          "symbol": "verifyAccessKey"
+        },
         {
           "repo": "astro-email-worker",
           "file": "src/services/workspaceTokenService.js",
           "symbol": "createWorkspaceAccessToken"
-        },
-        {
-          "repo": "astro-email-worker",
-          "file": "src/workers/workspaceEmailQueueWorker.js",
-          "symbol": "normalização do e-mail"
-        },
-        {
-          "repo": "astro-email-worker",
-          "file": "README.md",
-          "symbol": "Configuração do acesso ao workspace"
         }
       ],
       "file": "redis/keys/workspace-token.json"
@@ -197,7 +669,7 @@
       "type": "String",
       "category": "Cache",
       "status": "Proposta",
-      "description": "Guardar respostas frequentemente consultadas e buscar primeiro no cache, recorrendo à origem quando a chave não existir. Nenhuma família de chaves Redis de cache foi localizada.",
+      "description": "Proposta de cache genérico de consultas. O cache concreto de fotos já está implementado e possui contrato próprio usuario:foto:{id_usuario}; esta proposta não representa esse cache.",
       "ttl": "A definir por recurso; proposta exige expiração e regra de invalidação.",
       "producer": "Serviço responsável pela consulta · a definir",
       "consumer": "Serviço responsável pela consulta · a definir",
@@ -227,7 +699,7 @@
     {
       "id": "chat-session",
       "title": "Retomada de sessão do chatbot",
-      "key": "chat:usuario:{id}",
+      "key": "conversa:usuario:{id}",
       "type": "String",
       "category": "Sessão",
       "status": "Proposta",
@@ -236,8 +708,8 @@
       "producer": "Chatbot · a definir",
       "consumer": "Chatbot · a definir",
       "commands": [
-        "SET chat:usuario:{id} <session_id>",
-        "EXPIRE chat:usuario:{id} <segundos>"
+        "SET conversa:usuario:{id} <id_sessao>",
+        "EXPIRE conversa:usuario:{id} <segundos>"
       ],
       "fields": [
         {
@@ -259,42 +731,50 @@
   "modeling": {
     "principles": [
       {
-        "title": "Filas e dados temporários",
-        "description": "O uso localizado concentra-se no worker de e-mail: filas de IDs ou e-mails e códigos de acesso. Redis não é a fonte dos dados cadastrais dos usuários."
+        "title": "Para que serve o Redis no Astro",
+        "description": "Redis atende operações rápidas compartilhadas entre instâncias: filas de e-mail desacoplam SMTP das requisições; códigos de acesso validam primeiro acesso; conjuntos mantêm visualização individual e idempotência; contadores mostram mensagens não lidas; cache evita consultas e assinaturas repetidas; Pub/Sub distribui eventos WebSocket e marcadores limitam frequência de digitação."
       },
       {
-        "title": "Contratos configuráveis",
-        "description": "Os nomes reais de filas e prefixos vêm de variáveis de ambiente. Os exemplos são ilustrativos; nenhum valor de conexão ou credencial faz parte desta documentação."
+        "title": "Importância e limites",
+        "description": "Redis é parte do comportamento visível, não apenas otimização. Perder conjuntos de visualização altera indicadores; perder deduplicação permite recontagem; perder filas impede envios pendentes. O cache de fotos pode ser reconstruído. PostgreSQL continua sendo a origem cadastral, MongoDB guarda conversas e mensagens, e R2 guarda arquivos. Nenhuma transação PostgreSQL engloba esses recursos."
       },
       {
-        "title": "Uma execução por lote",
-        "description": "O workflow de astro-email-worker agenda as duas workers a cada cinco minutos e permite disparo manual com workflow_dispatch. Cada processo consome até a fila esvaziar e encerra; a disponibilidade do agendamento em produção não foi verificada."
+        "title": "Nomes e formatos",
+        "description": "Segmentos persistidos usam português, sem acentos, separados por dois-pontos. IDs e e-mails não são traduzidos. DTOs, nomes Java, propriedades JSON e variáveis de ambiente continuam com seus contratos existentes. Campos descritivos id/key/type destes documentos pertencem ao catálogo, não a hashes no Redis."
       },
       {
-        "title": "Implementado e proposta",
-        "description": "Implementado indica operações encontradas no código local, não comprovação de implantação. Sessões de chat e cache permanecem propostas. A configuração REDIS_URL na API de IA não comprova operações no Redis."
+        "title": "Configuração compartilhada",
+        "description": "API e worker de e-mail precisam compartilhar os valores de ACCESS_TOKEN_PREFIX e WORKSPACE_ACCESS_TOKEN_PREFIX. REDIS_QUEUE_KEY e WORKSPACE_EMAIL_QUEUE_KEY do worker devem coincidir com as listas fixas da API. Os exemplos não contêm credenciais nem dados reais."
+      },
+      {
+        "title": "Chaves e canais são diferentes",
+        "description": "String, List e Set são tipos armazenados. Os canais Pub/Sub documentados não aparecem em SCAN e não têm TTL nem armazenamento durável. Eventos WebSocket não substituem o histórico MongoDB."
+      },
+      {
+        "title": "Estado da revisão",
+        "description": "Contratos conferidos no código da API e do worker em 30/10/2026. Implementado significa localizado no código; não confirma implantação nem alteração de configuração em produção. Sessão de chatbot e cache genérico permanecem propostas. Não foi localizado ranking Redis."
       }
     ],
     "decisions": [
       {
-        "title": "Validade do código de workspace",
-        "description": "O código atual é salvo sem TTL. Definir se deve expirar e qual prazo, além de confirmar a remoção após uso no consumidor."
+        "title": "Validade e consumo dos códigos",
+        "description": "O código de espaço de trabalho é salvo sem TTL. A API compara os códigos sem removê-los após validação. Prazo e uso único são decisões de negócio ainda pendentes; não são garantias atuais."
       },
       {
-        "title": "Entrega e recuperação de falhas",
-        "description": "A fila de funcionários remove o ID antes do envio e não devolve em falha. A fila de workspace devolve em erro, mas ambas ficam vulneráveis à interrupção após LPOP. Definir confirmação, novas tentativas e idempotência."
+        "title": "Entrega das filas",
+        "description": "LPOP remove o item antes do SMTP. O fluxo de colaboradores registra falha sem devolver o item; o de espaço de trabalho devolve em falha conhecida, mas continua vulnerável a interrupções. Definir confirmação e retentativas antes de prometer entrega garantida."
       },
       {
-        "title": "Contrato dos produtores e consumidores",
-        "description": "Os produtores de fila e validadores de códigos não foram localizados nas cópias consultadas. Confirmar nomes de chave, RPUSH/LPOP para FIFO, consumo único e integração com os serviços responsáveis."
+        "title": "Retenção de conjuntos",
+        "description": "Visualizações e deduplicação não possuem TTL. A retenção deve considerar itens excluídos e a janela de idempotência das mensagens antes de remover membros."
       },
       {
-        "title": "Proposta inicial versus código atual",
-        "description": "A proposta inicial previa processamento:email com objeto contendo e-mail e ID, LPUSH/BRPOP e processamento:funcionario:{id}. O código atual usa nomes configuráveis, IDs simples na fila de funcionários e LPOP. Não tratar os nomes iniciais como contratos atuais."
+        "title": "Produtores não localizados",
+        "description": "A API consulta visualizações de eventos e validações, mas não foram localizados chamadores que gravem essas famílias. Confirmar a responsabilidade pelo registro; não confundir consulta com produção."
       },
       {
-        "title": "Chat, cache, ranking e notificações",
-        "description": "Definir escopo e TTL da retomada de chat e do cache antes de implementar. Não foi localizado ranking Redis. O armazenamento durável das notificações continua uma decisão entre os módulos responsáveis."
+        "title": "Configuração divergente da fila de colaboradores",
+        "description": "O código da API usa processamento:email:colaborador. A configuração local consultada do worker aponta para uma fila de funcionário; o consumidor precisa ser alinhado ao contrato antes da implantação. Nenhum valor de conexão foi reproduzido."
       }
     ],
     "flows": [
@@ -304,60 +784,134 @@
         "status": "Implementado",
         "steps": [
           {
-            "title": "Enfileirar ID",
-            "description": "A aplicação produtora adiciona o ID do usuário. O produtor não foi localizado.",
+            "title": "Enfileirar e-mail",
+            "description": "Após commit do cadastro, a API executa RPUSH em lote; o reenvio explícito exige confirmação do Redis.",
             "keyId": "employee-queue"
           },
           {
-            "title": "Consumir e validar",
-            "description": "LPOP remove o ID; o worker consulta PostgreSQL e exige COLABORADOR / PRE_CADASTRADO.",
+            "title": "Consumir e validar cadastro",
+            "description": "O worker executa LPOP, normaliza o e-mail e exige COLABORADOR/PRE_CADASTRADO no PostgreSQL.",
             "keyId": "employee-queue"
           },
           {
-            "title": "Gerar código com TTL",
-            "description": "SET grava o código de seis dígitos com EX configurado em segundos.",
+            "title": "Gerar e enviar código",
+            "description": "O worker salva seis dígitos com TTL configurado e envia por SMTP. Falhas de envio não devolvem o item.",
             "keyId": "employee-token"
           },
           {
-            "title": "Enviar e-mail",
-            "description": "O worker envia pelo SMTP. Falha de envio é registrada sem devolver o ID à fila."
-          },
-          {
-            "title": "Validar primeiro acesso",
-            "description": "Etapa esperada na aplicação consumidora; não localizada. Confirmar uso único do código.",
+            "title": "Conferir código",
+            "description": "UserService valida o estado cadastral, faz GET pelo e-mail normalizado e compara; não remove a chave.",
             "keyId": "employee-token"
           }
         ]
       },
       {
         "id": "workspace-access",
-        "title": "Criação de workspace",
+        "title": "Acesso ao espaço de trabalho",
         "status": "Implementado",
         "steps": [
           {
-            "title": "Enfileirar e-mail",
-            "description": "Aplicação produtora não localizada; o README demonstra RPUSH para inserção.",
+            "title": "Solicitar envio",
+            "description": "A API enfileira o e-mail do gestor.",
             "keyId": "workspace-queue"
           },
           {
-            "title": "Consumir e normalizar",
-            "description": "LPOP remove o item. O worker valida o e-mail após trim e conversão para minúsculas.",
-            "keyId": "workspace-queue"
-          },
-          {
-            "title": "Gerar código",
-            "description": "SET salva o código por e-mail sem expiração automática.",
+            "title": "Gerar código e enviar",
+            "description": "O worker normaliza o e-mail, salva o código sem TTL e envia SMTP; erro conhecido devolve o item.",
             "keyId": "workspace-token"
           },
           {
-            "title": "Enviar e recuperar",
-            "description": "SMTP envia o acesso. Em falha, RPUSH devolve o e-mail original e o processo encerra com erro.",
-            "keyId": "workspace-queue"
+            "title": "Conferir acesso",
+            "description": "A API faz GET e compara para GESTOR_WORKSPACE sem exigir usuário cadastrado.",
+            "keyId": "workspace-token"
+          }
+        ]
+      },
+      {
+        "id": "individual-viewed",
+        "title": "Visualização individual de recursos",
+        "status": "Implementado",
+        "steps": [
+          {
+            "title": "Listar recursos autorizados",
+            "description": "Serviços carregam recursos do domínio e consultam seus IDs no Set por usuário.",
+            "keyId": "viewed-eventos"
           },
           {
-            "title": "Validar e remover código",
-            "description": "Responsabilidade prevista para a aplicação principal no README; implementação não localizada.",
-            "keyId": "workspace-token"
+            "title": "Registrar abertura",
+            "description": "Notificações e formulários registram o ID em SADD; consultas seguintes usam SMISMEMBER.",
+            "keyId": "viewed-formularios"
+          },
+          {
+            "title": "Reutilizar na página inicial",
+            "description": "Home usa os mesmos conjuntos para apresentar o estado individual de notificações, eventos, formulários e validações.",
+            "keyId": "viewed-validacoes"
+          }
+        ]
+      },
+      {
+        "id": "chat-send",
+        "title": "Envio e leitura de mensagens",
+        "status": "Implementado",
+        "steps": [
+          {
+            "title": "Persistir e deduplicar",
+            "description": "Após persistir/recuperar a mensagem no MongoDB, Lua verifica se seu ID já foi contabilizado.",
+            "keyId": "chat-processed"
+          },
+          {
+            "title": "Incrementar uma vez",
+            "description": "Somente mensagem nova incrementa o contador do destinatário e grava o membro no mesmo script.",
+            "keyId": "chat-unread"
+          },
+          {
+            "title": "Distribuir entrega",
+            "description": "Pub/Sub encaminha o evento para sessões conectadas às instâncias.",
+            "keyId": "chat-delivery-channel"
+          },
+          {
+            "title": "Marcar conversa como lida",
+            "description": "Após autorizar o participante, DEL limpa apenas o contador dele; o conjunto de deduplicação permanece.",
+            "keyId": "chat-unread"
+          }
+        ]
+      },
+      {
+        "id": "chat-typing",
+        "title": "Indicador de digitação",
+        "status": "Implementado",
+        "steps": [
+          {
+            "title": "Limitar frequência",
+            "description": "SET NX com 1500 ms permite um início de digitação por par de usuários na janela. Parada remove o marcador.",
+            "keyId": "chat-typing-limit"
+          },
+          {
+            "title": "Distribuir evento",
+            "description": "O canal compartilha o evento entre instâncias e o listener envia ao destinatário.",
+            "keyId": "chat-typing-channel"
+          }
+        ]
+      },
+      {
+        "id": "avatar-cache",
+        "title": "Consulta de fotos",
+        "status": "Implementado",
+        "steps": [
+          {
+            "title": "Autorizar e consultar em lote",
+            "description": "Chamadores autorizam os usuários e o serviço executa MGET nas chaves de foto.",
+            "keyId": "user-avatar"
+          },
+          {
+            "title": "Buscar faltas e assinar",
+            "description": "Uma consulta PostgreSQL busca as fotos ausentes; R2 gera URLs e Redis recebe SET com expiração absoluta.",
+            "keyId": "user-avatar"
+          },
+          {
+            "title": "Invalidar ao alterar",
+            "description": "A troca da foto invalida a chave. Falha de leitura/gravação do cache admite consulta à origem.",
+            "keyId": "user-avatar"
           }
         ]
       }

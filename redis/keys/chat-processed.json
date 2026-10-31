@@ -1,0 +1,38 @@
+{
+  "id": "chat-processed",
+  "title": "Deduplicação do contador de mensagens",
+  "key": "conversa:nao_lidas:processadas:{id_conversa}",
+  "type": "Set",
+  "category": "Deduplicação",
+  "status": "Implementado",
+  "description": "Registra os IDs das mensagens já contabilizadas. Impede que a repetição do envio de uma mesma mensagem aumente novamente o contador do destinatário.",
+  "ttl": "Sem TTL ou limpeza automática definidos.",
+  "producer": "astro-api · ChatService.send",
+  "consumer": "astro-api · INCREMENT_UNREAD_ONCE",
+  "commands": [
+    "SISMEMBER conversa:nao_lidas:processadas:{id_conversa} <id_mensagem>",
+    "SADD conversa:nao_lidas:processadas:{id_conversa} <id_mensagem>"
+  ],
+  "fields": [
+    {
+      "name": "membro",
+      "type": "String",
+      "description": "ID da mensagem persistida em MongoDB."
+    }
+  ],
+  "example": [
+    "11111111-2222-4333-8444-555555555555"
+  ],
+  "notes": [
+    "O script verifica SISMEMBER antes de INCR; mensagem repetida retorna zero sem novo incremento.",
+    "Marcar como lida remove apenas o contador. Preservar o conjunto impede recontagem de mensagens antigas após reenvio.",
+    "O conjunto cresce com a conversa; uma política de retenção exige preservar a janela de idempotência."
+  ],
+  "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/chat/service/ChatService.java",
+      "symbol": "INCREMENT_UNREAD_ONCE / UNREAD_PROCESSED_KEY_PREFIX"
+    }
+  ]
+}

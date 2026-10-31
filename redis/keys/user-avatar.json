@@ -1,0 +1,49 @@
+{
+  "id": "user-avatar",
+  "title": "Cache de fotos dos usuários",
+  "key": "usuario:foto:{id_usuario}",
+  "type": "String",
+  "category": "Cache",
+  "status": "Implementado",
+  "description": "Guarda a URL de download assinada de uma foto do R2. Evita consultas e assinaturas repetidas ao carregar perfis, colaboradores, gestores e conversas.",
+  "ttl": "Expiração absoluta em milissegundos igual ao prazo da URL assinada (PXAT). Nunca estende a validade do link.",
+  "producer": "astro-api · UserAvatarService.cache",
+  "consumer": "astro-api · UserAvatarService.findUrls / findUrl",
+  "commands": [
+    "MGET usuario:foto:{id_usuario} [<outras_chaves> ...]",
+    "SET usuario:foto:{id_usuario} <url_assinada> PXAT <expiracao>",
+    "DEL usuario:foto:{id_usuario}"
+  ],
+  "fields": [
+    {
+      "name": "id_usuario",
+      "type": "Long",
+      "description": "ID PostgreSQL do usuário."
+    },
+    {
+      "name": "valor",
+      "type": "String",
+      "description": "URL assinada para download; não contém a imagem em binário."
+    }
+  ],
+  "example": "https://arquivos.exemplo.com/foto-assinada",
+  "notes": [
+    "Os chamadores autorizam os IDs antes da consulta ao cache compartilhado.",
+    "Faltas de cache são buscadas em lote no PostgreSQL; a origem da foto é UserProfilePhoto e o arquivo fica no R2.",
+    "A troca da foto invalida a chave. Usuários sem foto não são armazenados no cache.",
+    "Falha de leitura/gravação do cache permite devolver URL recém-gerada; falha na invalidação é propagada.",
+    "URLs assinadas são temporárias e não devem aparecer em logs ou exemplos reais."
+  ],
+  "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/user/service/UserAvatarService.java",
+      "symbol": "findUrls / cache / invalidate"
+    },
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/user/service/UserService.java",
+      "symbol": "updateProfilePhoto"
+    }
+  ]
+}

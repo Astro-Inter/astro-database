@@ -1,51 +1,47 @@
 {
   "id": "workspace-token",
-  "title": "Código de acesso ao workspace",
-  "key": "<WORKSPACE_ACCESS_TOKEN_PREFIX>{email_normalizado}",
+  "title": "Código de acesso ao espaço de trabalho",
+  "key": "processamento:email:espaco_trabalho:chave_acesso:{email_normalizado}",
   "type": "String",
-  "category": "Token",
+  "category": "Código de acesso",
   "status": "Implementado",
-  "description": "Código de seis dígitos salvo por e-mail para iniciar a criação de workspace. O mesmo código é enviado por e-mail.",
-  "ttl": "Sem expiração automática: o SET atual não usa EX ou EXPIRE.",
+  "description": "Permite conferir o código de seis dígitos enviado por e-mail sem armazená-lo no cadastro relacional. A chave é formada pelo prefixo configurado mais o e-mail normalizado, não pelo ID do usuário.",
+  "ttl": "Sem expiração automática: o SET atual do worker não aplica EX ou EXPIRE.",
   "producer": "astro-email-worker · createWorkspaceAccessToken",
-  "consumer": "Aplicação que valida o código de workspace; consumidor não localizado.",
+  "consumer": "astro-api · UserService.verifyAccessKey",
   "commands": [
-    "SET <WORKSPACE_ACCESS_TOKEN_PREFIX>{email_normalizado} <codigo>"
+    "SET processamento:email:espaco_trabalho:chave_acesso:<email_normalizado> <codigo>",
+    "GET processamento:email:espaco_trabalho:chave_acesso:<email_normalizado>"
   ],
   "fields": [
     {
-      "name": "sufixo da chave",
+      "name": "email_normalizado",
       "type": "String",
-      "description": "E-mail sem espaços externos e em minúsculas."
+      "description": "E-mail com trim e minúsculas."
     },
     {
       "name": "valor",
       "type": "String",
-      "description": "Código de seis dígitos."
+      "description": "Código de seis dígitos, tratado como segredo."
     }
   ],
-  "example": "654321",
+  "example": "123456",
   "notes": [
-    "Exemplo de prefixo no README: astro:workspace:access:token:. Não é um nome fixo no código.",
-    "Um novo pedido para o mesmo e-mail substitui o código anterior.",
-    "O README atribui a remoção após uso à aplicação principal; essa remoção não é feita pelo worker.",
-    "Definir prazo de validade é uma decisão em aberto, pois este código não tem TTL atualmente."
+    "WORKSPACE_ACCESS_TOKEN_PREFIX deve ter o mesmo valor em API e worker. O padrão documentado é processamento:email:espaco_trabalho:chave_acesso:; os nomes das variáveis de ambiente permanecem os mesmos.",
+    "Um novo SET substitui o código anterior. A API apenas compara o código; não faz DEL nem consome o código uma única vez.",
+    "No fluxo COLABORADOR, a API exige usuário COLABORADOR/PRE_CADASTRADO; no fluxo GESTOR_WORKSPACE, a consulta não exige cadastro PostgreSQL.",
+    "Não registrar o valor do código ou copiar dados reais para exemplos."
   ],
   "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/user/service/UserService.java",
+      "symbol": "verifyAccessKey"
+    },
     {
       "repo": "astro-email-worker",
       "file": "src/services/workspaceTokenService.js",
       "symbol": "createWorkspaceAccessToken"
-    },
-    {
-      "repo": "astro-email-worker",
-      "file": "src/workers/workspaceEmailQueueWorker.js",
-      "symbol": "normalização do e-mail"
-    },
-    {
-      "repo": "astro-email-worker",
-      "file": "README.md",
-      "symbol": "Configuração do acesso ao workspace"
     }
   ]
 }

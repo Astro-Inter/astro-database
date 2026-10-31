@@ -1,44 +1,43 @@
 {
   "id": "workspace-queue",
-  "title": "Fila de criação de workspace",
-  "key": "<WORKSPACE_EMAIL_QUEUE_KEY>",
+  "title": "Fila de acesso ao espaço de trabalho",
+  "key": "processamento:email:espaco_trabalho",
   "type": "List",
   "category": "Fila",
   "status": "Implementado",
-  "description": "Fila de e-mails para iniciar a criação de um workspace. O processo gera um código e envia a mensagem sem consultar o PostgreSQL.",
-  "ttl": "Sem TTL definido pelo worker. Cada item é removido por LPOP.",
-  "producer": "Aplicação que solicita criação de workspace; produtor não localizado. README demonstra RPUSH.",
-  "consumer": "astro-email-worker · processWorkspaceEmailQueue",
+  "description": "Solicita o envio do código para iniciar o cadastro do gestor de um espaço de trabalho. Mantém SMTP fora da requisição de cadastro.",
+  "ttl": "Sem TTL definido; o consumidor remove cada item com LPOP.",
+  "producer": "astro-api · PreRegistrationQueueService.enqueueManagerEmail",
+  "consumer": "astro-email-worker · processWorkspaceEmailQueue; configurar WORKSPACE_EMAIL_QUEUE_KEY com este nome",
   "commands": [
-    "RPUSH <WORKSPACE_EMAIL_QUEUE_KEY> <email>",
-    "LPOP <WORKSPACE_EMAIL_QUEUE_KEY>"
+    "RPUSH processamento:email:espaco_trabalho <email>",
+    "LPOP processamento:email:espaco_trabalho"
   ],
   "fields": [
     {
       "name": "item",
       "type": "String",
-      "description": "Endereço de e-mail; normalizado com trim e letras minúsculas antes de gerar o código."
+      "description": "E-mail do gestor; o consumidor normaliza espaços externos e caixa."
     }
   ],
   "example": [
-    "pessoa@example.com"
+    "gestor@exemplo.com"
   ],
   "notes": [
-    "Exemplo de nome no README: astro:workspace:email:queue. O nome efetivo vem da variável de ambiente.",
-    "E-mail inválido é descartado.",
-    "Falha no token ou envio devolve o item original com RPUSH e encerra a execução com erro para uma nova tentativa.",
-    "O processo termina ao esvaziar a fila. A devolução após erro não protege contra queda entre LPOP e processamento."
+    "Em erro de geração/envio, o consumidor devolve o item original com RPUSH e encerra com erro.",
+    "A interrupção entre LPOP e reenvio pode perder um item; não há confirmação de processamento implementada.",
+    "O nome configurado no consumidor precisa coincidir com o contrato da API."
   ],
   "evidence": [
+    {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/workspace/service/PreRegistrationQueueService.java",
+      "symbol": "enqueueManagerEmail"
+    },
     {
       "repo": "astro-email-worker",
       "file": "src/workers/workspaceEmailQueueWorker.js",
       "symbol": "processWorkspaceEmailQueue"
-    },
-    {
-      "repo": "astro-email-worker",
-      "file": "README.md",
-      "symbol": "Configuração do acesso ao workspace"
     }
   ]
 }

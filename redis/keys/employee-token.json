@@ -1,40 +1,47 @@
 {
   "id": "employee-token",
-  "title": "Token de primeiro acesso",
-  "key": "<ACCESS_TOKEN_PREFIX>{id_usuario}",
+  "title": "Código de acesso de colaborador",
+  "key": "processamento:email:colaborador:chave_acesso:{email_normalizado}",
   "type": "String",
-  "category": "Token",
+  "category": "Código de acesso",
   "status": "Implementado",
-  "description": "Código de seis dígitos associado ao ID de usuário do PostgreSQL. É gerado pelo worker e incluído no e-mail de primeiro acesso.",
-  "ttl": "ACCESS_TOKEN_TTL_SECONDS (segundos), aplicado em SET com EX. Valor depende da configuração.",
-  "producer": "astro-email-worker · createAccessToken",
-  "consumer": "Aplicação que valida o primeiro acesso; validação não localizada nos repositórios consultados.",
+  "description": "Permite conferir o código de seis dígitos enviado por e-mail sem armazená-lo no cadastro relacional. A chave é formada pelo prefixo configurado mais o e-mail normalizado, não pelo ID do usuário.",
+  "ttl": "ACCESS_TOKEN_TTL_SECONDS em segundos, aplicado pelo worker em SET com EX. O prazo depende da configuração.",
+  "producer": "astro-email-worker · saveAccessToken",
+  "consumer": "astro-api · UserService.verifyAccessKey",
   "commands": [
-    "SET <ACCESS_TOKEN_PREFIX>{id_usuario} <codigo> EX <ACCESS_TOKEN_TTL_SECONDS>"
+    "SET processamento:email:colaborador:chave_acesso:<email_normalizado> <codigo> EX <ACCESS_TOKEN_TTL_SECONDS>",
+    "GET processamento:email:colaborador:chave_acesso:<email_normalizado>"
   ],
   "fields": [
     {
-      "name": "sufixo da chave",
-      "type": "ID",
-      "description": "ID de usuário recebido pelo worker."
+      "name": "email_normalizado",
+      "type": "String",
+      "description": "E-mail com trim e minúsculas."
     },
     {
       "name": "valor",
       "type": "String",
-      "description": "Código aleatório de seis dígitos."
+      "description": "Código de seis dígitos, tratado como segredo."
     }
   ],
   "example": "123456",
   "notes": [
-    "Novo SET na mesma chave substitui o código anterior e renova a expiração.",
-    "A geração usa crypto.randomInt(100000, 1000000).",
-    "Consumo único e remoção após validação precisam ser confirmados na aplicação consumidora."
+    "ACCESS_TOKEN_PREFIX deve ter o mesmo valor em API e worker. O padrão documentado é processamento:email:colaborador:chave_acesso:; os nomes das variáveis de ambiente permanecem os mesmos.",
+    "Um novo SET substitui o código anterior. A API apenas compara o código; não faz DEL nem consome o código uma única vez.",
+    "No fluxo COLABORADOR, a API exige usuário COLABORADOR/PRE_CADASTRADO; no fluxo GESTOR_WORKSPACE, a consulta não exige cadastro PostgreSQL.",
+    "Não registrar o valor do código ou copiar dados reais para exemplos."
   ],
   "evidence": [
     {
+      "repo": "astro-api",
+      "file": "src/main/java/com/astro/api/user/service/UserService.java",
+      "symbol": "verifyAccessKey"
+    },
+    {
       "repo": "astro-email-worker",
       "file": "src/services/tokenService.js",
-      "symbol": "generateAccessToken / saveAccessToken / createAccessToken"
+      "symbol": "saveAccessToken"
     }
   ]
 }
