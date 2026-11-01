@@ -223,7 +223,7 @@ dialog .code-editor { min-height: 180px; resize: none; }
 .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
 .detail-meta span { padding: 7px 10px; color: var(--muted); background: var(--canvas); border-radius: 8px; font-size: 11px; }
 .tabs { display: flex; gap: 4px; margin: 18px 0; border-bottom: 1px solid var(--line); }
-.tab { padding: 10px 13px; border: 0; color: var(--muted); background: transparent; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab { text-decoration: none; padding: 10px 13px; border: 0; color: var(--muted); background: transparent; cursor: pointer; border-bottom: 2px solid transparent; }
 .tab.active { color: var(--purple); border-color: var(--purple); font-weight: 750; }
 .dependency-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
 .dependency-summary > div { padding: 15px 18px; background: white; border: 1px solid var(--line); border-radius: 13px; }
