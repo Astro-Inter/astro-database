@@ -6,9 +6,9 @@
   "category": "Cache",
   "status": "Implementado",
   "description": "Guarda a URL de download assinada de uma foto do R2. Evita consultas e assinaturas repetidas ao carregar perfis, colaboradores, gestores e conversas.",
-  "ttl": "Expiração absoluta em milissegundos igual ao prazo da URL assinada (PXAT). Nunca estende a validade do link.",
-  "producer": "astro-api · UserAvatarService.cache",
-  "consumer": "astro-api · UserAvatarService.findUrls / findUrl",
+  "ttl": "API Java: PXAT no prazo da URL. IA: EX 86370 em URL recém-assinada por 86400 segundos. Hits não escrevem nem renovam o link; a IA exige validade restante maior que 30 segundos.",
+  "producer": "astro-api · UserAvatarService.cache; astro-ai-api · resolve_avatar_urls (somente miss válido)",
+  "consumer": "astro-api · UserAvatarService.findUrls / findUrl; astro-ai-api · resolve_avatar_urls",
   "commands": [
     "MGET usuario:foto:{id_usuario} [<outras_chaves> ...]",
     "SET usuario:foto:{id_usuario} <url_assinada> PXAT <expiracao>",
@@ -32,7 +32,11 @@
     "Faltas de cache são buscadas em lote no PostgreSQL; a origem da foto é UserProfilePhoto e o arquivo fica no R2.",
     "A troca da foto invalida a chave. Usuários sem foto não são armazenados no cache.",
     "Falha de leitura/gravação do cache permite devolver URL recém-gerada; falha na invalidação é propagada.",
-    "URLs assinadas são temporárias e não devem aparecer em logs ou exemplos reais."
+    "URLs assinadas são temporárias e não devem aparecer em logs ou exemplos reais.",
+    "A IA revalida o usuário/workspace/unidade e o caminho atual da foto no PostgreSQL antes de MGET, inclusive ao reabrir histórico. O cache não concede permissão.",
+    "A IA usa MGET para até 200 IDs autorizados, valida host, objeto e expiração da URL e só assina faltas inválidas/ausentes. REDIS_URL ou AVATAR_REDIS_URL precisa apontar para o Redis/banco compartilhado correto.",
+    "O prefixo antigo user:avatar: da IA não é gravado nem migrado por essa alteração; chaves antigas expiram naturalmente. O contrato usuario:foto: foi conferido na main da API Java; não se assume que todo clone local esteja atualizado.",
+    "A integração da IA foi implementada na alteração SCRUM-167, pendente de publicação coordenada. Nenhuma URL real pertence a esta documentação."
   ],
   "evidence": [
     {
@@ -44,6 +48,11 @@
       "repo": "astro-api",
       "file": "src/main/java/com/astro/api/user/service/UserService.java",
       "symbol": "updateProfilePhoto"
+    },
+    {
+      "repo": "astro-ai-api",
+      "file": "app/infrastructure/avatar_urls.py",
+      "symbol": "resolve_avatar_urls / _valid_url / _authorized_photos / _authorized_own_photos"
     }
   ]
 }
