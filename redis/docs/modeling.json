@@ -23,6 +23,10 @@
     {
       "title": "Estado da revisão",
       "description": "Contratos conferidos no código da API e do worker em 30/10/2026. Implementado significa localizado no código; não confirma implantação nem alteração de configuração em produção. Sessão de chatbot e cache genérico permanecem propostas. Não foi localizado ranking Redis."
+    },
+    {
+      "title": "Cache público da IA não é histórico ou autorização",
+      "description": "Fonte pública oficial pode ser reutilizada entre instâncias por prazo curto. Respostas finais, Juiz, decisões de rota, consultas privadas e agregados de equipe continuam fora do cache. Autorização, fontes e revisões não são puladas por um hit."
     }
   ],
   "decisions": [
@@ -182,6 +186,27 @@
           "title": "Invalidar ao alterar",
           "description": "A troca da foto invalida a chave. Falha de leitura/gravação do cache admite consulta à origem.",
           "keyId": "user-avatar"
+        }
+      ]
+    },
+    {
+      "id": "ai-public-source-fetch",
+      "title": "Consulta pública repetida pela IA",
+      "status": "Implementado",
+      "steps": [
+        {
+          "title": "Validar a fonte",
+          "description": "Autenticação da rota e allowlist HTTPS antecedem o cache; URLs com query/fragmento não são compartilhadas."
+        },
+        {
+          "title": "Consultar os níveis de cache",
+          "description": "Memória local limitada, depois GET por hash de URL/parâmetros. Conferir envelope e prazo original; hit não renova TTL.",
+          "keyId": "ai-public-source-cache"
+        },
+        {
+          "title": "Coletar via MCP e preencher",
+          "description": "Em miss, consultar a fonte pelo MCP. Só resultado público ok validado recebe SET EX. Redis falho mantém a consulta original; Juiz e guardrails continuam no fluxo.",
+          "keyId": "ai-public-source-cache"
         }
       ]
     }

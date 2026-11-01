@@ -1,7 +1,84 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T02:44:25.572Z",
+  "generatedAt": "2026-11-01T06:06:02.246Z",
   "keys": [
+    {
+      "id": "ai-public-source-cache",
+      "title": "Cache de fontes públicas oficiais da IA",
+      "key": "ia:cache:fonte_publica:v1:{hash_consulta}",
+      "type": "String",
+      "category": "Cache",
+      "status": "Implementado",
+      "description": "Compartilha entre instâncias da astro-ai-api o conteúdo público retornado pelo MCP Fetch para fontes HTTPS autorizadas. Não armazena respostas finais de IA, avaliações do Juiz, embeddings, conversas ou dados de equipe.",
+      "ttl": "EX FETCH_MCP_CACHE_TTL_SECONDS: padrão 900 segundos, configurável de 0 a 86400. Zero desativa leitura/gravação nos dois níveis. Hits não renovam a validade; o envelope conserva a expiração original.",
+      "producer": "astro-ai-api · FetchMCPClient.fetch / PublicSourceCache.put",
+      "consumer": "astro-ai-api e seu serviço A2A · FetchMCPClient.fetch / PublicSourceCache.get",
+      "commands": [
+        "GET ia:cache:fonte_publica:v1:{hash_consulta}",
+        "SET ia:cache:fonte_publica:v1:{hash_consulta} <envelope_json> EX <ttl_segundos>",
+        "DEL ia:cache:fonte_publica:v1:{hash_consulta}"
+      ],
+      "fields": [
+        {
+          "name": "hash_consulta",
+          "type": "SHA-256 hexadecimal, 64 caracteres",
+          "description": "SHA-256 UTF-8 do JSON compacto ASCII [url,max_length,start_index,raw]. A versão do contrato está no prefixo; URLs e parâmetros não ficam em texto na chave."
+        },
+        {
+          "name": "versao",
+          "type": "integer",
+          "description": "Versão do envelope: 1."
+        },
+        {
+          "name": "criado_em / expira_em",
+          "type": "number",
+          "description": "Instantes UTC em segundos Unix, finitos. Limitam a validade inclusive quando a chave ou o TTL da aplicação muda."
+        },
+        {
+          "name": "resultado",
+          "type": "object",
+          "description": "Contrato MCP original validado: status, url, conteudo, truncado, proximo_indice e protocolo. Somente status ok e texto público não vazio são armazenados."
+        }
+      ],
+      "example": {
+        "versao": 1,
+        "criado_em": 1793534400,
+        "expira_em": 1793535300,
+        "resultado": {
+          "status": "ok",
+          "url": "https://www.gov.br/pagina-exemplo",
+          "conteudo": "Conteúdo público fictício para ilustrar o contrato.",
+          "truncado": false,
+          "proximo_indice": null,
+          "protocolo": "MCP"
+        }
+      },
+      "notes": [
+        "Implementado no código da alteração SCRUM-167; não confirma merge ou configuração em produção. Cache opcional usa REDIS_URL e FETCH_MCP_REDIS_CACHE_ENABLED=true. false mantém apenas o cache local.",
+        "A URL é validada pela allowlist antes de qualquer hit, inclusive em memória. URLs com query string ou fragmento não usam o cache compartilhado. Não há UID, workspace, segredo ou texto do usuário na chave.",
+        "Somente fontes públicas sem credenciais transitam nesse cache. Não usar esta família para documentos privados, permissões, listas de usuários, indicadores de equipe, Juiz, roteamento, assinaturas de PDF ou respostas finais.",
+        "Uma mesma URL com max_length, start_index ou raw diferentes gera outra chave. O máximo do valor é 262144 bytes. Envelope inválido, expirado, de outra URL ou versão é ignorado.",
+        "Redis indisponível/timeout não bloqueia a tool: orçamento por operação de 300 ms e pausa de tentativas por 30 segundos nessa instância. Erros, respostas vazias e negativas não são cacheados.",
+        "O nível em memória conserva a validade restante do Redis, tem máximo de 128 entradas e não estende o prazo ao receber um hit compartilhado. Mudança para TTL menor limita também entradas existentes.",
+        "Invalidação normal por TTL; um operador pode remover apenas uma chave exata conhecida ou incrementar a versão do prefixo. Não usar FLUSHDB, KEYS ou limpeza de filas e chaves de outros serviços.",
+        "Não elimina autenticação das rotas, geração de resposta ou revisão do Juiz/guardrails. Conteúdo recuperado continua sendo dado externo não confiável, não uma instrução ou aprovação.",
+        "Requisições simultâneas com cache frio podem repetir a coleta; não é uma fila nem há garantia de deduplicação distribuída. Exemplo fictício, sem conteúdo ou credenciais reais.",
+        "Hits não renovam o TTL nem regravam o valor no Redis."
+      ],
+      "evidence": [
+        {
+          "repo": "astro-ai-api",
+          "file": "app/infrastructure/public_source_cache.py",
+          "symbol": "cache_key / PublicSourceCache.get / put"
+        },
+        {
+          "repo": "astro-ai-api",
+          "file": "app/infrastructure/mcp_fetch.py",
+          "symbol": "FetchMCPClient.fetch / _remember"
+        }
+      ],
+      "file": "redis/keys/ai-public-source-cache.json"
+    },
     {
       "id": "chat-delivery-channel",
       "title": "Canal de entrega de mensagens",
@@ -325,9 +402,9 @@
       "category": "Cache",
       "status": "Implementado",
       "description": "Guarda a URL de download assinada de uma foto do R2. Evita consultas e assinaturas repetidas ao carregar perfis, colaboradores, gestores e conversas.",
-      "ttl": "Expiração absoluta em milissegundos igual ao prazo da URL assinada (PXAT). Nunca estende a validade do link.",
-      "producer": "astro-api · UserAvatarService.cache",
-      "consumer": "astro-api · UserAvatarService.findUrls / findUrl",
+      "ttl": "API Java: PXAT no prazo da URL. IA: EX 86370 em URL recém-assinada por 86400 segundos. Hits não escrevem nem renovam o link; a IA exige validade restante maior que 30 segundos.",
+      "producer": "astro-api · UserAvatarService.cache; astro-ai-api · resolve_avatar_urls (somente miss válido)",
+      "consumer": "astro-api · UserAvatarService.findUrls / findUrl; astro-ai-api · resolve_avatar_urls",
       "commands": [
         "MGET usuario:foto:{id_usuario} [<outras_chaves> ...]",
         "SET usuario:foto:{id_usuario} <url_assinada> PXAT <expiracao>",
@@ -351,7 +428,11 @@
         "Faltas de cache são buscadas em lote no PostgreSQL; a origem da foto é UserProfilePhoto e o arquivo fica no R2.",
         "A troca da foto invalida a chave. Usuários sem foto não são armazenados no cache.",
         "Falha de leitura/gravação do cache permite devolver URL recém-gerada; falha na invalidação é propagada.",
-        "URLs assinadas são temporárias e não devem aparecer em logs ou exemplos reais."
+        "URLs assinadas são temporárias e não devem aparecer em logs ou exemplos reais.",
+        "A IA revalida o usuário/workspace/unidade e o caminho atual da foto no PostgreSQL antes de MGET, inclusive ao reabrir histórico. O cache não concede permissão.",
+        "A IA usa MGET para até 200 IDs autorizados, valida host, objeto e expiração da URL e só assina faltas inválidas/ausentes. REDIS_URL ou AVATAR_REDIS_URL precisa apontar para o Redis/banco compartilhado correto.",
+        "O prefixo antigo user:avatar: da IA não é gravado nem migrado por essa alteração; chaves antigas expiram naturalmente. O contrato usuario:foto: foi conferido na main da API Java; não se assume que todo clone local esteja atualizado.",
+        "A integração da IA foi implementada na alteração SCRUM-167, pendente de publicação coordenada. Nenhuma URL real pertence a esta documentação."
       ],
       "evidence": [
         {
@@ -363,6 +444,11 @@
           "repo": "astro-api",
           "file": "src/main/java/com/astro/api/user/service/UserService.java",
           "symbol": "updateProfilePhoto"
+        },
+        {
+          "repo": "astro-ai-api",
+          "file": "app/infrastructure/avatar_urls.py",
+          "symbol": "resolve_avatar_urls / _valid_url / _authorized_photos / _authorized_own_photos"
         }
       ],
       "file": "redis/keys/user-avatar.json"
@@ -753,6 +839,10 @@
       {
         "title": "Estado da revisão",
         "description": "Contratos conferidos no código da API e do worker em 30/10/2026. Implementado significa localizado no código; não confirma implantação nem alteração de configuração em produção. Sessão de chatbot e cache genérico permanecem propostas. Não foi localizado ranking Redis."
+      },
+      {
+        "title": "Cache público da IA não é histórico ou autorização",
+        "description": "Fonte pública oficial pode ser reutilizada entre instâncias por prazo curto. Respostas finais, Juiz, decisões de rota, consultas privadas e agregados de equipe continuam fora do cache. Autorização, fontes e revisões não são puladas por um hit."
       }
     ],
     "decisions": [
@@ -912,6 +1002,27 @@
             "title": "Invalidar ao alterar",
             "description": "A troca da foto invalida a chave. Falha de leitura/gravação do cache admite consulta à origem.",
             "keyId": "user-avatar"
+          }
+        ]
+      },
+      {
+        "id": "ai-public-source-fetch",
+        "title": "Consulta pública repetida pela IA",
+        "status": "Implementado",
+        "steps": [
+          {
+            "title": "Validar a fonte",
+            "description": "Autenticação da rota e allowlist HTTPS antecedem o cache; URLs com query/fragmento não são compartilhadas."
+          },
+          {
+            "title": "Consultar os níveis de cache",
+            "description": "Memória local limitada, depois GET por hash de URL/parâmetros. Conferir envelope e prazo original; hit não renova TTL.",
+            "keyId": "ai-public-source-cache"
+          },
+          {
+            "title": "Coletar via MCP e preencher",
+            "description": "Em miss, consultar a fonte pelo MCP. Só resultado público ok validado recebe SET EX. Redis falho mantém a consulta original; Juiz e guardrails continuam no fluxo.",
+            "keyId": "ai-public-source-cache"
           }
         ]
       }
