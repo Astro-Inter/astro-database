@@ -444,8 +444,10 @@ function render() {
   else if (route === 'object') content.innerHTML = explorer(state.database, state.selectedId, state.filter, false);
   else if (route === 'dependencies') content.innerHTML = dependencyView(state.database, state.dependencyFocus);
   else if (route === 'impact') content.innerHTML = impactView(state.database);
-  else if (route === 'modeling') content.innerHTML = modeling(state.database.models);
-  else if (route === 'changes') {
+  else if (route === 'modeling') {
+    state.zoom = 1;
+    content.innerHTML = modeling(state.database.models, location.hash.split(/[/?]/)[2]);
+  } else if (route === 'changes') {
     content.innerHTML = changes(state.mode);
     if (state.mode.editable) loadChanges();
   } else if (route === 'history') {
@@ -890,19 +892,6 @@ document.addEventListener('click', async (event) => {
           : 1;
       const image = document.querySelector('#model-frame img');
       if (image) image.style.transform = `scale(${state.zoom})`;
-    }
-
-    if (target.dataset.modelTab) {
-      state.zoom = 1;
-      document.querySelectorAll('[data-model-tab]').forEach((tab) => tab.classList.toggle('active', tab === target));
-      const image = document.querySelector('[data-model-image]');
-      if (image) {
-        const modelPath = state.database.models?.[target.dataset.modelTab]
-          ?? `models/${target.dataset.modelTab === 'conceptual' ? 'conceitual' : 'logico'}.png`;
-        image.src = `./${modelPath}`;
-        image.style.transform = 'scale(1)';
-        image.alt = `Modelo ${target.dataset.modelTab === 'conceptual' ? 'conceitual' : 'lógico'} do banco de dados`;
-      }
     }
   } catch (error) {
     toast(error.message);
