@@ -1,3 +1,6 @@
 docs/analise-performance-SCRUM-687/*.json linguist-generated=true
 site/analysis/SCRUM-687/** linguist-generated=true
 site/data/performance-scrum687.js linguist-generated=true
+mongo/analysis/performance/*.json linguist-generated=true
+site/mongo-analysis/** linguist-generated=true
+site/data/mongo-performance.js linguist-generated=true

@@ -1,0 +1,578 @@
+{
+  "measuredAt": "2026-11-02T02:34:56.670494+00:00",
+  "database": "astro",
+  "version": "8.0.36",
+  "collections": [
+    {
+      "name": "configuracoes_paineis",
+      "count": 1,
+      "size": 848,
+      "storageSize": 36864,
+      "indexSizes": {
+        "_id_": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 7,
+            "since": {
+              "$date": "2026-10-31T18:08:36.781Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "painel_id": "str",
+        "usuario_id": "str",
+        "workspace_id": "str",
+        "nome": "str",
+        "estilo": "str",
+        "configuracao": "dict",
+        "versao": "int",
+        "criado_em": "datetime",
+        "atualizado_em": "datetime"
+      }
+    },
+    {
+      "name": "conversas",
+      "count": 4,
+      "size": 388,
+      "storageSize": 36864,
+      "indexSizes": {
+        "_id_": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 358,
+            "since": {
+              "$date": "2026-10-30T21:00:45.849Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "participantes_ids": "list"
+      }
+    },
+    {
+      "name": "fila_entregas_chat",
+      "count": 39,
+      "size": 4992,
+      "storageSize": 36864,
+      "indexSizes": {
+        "_id_": 36864,
+        "concluida_1_proxima_tentativa_em_1": 36864,
+        "expira_em_1": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "concluida": 1,
+            "proxima_tentativa_em": 1
+          },
+          "name": "concluida_1_proxima_tentativa_em_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "expira_em": 1
+          },
+          "name": "expira_em_1",
+          "expireAfterSeconds": 0
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "concluida_1_proxima_tentativa_em_1",
+          "accesses": {
+            "ops": 109360,
+            "since": {
+              "$date": "2026-10-31T15:56:04.476Z"
+            }
+          }
+        },
+        {
+          "name": "expira_em_1",
+          "accesses": {
+            "ops": 0,
+            "since": {
+              "$date": "2026-10-31T15:56:04.566Z"
+            }
+          }
+        },
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 1984,
+            "since": {
+              "$date": "2026-10-30T21:00:45.867Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "proxima_tentativa_em": "datetime",
+        "expira_em": "datetime",
+        "tentativas": "int",
+        "concluida": "bool"
+      }
+    },
+    {
+      "name": "formularios",
+      "count": 8,
+      "size": 9327,
+      "storageSize": 36864,
+      "indexSizes": {
+        "_id_": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 81,
+            "since": {
+              "$date": "2026-10-30T21:00:45.853Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "workspace_id": "Int64",
+        "gestor_id": "int",
+        "gestor_remetente_id": "Int64",
+        "titulo": "str",
+        "descricao": "str",
+        "data_limite": "datetime",
+        "status": "str",
+        "criado_em": "datetime",
+        "atualizado_em": "datetime",
+        "unidade_id": "int",
+        "versao": "int",
+        "perguntas": "list",
+        "_class": "str",
+        "nr_id": "int",
+        "envio_id": "str",
+        "respondido_em": "datetime",
+        "analise": "dict"
+      }
+    },
+    {
+      "name": "mensagens",
+      "count": 111,
+      "size": 20611,
+      "storageSize": 45056,
+      "indexSizes": {
+        "_id_": 45056,
+        "mensagens_participantes_data": 36864,
+        "mensagens_participantes_inverso_data": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "remetente_id": 1,
+            "destinatario_id": 1,
+            "data": -1
+          },
+          "name": "mensagens_participantes_data"
+        },
+        {
+          "v": 2,
+          "key": {
+            "destinatario_id": 1,
+            "remetente_id": 1,
+            "data": -1
+          },
+          "name": "mensagens_participantes_inverso_data"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "mensagens_participantes_inverso_data",
+          "accesses": {
+            "ops": 0,
+            "since": {
+              "$date": "2026-10-31T15:56:06.160Z"
+            }
+          }
+        },
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 180,
+            "since": {
+              "$date": "2026-10-30T21:00:45.866Z"
+            }
+          }
+        },
+        {
+          "name": "mensagens_participantes_data",
+          "accesses": {
+            "ops": 0,
+            "since": {
+              "$date": "2026-10-31T15:56:06.091Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "conversa_id": "str",
+        "remetente_id": "Int64",
+        "mensagem": "str",
+        "resposta_mensagem_id": "NoneType",
+        "data": "datetime"
+      }
+    },
+    {
+      "name": "notificacoes",
+      "count": 104,
+      "size": 25787,
+      "storageSize": 45056,
+      "indexSizes": {
+        "_id_": 36864,
+        "uq_notificacoes_chave_deduplicacao": 36864,
+        "idx_notificacoes_usuario_criacao": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "chave_deduplicacao": 1
+          },
+          "name": "uq_notificacoes_chave_deduplicacao",
+          "unique": true,
+          "partialFilterExpression": {
+            "chave_deduplicacao": {
+              "$type": "string"
+            }
+          }
+        },
+        {
+          "v": 2,
+          "key": {
+            "usuario_id": 1,
+            "data_criacao": -1,
+            "_id": -1
+          },
+          "name": "idx_notificacoes_usuario_criacao"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "uq_notificacoes_chave_deduplicacao",
+          "accesses": {
+            "ops": 0,
+            "since": {
+              "$date": "2026-10-30T21:00:45.869Z"
+            }
+          }
+        },
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 116,
+            "since": {
+              "$date": "2026-10-30T21:00:45.869Z"
+            }
+          }
+        },
+        {
+          "name": "idx_notificacoes_usuario_criacao",
+          "accesses": {
+            "ops": 163,
+            "since": {
+              "$date": "2026-10-31T15:56:08.142Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "usuario_id": "int",
+        "mensagem": "str",
+        "data_criacao": "datetime"
+      }
+    },
+    {
+      "name": "nrs",
+      "count": 38,
+      "size": 51472,
+      "storageSize": 77824,
+      "indexSizes": {
+        "_id_": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 288,
+            "since": {
+              "$date": "2026-10-30T21:00:45.852Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "aplicabilidade": "str",
+        "data_criacao": "datetime",
+        "descricao": "str",
+        "nome": "str",
+        "objetivo": "str",
+        "revogada": "bool",
+        "tempo_reciclagem_meses": "int",
+        "ultima_atualizacao": "str",
+        "usabilidade": "str"
+      }
+    },
+    {
+      "name": "nrs_pendentes",
+      "count": 2,
+      "size": 3053,
+      "storageSize": 36864,
+      "indexSizes": {
+        "_id_": 36864
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 22,
+            "since": {
+              "$date": "2026-10-30T21:00:45.853Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "aplicabilidade": "str",
+        "data_criacao": "datetime",
+        "descricao": "str",
+        "nome": "str",
+        "objetivo": "str",
+        "revogada": "bool",
+        "tempo_reciclagem_meses": "int",
+        "ultima_atualizacao": "str",
+        "usabilidade": "str"
+      }
+    },
+    {
+      "name": "sessoes",
+      "count": 95,
+      "size": 885852,
+      "storageSize": 315392,
+      "indexSizes": {
+        "_id_": 45056,
+        "sessoes_inatividade_resumo": 36864,
+        "sessoes_inatividade_legado": 36864,
+        "historico_usuario": 36864,
+        "sessoes_usuario_atualizacao": 45056
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "status": 1,
+            "ultima_mensagem_em": 1
+          },
+          "name": "sessoes_inatividade_resumo"
+        },
+        {
+          "v": 2,
+          "key": {
+            "status": 1,
+            "atualizada_em": 1
+          },
+          "name": "sessoes_inatividade_legado"
+        },
+        {
+          "v": 2,
+          "key": {
+            "usuario_id": 1,
+            "status": 1,
+            "atualizada_em": -1
+          },
+          "name": "historico_usuario"
+        },
+        {
+          "v": 2,
+          "key": {
+            "usuario_id": 1,
+            "atualizada_em": -1,
+            "_id": -1
+          },
+          "name": "sessoes_usuario_atualizacao"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 2057,
+            "since": {
+              "$date": "2026-10-30T21:00:45.852Z"
+            }
+          }
+        },
+        {
+          "name": "historico_usuario",
+          "accesses": {
+            "ops": 0,
+            "since": {
+              "$date": "2026-10-31T15:56:11.776Z"
+            }
+          }
+        },
+        {
+          "name": "sessoes_usuario_atualizacao",
+          "accesses": {
+            "ops": 338,
+            "since": {
+              "$date": "2026-10-31T15:56:11.865Z"
+            }
+          }
+        },
+        {
+          "name": "sessoes_inatividade_resumo",
+          "accesses": {
+            "ops": 0,
+            "since": {
+              "$date": "2026-10-30T21:00:45.852Z"
+            }
+          }
+        },
+        {
+          "name": "sessoes_inatividade_legado",
+          "accesses": {
+            "ops": 0,
+            "since": {
+              "$date": "2026-10-30T21:00:45.852Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {
+        "usuario_id": "str",
+        "acao_pendente": "NoneType",
+        "atualizada_em": "datetime",
+        "iniciada_em": "datetime",
+        "mensagens": "list",
+        "resumo": "str",
+        "resumo_indexado": "bool",
+        "status": "str",
+        "ultima_mensagem_em": "datetime",
+        "consulta_rh": "NoneType",
+        "resumo_tarefa_proxima_tentativa": "datetime",
+        "resumo_tarefa_tentativas": "int",
+        "titulo": "str",
+        "ultima_mensagem_previa": "str",
+        "ultima_rota": "str"
+      }
+    },
+    {
+      "name": "sincronizacoes_catalogo_nrs",
+      "count": 0,
+      "size": 0,
+      "storageSize": 24576,
+      "indexSizes": {
+        "_id_": 24576
+      },
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ],
+      "indexUsage": [
+        {
+          "name": "_id_",
+          "accesses": {
+            "ops": 1,
+            "since": {
+              "$date": "2026-10-30T21:00:45.869Z"
+            }
+          }
+        }
+      ],
+      "sampleFieldTypes": {}
+    }
+  ]
+}
