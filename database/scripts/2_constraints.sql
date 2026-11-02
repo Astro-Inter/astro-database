@@ -352,8 +352,8 @@ ALTER TABLE conformidade
 
 ALTER TABLE acesso
     ALTER COLUMN data SET NOT NULL,
-    ALTER COLUMN usuario_id SET NOT NULL,
-    ADD CONSTRAINT pk_acesso PRIMARY KEY (data, usuario_id);
+    ALTER COLUMN firebase_uid SET NOT NULL,
+    ADD CONSTRAINT pk_acesso PRIMARY KEY (data, firebase_uid);
 
 ALTER TABLE evento_astro
     ALTER COLUMN firebase_uid SET NOT NULL,
