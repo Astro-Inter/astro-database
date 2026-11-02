@@ -40,3 +40,13 @@ Após editar o catálogo, execute `node --input-type=module -e "import { analyze
 ## Painéis
 
 A astro-dashboard-api salva configurações na coleção `configuracoes_paineis`, com campos portugueses e referências `usuario_id` e `workspace_id`. A configuração é pessoal dentro do workspace. O web importa as visões locais uma vez, conserva a cópia antiga e passa a ler e gravar via API. O estilo fica em `estilo`, separado do nome. O Worker exige os secrets MONGODB_URI e MONGODB_DATABASE antes da publicação. Dados analíticos permanecem no Databricks.
+
+## Exportação do diagrama
+
+O seletor **Disposição** oferece **Compacta** (padrão) e **Espaçada**. A disposição compacta organiza grupos independentes em colunas, reduz os intervalos e mostra cada campo uma única vez no documento mais específico já representado. Os campos usam nomes relativos ao documento e os caminhos completos permanecem no cabeçalho dos blocos. Nenhuma coleção, campo ou relação é removida. A escolha vale para a tela, o modo captura, o PNG, o SVG e as páginas; na disposição compacta, a posição dos blocos é automática.
+
+Em **MongoDB → Modelagem**, use **Exportar PNG** ou **Exportar SVG**. A imagem única inclui todo o grafo, com nomes completos, tipos, relações, título e legenda. A exportação reorganiza os blocos para acomodar os textos, sem alterar os dados ou as relações; busca, seleção, posições arrastadas, zoom e rolagem não limitam o arquivo. O SVG inclui as cores e propriedades tipográficas, com larguras de texto explícitas para conservar o alinhamento em outros visualizadores. O PNG é renderizado em resolução 2×.
+
+Escolha **Páginas numeradas (ZIP)** para baixar um pacote no formato selecionado. As divisões ocorrem nos espaços entre grupos conectados, mantendo cada entidade e suas relações inteiras. Grupos maiores que a altura de referência de 1800 unidades produzem páginas maiores. Todas as páginas incluem numeração e legenda. Se o PNG ultrapassar os limites de dimensão ou memória previstos para o navegador, a interface informa o problema e orienta usar SVG ou páginas, sem reduzir silenciosamente a qualidade.
+
+O **Modo captura** mostra o modelo completo em fundo claro, sem menu lateral, cabeçalho de navegação e controles de modelagem. Use **Esc** ou **Voltar** para retornar à página.
