@@ -93,12 +93,12 @@ Referências oficiais: [Explain Results v8.0](https://www.mongodb.com/docs/v8.0/
 ## Evidências e reprodução
 
 - inventory.json: collections, contagens, definições e uso de índices existentes; somente nomes de campos/tipos amostrados, sem payloads.
-- benchmark.json: ensaio inicial com os quatro candidatos; o limite de NRs foi 100 nessa exploração.
-- confirmation.json: confirmação sem candidatos e duas rodadas com somente o escolhido; limite de NRs corrigido para 50 do código. Há 11 amostras por consulta/fase, queryPlanner e um plano executionStats representativo.
+- benchmark.json.gz: ensaio inicial com os quatro candidatos; o limite de NRs foi 100 nessa exploração.
+- confirmation.json.gz: confirmação sem candidatos e duas rodadas com somente o escolhido; limite de NRs corrigido para 50 do código. Há 11 amostras por consulta/fase, queryPlanner e um plano executionStats representativo.
 - validation.json: índice final visível, tamanho, ordem de nove consultas comparada contra varredura natural e cobertura de tipos dos campos.
 - scenarios.json e replay.py: reprodução de explain sem criar/remover índices e sem imprimir documentos. Dependência: pymongo (requirements.txt). Resolução dinâmica dos IDs de conversa/sessão; outros IDs numéricos mantêm os parâmetros observados.
 
-As evidências integrais ficam somente nesta pasta. O site carrega o relatório derivado em `site/data/mongo-performance.js` apenas ao abrir “Análise de índices”, sem publicar uma segunda cópia dos JSONs. Na reprodução da paginação, a data e o ID do cursor são obtidos juntos da décima mensagem da conversa amostrada; a data histórica em `scenarios.json` documenta a coleta original.
+As duas capturas integrais ficam somente nesta pasta, comprimidas em `.json.gz` sem perda de conteúdo. Para inspecionar, descomprima com uma ferramenta compatível com gzip ou use `python -m gzip -d ARQUIVO.json.gz` sobre uma cópia do arquivo. O site mantém somente as métricas e resumos dos planos, sem repetir os planos integrais; carrega o relatório derivado em `site/data/mongo-performance.js` apenas ao abrir “Análise de índices”, sem publicar uma segunda cópia dos JSONs. Na reprodução da paginação, a data e o ID do cursor são obtidos juntos da décima mensagem da conversa amostrada; a data histórica em `scenarios.json` documenta a coleta original.
 
 ```powershell
 python mongo/analysis/performance/replay.py --env-file "CAMINHO_DA_ENV_DA_API"
