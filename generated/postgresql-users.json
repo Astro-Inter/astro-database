@@ -1,0 +1,813 @@
+{
+  "reviewedAt": "2026-11-02",
+  "status": "Proposta de provisionamento; não aplicada ao banco",
+  "excluded": [
+    "astro-database"
+  ],
+  "users": [
+    {
+      "name": "svc_astro_api",
+      "service": "astro-api",
+      "process": "API Java",
+      "purpose": "Tabelas de negócio, views e rotinas detalhadas no relatório",
+      "profile": "SELECT/INSERT/UPDATE/DELETE por objeto; EXECUTE",
+      "connection": "POSTGRES_USER / POSTGRES_PASSWORD",
+      "database": "Astro",
+      "notes": [
+        "JPA materializa entidades: SELECT de tabela nos objetos de negócio. DML concedido somente onde há operação identificada.",
+        "UPDATE(codigo_nr) é necessário ao lock pessimista da NR; não representa uma edição de catálogo de negócio. Capturar o SQL Hibernate em homologação.",
+        "Auditoria SECURITY DEFINER e histórico SCD não exigem escrita direta em logs/history. Triggers invoker de conformidade usam as permissões de negócio já listadas.",
+        "AdminRepository.existsByEmail consulta email e projeta id_admin; autorização lê firebase_uid. As três colunas são necessárias.",
+        "Validado no PostgreSQL 17: ON CONFLICT(data, firebase_uid) DO NOTHING da função diária também exige SELECT nessas colunas.",
+        "O trigger fn_impedir_conclusao_pendente_gestor da main usa FOR SHARE OF turma_colaborador: exige UPDATE em uma coluna, além de SELECT. A permissão não corresponde a edição de participantes pela API."
+      ],
+      "source": "https://github.com/Astro-Inter/astro-api/blob/2241699760eb0b20ef17056ab6ef7fa9e75039f5/src/main/java/com/astro/api/user/service/UserService.java#L76",
+      "file": "database/users/svc_astro_api.sql",
+      "grants": [
+        {
+          "privileges": "SELECT, INSERT",
+          "object": "public.workspace"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.unidade_endereco"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.usuario_foto_perfil"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.nr_catalogo"
+        },
+        {
+          "privileges": "SELECT, INSERT, DELETE",
+          "object": "public.cargo_nr"
+        },
+        {
+          "privileges": "SELECT, INSERT, DELETE",
+          "object": "public.unidade_nr"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.evento"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE, DELETE",
+          "object": "public.turma"
+        },
+        {
+          "privileges": "SELECT, INSERT, DELETE",
+          "object": "public.turma_colaborador"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.conclusao_evento"
+        },
+        {
+          "privileges": "SELECT, INSERT, DELETE",
+          "object": "public.evidencia"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE",
+          "object": "public.conformidade"
+        },
+        {
+          "privileges": "SELECT (data, firebase_uid), INSERT (data, firebase_uid)",
+          "object": "public.acesso"
+        },
+        {
+          "privileges": "SELECT (id_admin, email, firebase_uid)",
+          "object": "public.admin"
+        },
+        {
+          "privileges": "UPDATE (codigo_nr)",
+          "object": "public.nr_catalogo"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_gestores"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_colaboradores"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_conformidade_colaborador"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_conformidade_unidade"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_eventos_gestor"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_cargos"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_unidades"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_home_estatisticas_gerais"
+        },
+        {
+          "privileges": "UPDATE (id_turma_colaborador)",
+          "object": "public.turma_colaborador"
+        }
+      ],
+      "conditional": [],
+      "hosting": "AWS",
+      "sql": "-- Usuário: svc_astro_api\r\n-- Serviço: astro-api / API Java\r\n-- Hospedagem: AWS\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_astro_api LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_astro_api', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_astro_api;\r\n\r\nGRANT SELECT, INSERT ON TABLE public.workspace TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.cargo TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.unidade TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.unidade_endereco TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.usuario TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.usuario_foto_perfil TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.nr_catalogo TO svc_astro_api;\r\nGRANT SELECT, INSERT, DELETE ON TABLE public.cargo_nr TO svc_astro_api;\r\nGRANT SELECT, INSERT, DELETE ON TABLE public.unidade_nr TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.evento TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.turma TO svc_astro_api;\r\nGRANT SELECT, INSERT, DELETE ON TABLE public.turma_colaborador TO svc_astro_api;\r\n-- Lock FOR SHARE do trigger de validação de conclusões.\r\nGRANT UPDATE (id_turma_colaborador) ON TABLE public.turma_colaborador TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.conclusao_evento TO svc_astro_api;\r\nGRANT SELECT, INSERT, DELETE ON TABLE public.evidencia TO svc_astro_api;\r\nGRANT SELECT, INSERT, UPDATE ON TABLE public.conformidade TO svc_astro_api;\r\nGRANT SELECT (data, firebase_uid), INSERT (data, firebase_uid) ON TABLE public.acesso TO svc_astro_api;\r\nGRANT SELECT (id_admin, email, firebase_uid) ON TABLE public.admin TO svc_astro_api;\r\nGRANT UPDATE (codigo_nr) ON TABLE public.nr_catalogo TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_gestores TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_colaboradores TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_conformidade_colaborador TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_conformidade_unidade TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_eventos_gestor TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_cargos TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_unidades TO svc_astro_api;\r\nGRANT SELECT ON TABLE public.vw_home_estatisticas_gerais TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_retornar_nivel_acesso(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_retornar_tipo_conta(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_registrar_acesso_diario(character varying) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_carrega_home_colaborador(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_carrega_home_gestor(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_carrega_workspace(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_seleciona_cargos(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_seleciona_cargo_nrs(text, bigint) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_altera_status_cargo(text, bigint) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_altera_cargo(text, bigint, text, text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_seleciona_unidades(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_seleciona_unidade_nrs(text, bigint) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_altera_status_unidade(text, bigint) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_seleciona_candidatos_evento(text, integer) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_carrega_colaboradores(text) TO svc_astro_api;\r\nGRANT EXECUTE ON FUNCTION public.fn_carrega_evento_colaborador(text, bigint) TO svc_astro_api;\r\nGRANT EXECUTE ON PROCEDURE public.pr_inseri_cargo(text, text, text) TO svc_astro_api;\r\nGRANT EXECUTE ON PROCEDURE public.pr_alterar_cargo_nrs(text, bigint, jsonb) TO svc_astro_api;\r\nGRANT EXECUTE ON PROCEDURE public.pr_alterar_unidade_nrs(text, bigint, jsonb) TO svc_astro_api;\r\nDO $sequences$\r\nDECLARE relation_name text; sequence_name text;\r\nBEGIN\r\n  FOREACH relation_name IN ARRAY ARRAY['public.workspace', 'public.cargo', 'public.unidade', 'public.usuario', 'public.evento', 'public.turma', 'public.turma_colaborador', 'public.conclusao_evento', 'public.evidencia', 'public.conformidade'] LOOP\r\n    sequence_name := pg_get_serial_sequence(relation_name, 'id_' || split_part(relation_name, '.', 2));\r\n    IF sequence_name IS NULL THEN\r\n      RAISE EXCEPTION 'Sequence não localizada para %. Confirmar o DDL instalado.', relation_name;\r\n    END IF;\r\n    EXECUTE format('GRANT USAGE ON SEQUENCE %s TO svc_astro_api', sequence_name);\r\n  END LOOP;\r\nEND;\r\n$sequences$;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_astro_ai",
+      "service": "astro-ai-api",
+      "process": "API IA, ferramentas e autorização",
+      "purpose": "admin, usuario, cargo, unidade, workspace, unidade_endereco, cargo_nr, unidade_nr, nr_catalogo, conformidade, turma_colaborador, turma, evento, conclusao_evento, acesso, evidencia, usuario_foto_perfil; vw_conformidade_colaborador, vw_unidades; fn_retornar_nivel_acesso, fn_seleciona_unidades",
+      "profile": "SELECT; EXECUTE",
+      "connection": "DATABASE_URL",
+      "database": "Astro",
+      "notes": [
+        "Somente leitura; inclui evidências, avatares, view de conformidade e dependências das funções invoker.",
+        "A conexão da IA já configura transação de leitura; os GRANTs também não permitem escrita.",
+        "Revisão adicional: acessos reduzidos por coluna onde as consultas têm projeção delimitada; sem escrita em campos não utilizados."
+      ],
+      "source": "https://github.com/Astro-Inter/astro-ai-api/blob/e811ea8c2a7bfa5ccf5d84c67d9f9de6c0c63bdf/app/infrastructure/database/connections.py#L1",
+      "file": "database/users/svc_astro_ai.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (nome, email, firebase_uid)",
+          "object": "public.admin"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.workspace"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.unidade_endereco"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.cargo_nr"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.unidade_nr"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.nr_catalogo"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.conformidade"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.turma_colaborador"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.turma"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.evento"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.conclusao_evento"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.acesso"
+        },
+        {
+          "privileges": "SELECT (conclusao_evento_id)",
+          "object": "public.evidencia"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.usuario_foto_perfil"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_conformidade_colaborador"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "public.vw_unidades"
+        }
+      ],
+      "conditional": [],
+      "hosting": "AWS",
+      "sql": "-- Usuário: svc_astro_ai\r\n-- Serviço: astro-ai-api / API IA, ferramentas e autorização\r\n-- Hospedagem: AWS\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_astro_ai LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_astro_ai', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_astro_ai;\r\nALTER ROLE svc_astro_ai SET default_transaction_read_only = on;\r\n\r\nGRANT SELECT (nome, email, firebase_uid) ON TABLE public.admin TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.usuario TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.cargo TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.unidade TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.workspace TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.unidade_endereco TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.cargo_nr TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.unidade_nr TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.nr_catalogo TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.conformidade TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.turma_colaborador TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.turma TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.evento TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.conclusao_evento TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.acesso TO svc_astro_ai;\r\nGRANT SELECT (conclusao_evento_id) ON TABLE public.evidencia TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.usuario_foto_perfil TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.vw_conformidade_colaborador TO svc_astro_ai;\r\nGRANT SELECT ON TABLE public.vw_unidades TO svc_astro_ai;\r\nGRANT EXECUTE ON FUNCTION public.fn_retornar_nivel_acesso(text) TO svc_astro_ai;\r\nGRANT EXECUTE ON FUNCTION public.fn_seleciona_unidades(text) TO svc_astro_ai;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_rpa_legacy",
+      "service": "data-integration-rpa",
+      "process": "Origem legado",
+      "purpose": "funcionario, empresa, departamento; email quando separado; pgp_sym_decrypt quando CPF bytea",
+      "profile": "SELECT; EXECUTE condicional",
+      "connection": "LEGACY_DB Hyperdrive / LEGACY_DB_*",
+      "database": "Legado",
+      "notes": [
+        "Executar no banco legado, não no banco Astro.",
+        "O layout do legado determina se o e-mail fica em funcionario ou na tabela email. Aplicar apenas o bloco condicional correspondente. CPF bytea requer pgcrypto e chave externa."
+      ],
+      "source": "https://github.com/Astro-Inter/data-integration-rpa/blob/f420eef6035d293bd21d545f8ba5e9bf7bd9f3e5/cloudflare/repositories.ts#L1",
+      "file": "database/users/svc_rpa_legacy.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_funcionario, cpf, nome, cargo, id_empresa, id_departamento)",
+          "object": "public.funcionario"
+        },
+        {
+          "privileges": "SELECT (id_empresa, nome, cnpj)",
+          "object": "public.empresa"
+        },
+        {
+          "privileges": "SELECT (id_departamento, nome, id_empresa)",
+          "object": "public.departamento"
+        }
+      ],
+      "conditional": [
+        {
+          "title": "Legado com e-mail inline",
+          "reason": "Aplicar somente se funcionario possuir a coluna email.",
+          "sql": "GRANT SELECT (email) ON TABLE public.funcionario TO svc_rpa_legacy;"
+        },
+        {
+          "title": "Legado com tabela de e-mails",
+          "reason": "Aplicar somente se os e-mails estiverem em tabela separada.",
+          "sql": "GRANT SELECT (id_funcionario, id_email, email) ON TABLE public.email TO svc_rpa_legacy;"
+        },
+        {
+          "title": "CPF criptografado em bytea",
+          "reason": "Se pgcrypto estiver instalado em outro schema, ajustar a assinatura. A chave não pertence a este catálogo.",
+          "sql": "GRANT EXECUTE ON FUNCTION public.pgp_sym_decrypt(bytea, text) TO svc_rpa_legacy;"
+        }
+      ],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_rpa_legacy\r\n-- Serviço: data-integration-rpa / Origem legado\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco LEGADO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_rpa_legacy LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_rpa_legacy', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_rpa_legacy;\r\n\r\nGRANT SELECT (id_funcionario, cpf, nome, cargo, id_empresa, id_departamento) ON TABLE public.funcionario TO svc_rpa_legacy;\r\nGRANT SELECT (id_empresa, nome, cnpj) ON TABLE public.empresa TO svc_rpa_legacy;\r\nGRANT SELECT (id_departamento, nome, id_empresa) ON TABLE public.departamento TO svc_rpa_legacy;\r\nCOMMIT;\r\n\r\n-- OPCIONAL: Legado com e-mail inline\r\n-- Aplicar somente se funcionario possuir a coluna email.\r\n-- GRANT SELECT (email) ON TABLE public.funcionario TO svc_rpa_legacy;\r\n\r\n-- OPCIONAL: Legado com tabela de e-mails\r\n-- Aplicar somente se os e-mails estiverem em tabela separada.\r\n-- GRANT SELECT (id_funcionario, id_email, email) ON TABLE public.email TO svc_rpa_legacy;\r\n\r\n-- OPCIONAL: CPF criptografado em bytea\r\n-- Se pgcrypto estiver instalado em outro schema, ajustar a assinatura. A chave não pertence a este catálogo.\r\n-- GRANT EXECUTE ON FUNCTION public.pgp_sym_decrypt(bytea, text) TO svc_rpa_legacy;\r\n"
+    },
+    {
+      "name": "svc_rpa_target",
+      "service": "data-integration-rpa",
+      "process": "Destino Astro",
+      "purpose": "workspace S/I/U; cargo e unidade S/I; usuario S/I/U; admin e ONLY conta S(email,firebase_uid)",
+      "profile": "SELECT/INSERT/UPDATE por objeto",
+      "connection": "TARGET_DB Hyperdrive / TARGET_DB_*",
+      "database": "Astro",
+      "notes": [
+        "Worker Cloudflare atual usa Firestore para estado. As três tabelas rpa_* são apenas para o fallback SQL, em bloco separado.",
+        "SELECT em conta é verificado no pai; ONLY é opção da consulta, não sintaxe de GRANT. Não há DELETE.",
+        "Revisão adicional: acessos reduzidos por coluna onde as consultas têm projeção delimitada; sem escrita em campos não utilizados."
+      ],
+      "source": "https://github.com/Astro-Inter/data-integration-rpa/blob/f420eef6035d293bd21d545f8ba5e9bf7bd9f3e5/cloudflare/target-user-repository.ts#L1",
+      "file": "database/users/svc_rpa_target.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_workspace, cnpj, nome), INSERT (nome, cnpj), UPDATE (nome)",
+          "object": "public.workspace"
+        },
+        {
+          "privileges": "SELECT (id_cargo, workspace_id, nome), INSERT (workspace_id, nome, ativo)",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT (id_unidade, workspace_id, nome), INSERT (workspace_id, nome, ativo)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_usuario, cpf, email, firebase_uid, cargo_id, unidade_id), INSERT (nome, email, cpf, firebase_uid, cargo_id, unidade_id, tipo, status), UPDATE (nome, email, cpf, firebase_uid, cargo_id, unidade_id)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (email, firebase_uid)",
+          "object": "public.admin"
+        },
+        {
+          "privileges": "SELECT (email, firebase_uid)",
+          "object": "public.conta"
+        }
+      ],
+      "conditional": [
+        {
+          "title": "Fallback com controle SQL",
+          "reason": "Somente quando o processo não recebe FirestoreState e as tabelas rpa_* estiverem instaladas.",
+          "sql": "GRANT SELECT, INSERT, UPDATE ON TABLE public.rpa_sync_control, public.rpa_sync_users TO svc_rpa_target;\nGRANT SELECT, INSERT ON TABLE public.rpa_user_links TO svc_rpa_target;"
+        }
+      ],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_rpa_target\r\n-- Serviço: data-integration-rpa / Destino Astro\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_rpa_target LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_rpa_target', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_rpa_target;\r\n\r\nGRANT SELECT (id_workspace, cnpj, nome), INSERT (nome, cnpj), UPDATE (nome) ON TABLE public.workspace TO svc_rpa_target;\r\nGRANT SELECT (id_cargo, workspace_id, nome), INSERT (workspace_id, nome, ativo) ON TABLE public.cargo TO svc_rpa_target;\r\nGRANT SELECT (id_unidade, workspace_id, nome), INSERT (workspace_id, nome, ativo) ON TABLE public.unidade TO svc_rpa_target;\r\nGRANT SELECT (id_usuario, cpf, email, firebase_uid, cargo_id, unidade_id), INSERT (nome, email, cpf, firebase_uid, cargo_id, unidade_id, tipo, status), UPDATE (nome, email, cpf, firebase_uid, cargo_id, unidade_id) ON TABLE public.usuario TO svc_rpa_target;\r\nGRANT SELECT (email, firebase_uid) ON TABLE public.admin TO svc_rpa_target;\r\nGRANT SELECT (email, firebase_uid) ON TABLE public.conta TO svc_rpa_target;\r\nDO $sequences$\r\nDECLARE relation_name text; sequence_name text;\r\nBEGIN\r\n  FOREACH relation_name IN ARRAY ARRAY['public.workspace', 'public.cargo', 'public.unidade', 'public.usuario'] LOOP\r\n    sequence_name := pg_get_serial_sequence(relation_name, 'id_' || split_part(relation_name, '.', 2));\r\n    IF sequence_name IS NULL THEN\r\n      RAISE EXCEPTION 'Sequence não localizada para %. Confirmar o DDL instalado.', relation_name;\r\n    END IF;\r\n    EXECUTE format('GRANT USAGE ON SEQUENCE %s TO svc_rpa_target', sequence_name);\r\n  END LOOP;\r\nEND;\r\n$sequences$;\r\nCOMMIT;\r\n\r\n-- OPCIONAL: Fallback com controle SQL\r\n-- Somente quando o processo não recebe FirestoreState e as tabelas rpa_* estiverem instaladas.\r\n-- GRANT SELECT, INSERT, UPDATE ON TABLE public.rpa_sync_control, public.rpa_sync_users TO svc_rpa_target;\r\n-- GRANT SELECT, INSERT ON TABLE public.rpa_user_links TO svc_rpa_target;\r\n"
+    },
+    {
+      "name": "svc_email_employee",
+      "service": "astro-email-worker",
+      "process": "Colaboradores; Worker Cloudflare combinado",
+      "purpose": "usuario, unidade, workspace, cargo",
+      "profile": "SELECT",
+      "connection": "HYPERDRIVE; DATABASE_URL no Node/fallback",
+      "database": "Astro",
+      "notes": [
+        "No Node, workspaceIndex isolado dispensa PostgreSQL. O Worker Cloudflare combina as duas filas e conecta ao banco antes do processamento."
+      ],
+      "source": "https://github.com/Astro-Inter/astro-email-worker/blob/c74ef8282bd3f556f8cc02b30139c3edd8e6d469/src/repositories/userRepository.js#L1",
+      "file": "database/users/svc_email_employee.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_usuario, nome, email, status, tipo, unidade_id, cargo_id)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (id_unidade, nome, workspace_id)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_workspace, nome)",
+          "object": "public.workspace"
+        },
+        {
+          "privileges": "SELECT (id_cargo, nome)",
+          "object": "public.cargo"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_email_employee\r\n-- Serviço: astro-email-worker / Colaboradores; Worker Cloudflare combinado\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_email_employee LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_email_employee', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_email_employee;\r\n\r\nGRANT SELECT (id_usuario, nome, email, status, tipo, unidade_id, cargo_id) ON TABLE public.usuario TO svc_email_employee;\r\nGRANT SELECT (id_unidade, nome, workspace_id) ON TABLE public.unidade TO svc_email_employee;\r\nGRANT SELECT (id_workspace, nome) ON TABLE public.workspace TO svc_email_employee;\r\nGRANT SELECT (id_cargo, nome) ON TABLE public.cargo TO svc_email_employee;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_nr_updater",
+      "service": "nr-updater",
+      "process": "Atualização catálogo NRs",
+      "purpose": "ler_json_nr(text); nr_catalogo(codigo_nr,titulo,revogada,tempo_reciclagem_mes)",
+      "profile": "EXECUTE; SELECT/INSERT/UPDATE internos",
+      "connection": "HYPERDRIVE / POSTGRES_USER e POSTGRES_PASSWORD",
+      "database": "Astro",
+      "notes": [
+        "ler_json_nr(text) é SECURITY INVOKER: EXECUTE não substitui os privilégios do upsert na tabela."
+      ],
+      "source": "https://github.com/Astro-Inter/nr-updater/blob/73a99b658d4c0c3724f5ddb412c042758e0e1b75/cloudflare/worker.ts#L1",
+      "file": "database/users/svc_nr_updater.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (codigo_nr, titulo, revogada, tempo_reciclagem_mes), INSERT (codigo_nr, titulo, revogada, tempo_reciclagem_mes), UPDATE (titulo, revogada, tempo_reciclagem_mes)",
+          "object": "public.nr_catalogo"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_nr_updater\r\n-- Serviço: nr-updater / Atualização catálogo NRs\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_nr_updater LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_nr_updater', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_nr_updater;\r\n\r\nGRANT SELECT (codigo_nr, titulo, revogada, tempo_reciclagem_mes), INSERT (codigo_nr, titulo, revogada, tempo_reciclagem_mes), UPDATE (titulo, revogada, tempo_reciclagem_mes) ON TABLE public.nr_catalogo TO svc_nr_updater;\r\nGRANT EXECUTE ON PROCEDURE public.ler_json_nr(text) TO svc_nr_updater;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_cleanup",
+      "service": "astro-data-cleanup",
+      "process": "Reconciliação Firebase",
+      "purpose": "conta incluindo herança",
+      "profile": "SELECT(firebase_uid)",
+      "connection": "POSTGRES Hyperdrive / POSTGRES_URL",
+      "database": "Astro",
+      "notes": [
+        "SELECT em conta inclui usuario/admin por herança. As exclusões são em Firebase/MongoDB, sem DELETE PostgreSQL."
+      ],
+      "source": "https://github.com/Astro-Inter/astro-data-cleanup/blob/102561bb00e1e7a2b6c5b6d8d7815c801f83ce44/cloudflare/connectors.ts#L1",
+      "file": "database/users/svc_cleanup.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (firebase_uid)",
+          "object": "public.conta"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_cleanup\r\n-- Serviço: astro-data-cleanup / Reconciliação Firebase\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_cleanup LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_cleanup', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_cleanup;\r\n\r\nGRANT SELECT (firebase_uid) ON TABLE public.conta TO svc_cleanup;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_tracking",
+      "service": "astro-tracking-api",
+      "process": "Coleta de eventos de navegação",
+      "purpose": "evento_astro",
+      "profile": "INSERT; SELECT do RETURNING e health check; USAGE sequence",
+      "connection": "HYPERDRIVE / DB_USER e DB_PASSWORD",
+      "database": "Astro",
+      "notes": [
+        "SELECT é necessário ao RETURNING e health check. A sequence usa o nome físico instalado, resolvido por pg_get_serial_sequence.",
+        "A coluna serial de evento_astro é id_evento; não derivar id_evento_astro do nome da tabela."
+      ],
+      "source": "https://github.com/Astro-Inter/astro-tracking-api/blob/5f35be589fabe839cb3875bd54879e9bc4b7a1cf/src/app/repository.py#L1",
+      "file": "database/users/svc_tracking.sql",
+      "grants": [
+        {
+          "privileges": "INSERT (firebase_uid, tipo_evento, nome_botao, nome_tela, contexto_tela, nome_dialog, dialog_clicado, showcase_click, nome_showcase, cliente_ip, criado_em), SELECT (id_evento, firebase_uid, tipo_evento, nome_botao, nome_tela, contexto_tela, nome_dialog, dialog_clicado, showcase_click, nome_showcase, cliente_ip, criado_em)",
+          "object": "public.evento_astro"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_tracking\r\n-- Serviço: astro-tracking-api / Coleta de eventos de navegação\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_tracking LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_tracking', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_tracking;\r\n\r\nGRANT INSERT (firebase_uid, tipo_evento, nome_botao, nome_tela, contexto_tela, nome_dialog, dialog_clicado, showcase_click, nome_showcase, cliente_ip, criado_em), SELECT (id_evento, firebase_uid, tipo_evento, nome_botao, nome_tela, contexto_tela, nome_dialog, dialog_clicado, showcase_click, nome_showcase, cliente_ip, criado_em) ON TABLE public.evento_astro TO svc_tracking;\r\nDO $sequences$\r\nDECLARE relation_name text; sequence_name text;\r\nBEGIN\r\n  FOREACH relation_name IN ARRAY ARRAY['public.evento_astro'] LOOP\r\n    sequence_name := pg_get_serial_sequence(relation_name, 'id_evento');\r\n    IF sequence_name IS NULL THEN\r\n      RAISE EXCEPTION 'Sequence não localizada para %. Confirmar o DDL instalado.', relation_name;\r\n    END IF;\r\n    EXECUTE format('GRANT USAGE ON SEQUENCE %s TO svc_tracking', sequence_name);\r\n  END LOOP;\r\nEND;\r\n$sequences$;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_medallion",
+      "service": "astro-medallion-api",
+      "process": "API e captura Bronze/Silver/Gold",
+      "purpose": "public: unidade, unidade_endereco, usuario, dim_nr_catalogo, turma_colaborador, turma, conclusao_evento, conformidade, evento, evento_astro, cargo_nr, cargo; astro_api: history_control S, usuario_history S, snapshots S/I/D, rate_buckets S/I/U/D, fact_id_seq USAGE",
+      "profile": "SELECT fontes; DML interno; USAGE sequence",
+      "connection": "HYPERDRIVE / DATABASE_URL",
+      "database": "Astro",
+      "notes": [
+        "Instalar primeiro a migração 001_history_and_snapshots.sql do serviço. Ela cria o schema astro_api e os triggers SECURITY DEFINER.",
+        "Databricks consome HTTP e tem identidade própria, sem login PostgreSQL adicional."
+      ],
+      "source": "https://github.com/Astro-Inter/astro-medallion-api/blob/c9a40d57105ef35a286449b26b248d456531b29e/app/bronze/datasets.py#L1",
+      "file": "database/users/svc_medallion.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (nome, id_unidade)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (unidade_id, rua, numero, cidade, bairro, estado, complemento, geolocalizacao)",
+          "object": "public.unidade_endereco"
+        },
+        {
+          "privileges": "SELECT (id_usuario, unidade_id, cargo_id, tipo, status, nome)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (codigo_nr, id_unidade, id_dim_nr_catalogo)",
+          "object": "public.dim_nr_catalogo"
+        },
+        {
+          "privileges": "SELECT (usuario_id, turma_id, id_turma_colaborador)",
+          "object": "public.turma_colaborador"
+        },
+        {
+          "privileges": "SELECT (id_turma, data_inicial, evento_id)",
+          "object": "public.turma"
+        },
+        {
+          "privileges": "SELECT (status, turma_colaborador_id, id_conclusao_evento, data_conclusao, data_validacao)",
+          "object": "public.conclusao_evento"
+        },
+        {
+          "privileges": "SELECT (id_conformidade, nr_id, conclusao_evento_id)",
+          "object": "public.conformidade"
+        },
+        {
+          "privileges": "SELECT (status, id_evento, gestor_id, nr_id, modo_conclusao)",
+          "object": "public.evento"
+        },
+        {
+          "privileges": "SELECT (id_evento, firebase_uid, tipo_evento, nome_botao, nome_tela, contexto_tela, nome_dialog, dialog_clicado, showcase_click, nome_showcase, cliente_ip, criado_em)",
+          "object": "public.evento_astro"
+        },
+        {
+          "privileges": "SELECT (nr_id, cargo_id)",
+          "object": "public.cargo_nr"
+        },
+        {
+          "privileges": "SELECT (id_cargo, nome)",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "astro_api.history_control"
+        },
+        {
+          "privileges": "SELECT",
+          "object": "astro_api.usuario_history"
+        },
+        {
+          "privileges": "SELECT, INSERT, DELETE",
+          "object": "astro_api.snapshots"
+        },
+        {
+          "privileges": "SELECT, INSERT, UPDATE, DELETE",
+          "object": "astro_api.rate_buckets"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_medallion\r\n-- Serviço: astro-medallion-api / API e captura Bronze/Silver/Gold\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_medallion LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_medallion', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_medallion;\r\n\r\nGRANT SELECT (nome, id_unidade) ON TABLE public.unidade TO svc_medallion;\r\nGRANT SELECT (unidade_id, rua, numero, cidade, bairro, estado, complemento, geolocalizacao) ON TABLE public.unidade_endereco TO svc_medallion;\r\nGRANT SELECT (id_usuario, unidade_id, cargo_id, tipo, status, nome) ON TABLE public.usuario TO svc_medallion;\r\nGRANT SELECT (codigo_nr, id_unidade, id_dim_nr_catalogo) ON TABLE public.dim_nr_catalogo TO svc_medallion;\r\nGRANT SELECT (usuario_id, turma_id, id_turma_colaborador) ON TABLE public.turma_colaborador TO svc_medallion;\r\nGRANT SELECT (id_turma, data_inicial, evento_id) ON TABLE public.turma TO svc_medallion;\r\nGRANT SELECT (status, turma_colaborador_id, id_conclusao_evento, data_conclusao, data_validacao) ON TABLE public.conclusao_evento TO svc_medallion;\r\nGRANT SELECT (id_conformidade, nr_id, conclusao_evento_id) ON TABLE public.conformidade TO svc_medallion;\r\nGRANT SELECT (status, id_evento, gestor_id, nr_id, modo_conclusao) ON TABLE public.evento TO svc_medallion;\r\nGRANT SELECT (id_evento, firebase_uid, tipo_evento, nome_botao, nome_tela, contexto_tela, nome_dialog, dialog_clicado, showcase_click, nome_showcase, cliente_ip, criado_em) ON TABLE public.evento_astro TO svc_medallion;\r\nGRANT SELECT (nr_id, cargo_id) ON TABLE public.cargo_nr TO svc_medallion;\r\nGRANT SELECT (id_cargo, nome) ON TABLE public.cargo TO svc_medallion;\r\nGRANT SELECT ON TABLE astro_api.history_control TO svc_medallion;\r\nGRANT SELECT ON TABLE astro_api.usuario_history TO svc_medallion;\r\nGRANT SELECT, INSERT, DELETE ON TABLE astro_api.snapshots TO svc_medallion;\r\nGRANT SELECT, INSERT, UPDATE, DELETE ON TABLE astro_api.rate_buckets TO svc_medallion;\r\nGRANT USAGE ON SCHEMA astro_api TO svc_medallion;\r\nGRANT USAGE ON SEQUENCE astro_api.fact_id_seq TO svc_medallion;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_notif_expiring",
+      "service": "astro-notification-service",
+      "process": "expiring-compliance",
+      "purpose": "conformidade, usuario, unidade, cargo, nr_catalogo",
+      "profile": "SELECT",
+      "connection": "HYPERDRIVE / DATABASE_URL",
+      "database": "Astro",
+      "notes": [],
+      "source": "https://github.com/Astro-Inter/astro-notification-service/blob/153c0fdaecf20a477d4f1ce65f771405d28510e5/src/rules/queries.ts#L1",
+      "file": "database/users/svc_notif_expiring.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_conformidade, usuario_id, nr_id, aplicavel, data_validade)",
+          "object": "public.conformidade"
+        },
+        {
+          "privileges": "SELECT (id_usuario, cargo_id, unidade_id, tipo, status)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (id_unidade, workspace_id, ativo)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_cargo, workspace_id, ativo)",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT (codigo_nr, revogada)",
+          "object": "public.nr_catalogo"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_notif_expiring\r\n-- Serviço: astro-notification-service / expiring-compliance\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_notif_expiring LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_notif_expiring', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_notif_expiring;\r\n\r\nGRANT SELECT (id_conformidade, usuario_id, nr_id, aplicavel, data_validade) ON TABLE public.conformidade TO svc_notif_expiring;\r\nGRANT SELECT (id_usuario, cargo_id, unidade_id, tipo, status) ON TABLE public.usuario TO svc_notif_expiring;\r\nGRANT SELECT (id_unidade, workspace_id, ativo) ON TABLE public.unidade TO svc_notif_expiring;\r\nGRANT SELECT (id_cargo, workspace_id, ativo) ON TABLE public.cargo TO svc_notif_expiring;\r\nGRANT SELECT (codigo_nr, revogada) ON TABLE public.nr_catalogo TO svc_notif_expiring;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_notif_expired",
+      "service": "astro-notification-service",
+      "process": "expired-compliance",
+      "purpose": "conformidade, usuario, unidade, cargo, nr_catalogo",
+      "profile": "SELECT",
+      "connection": "HYPERDRIVE / DATABASE_URL",
+      "database": "Astro",
+      "notes": [],
+      "source": "https://github.com/Astro-Inter/astro-notification-service/blob/153c0fdaecf20a477d4f1ce65f771405d28510e5/src/rules/queries.ts#L1",
+      "file": "database/users/svc_notif_expired.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_conformidade, usuario_id, nr_id, aplicavel, data_validade)",
+          "object": "public.conformidade"
+        },
+        {
+          "privileges": "SELECT (id_usuario, cargo_id, unidade_id, tipo, status)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (id_unidade, workspace_id, ativo)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_cargo, workspace_id, ativo)",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT (codigo_nr, revogada)",
+          "object": "public.nr_catalogo"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_notif_expired\r\n-- Serviço: astro-notification-service / expired-compliance\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_notif_expired LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_notif_expired', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_notif_expired;\r\n\r\nGRANT SELECT (id_conformidade, usuario_id, nr_id, aplicavel, data_validade) ON TABLE public.conformidade TO svc_notif_expired;\r\nGRANT SELECT (id_usuario, cargo_id, unidade_id, tipo, status) ON TABLE public.usuario TO svc_notif_expired;\r\nGRANT SELECT (id_unidade, workspace_id, ativo) ON TABLE public.unidade TO svc_notif_expired;\r\nGRANT SELECT (id_cargo, workspace_id, ativo) ON TABLE public.cargo TO svc_notif_expired;\r\nGRANT SELECT (codigo_nr, revogada) ON TABLE public.nr_catalogo TO svc_notif_expired;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_notif_deadlines",
+      "service": "astro-notification-service",
+      "process": "class-deadlines",
+      "purpose": "turma_colaborador, turma, evento, usuario, unidade, cargo, conclusao_evento",
+      "profile": "SELECT",
+      "connection": "HYPERDRIVE / DATABASE_URL",
+      "database": "Astro",
+      "notes": [],
+      "source": "https://github.com/Astro-Inter/astro-notification-service/blob/153c0fdaecf20a477d4f1ce65f771405d28510e5/src/rules/queries.ts#L1",
+      "file": "database/users/svc_notif_deadlines.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_turma_colaborador, turma_id, usuario_id)",
+          "object": "public.turma_colaborador"
+        },
+        {
+          "privileges": "SELECT (id_turma, evento_id, data_termino)",
+          "object": "public.turma"
+        },
+        {
+          "privileges": "SELECT (id_evento, gestor_id, titulo, status)",
+          "object": "public.evento"
+        },
+        {
+          "privileges": "SELECT (id_usuario, cargo_id, unidade_id, tipo, status)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (id_unidade, workspace_id, ativo)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_cargo, workspace_id, ativo)",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT (id_conclusao_evento, turma_colaborador_id, status, data_conclusao)",
+          "object": "public.conclusao_evento"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_notif_deadlines\r\n-- Serviço: astro-notification-service / class-deadlines\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_notif_deadlines LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_notif_deadlines', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_notif_deadlines;\r\n\r\nGRANT SELECT (id_turma_colaborador, turma_id, usuario_id) ON TABLE public.turma_colaborador TO svc_notif_deadlines;\r\nGRANT SELECT (id_turma, evento_id, data_termino) ON TABLE public.turma TO svc_notif_deadlines;\r\nGRANT SELECT (id_evento, gestor_id, titulo, status) ON TABLE public.evento TO svc_notif_deadlines;\r\nGRANT SELECT (id_usuario, cargo_id, unidade_id, tipo, status) ON TABLE public.usuario TO svc_notif_deadlines;\r\nGRANT SELECT (id_unidade, workspace_id, ativo) ON TABLE public.unidade TO svc_notif_deadlines;\r\nGRANT SELECT (id_cargo, workspace_id, ativo) ON TABLE public.cargo TO svc_notif_deadlines;\r\nGRANT SELECT (id_conclusao_evento, turma_colaborador_id, status, data_conclusao) ON TABLE public.conclusao_evento TO svc_notif_deadlines;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_notif_pending",
+      "service": "astro-notification-service",
+      "process": "pending-validations",
+      "purpose": "turma_colaborador, turma, evento, usuario, unidade, cargo, conclusao_evento",
+      "profile": "SELECT",
+      "connection": "HYPERDRIVE / DATABASE_URL",
+      "database": "Astro",
+      "notes": [],
+      "source": "https://github.com/Astro-Inter/astro-notification-service/blob/153c0fdaecf20a477d4f1ce65f771405d28510e5/src/rules/queries.ts#L1",
+      "file": "database/users/svc_notif_pending.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_turma_colaborador, turma_id, usuario_id)",
+          "object": "public.turma_colaborador"
+        },
+        {
+          "privileges": "SELECT (id_turma, evento_id)",
+          "object": "public.turma"
+        },
+        {
+          "privileges": "SELECT (id_evento, gestor_id, titulo, status)",
+          "object": "public.evento"
+        },
+        {
+          "privileges": "SELECT (id_usuario, cargo_id, unidade_id, tipo, status)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (id_unidade, workspace_id, ativo)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_cargo, workspace_id, ativo)",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT (id_conclusao_evento, turma_colaborador_id, status, data_conclusao, data_validacao)",
+          "object": "public.conclusao_evento"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_notif_pending\r\n-- Serviço: astro-notification-service / pending-validations\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_notif_pending LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_notif_pending', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_notif_pending;\r\n\r\nGRANT SELECT (id_turma_colaborador, turma_id, usuario_id) ON TABLE public.turma_colaborador TO svc_notif_pending;\r\nGRANT SELECT (id_turma, evento_id) ON TABLE public.turma TO svc_notif_pending;\r\nGRANT SELECT (id_evento, gestor_id, titulo, status) ON TABLE public.evento TO svc_notif_pending;\r\nGRANT SELECT (id_usuario, cargo_id, unidade_id, tipo, status) ON TABLE public.usuario TO svc_notif_pending;\r\nGRANT SELECT (id_unidade, workspace_id, ativo) ON TABLE public.unidade TO svc_notif_pending;\r\nGRANT SELECT (id_cargo, workspace_id, ativo) ON TABLE public.cargo TO svc_notif_pending;\r\nGRANT SELECT (id_conclusao_evento, turma_colaborador_id, status, data_conclusao, data_validacao) ON TABLE public.conclusao_evento TO svc_notif_pending;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_notif_event_push",
+      "service": "astro-notification-service",
+      "process": "pending-events-push",
+      "purpose": "usuario, unidade, cargo, turma_colaborador, turma, evento, conclusao_evento",
+      "profile": "SELECT",
+      "connection": "HYPERDRIVE / DATABASE_URL",
+      "database": "Astro",
+      "notes": [],
+      "source": "https://github.com/Astro-Inter/astro-notification-service/blob/153c0fdaecf20a477d4f1ce65f771405d28510e5/src/push/query.ts#L1",
+      "file": "database/users/svc_notif_event_push.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_turma_colaborador, turma_id, usuario_id)",
+          "object": "public.turma_colaborador"
+        },
+        {
+          "privileges": "SELECT (id_turma, evento_id)",
+          "object": "public.turma"
+        },
+        {
+          "privileges": "SELECT (id_evento, gestor_id, status)",
+          "object": "public.evento"
+        },
+        {
+          "privileges": "SELECT (id_usuario, cargo_id, unidade_id, tipo, status, firebase_uid)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (id_unidade, workspace_id, ativo)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_cargo, workspace_id, ativo)",
+          "object": "public.cargo"
+        },
+        {
+          "privileges": "SELECT (id_conclusao_evento, turma_colaborador_id, status, data_conclusao, data_validacao)",
+          "object": "public.conclusao_evento"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_notif_event_push\r\n-- Serviço: astro-notification-service / pending-events-push\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_notif_event_push LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_notif_event_push', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_notif_event_push;\r\n\r\nGRANT SELECT (id_turma_colaborador, turma_id, usuario_id) ON TABLE public.turma_colaborador TO svc_notif_event_push;\r\nGRANT SELECT (id_turma, evento_id) ON TABLE public.turma TO svc_notif_event_push;\r\nGRANT SELECT (id_evento, gestor_id, status) ON TABLE public.evento TO svc_notif_event_push;\r\nGRANT SELECT (id_usuario, cargo_id, unidade_id, tipo, status, firebase_uid) ON TABLE public.usuario TO svc_notif_event_push;\r\nGRANT SELECT (id_unidade, workspace_id, ativo) ON TABLE public.unidade TO svc_notif_event_push;\r\nGRANT SELECT (id_cargo, workspace_id, ativo) ON TABLE public.cargo TO svc_notif_event_push;\r\nGRANT SELECT (id_conclusao_evento, turma_colaborador_id, status, data_conclusao, data_validacao) ON TABLE public.conclusao_evento TO svc_notif_event_push;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "svc_dashboard",
+      "service": "astro-dashboard-api",
+      "process": "Autorização de workspace",
+      "purpose": "usuario, unidade, workspace; admin(firebase_uid) pela função invoker; fn_retornar_nivel_acesso(text)",
+      "profile": "SELECT; EXECUTE",
+      "connection": "ASTRO_DB Hyperdrive",
+      "database": "Astro",
+      "notes": [
+        "Indicadores e explorer usam Databricks via HTTP. No PostgreSQL, somente vínculo/autorização e dependências invoker."
+      ],
+      "source": "https://github.com/Astro-Inter/astro-dashboard-api/blob/8d792fc991ff132314a6c9f6d40b6138ad352ec1/src/auth/workspace.ts#L1",
+      "file": "database/users/svc_dashboard.sql",
+      "grants": [
+        {
+          "privileges": "SELECT (id_usuario, firebase_uid, unidade_id, status, tipo)",
+          "object": "public.usuario"
+        },
+        {
+          "privileges": "SELECT (id_unidade, workspace_id, ativo)",
+          "object": "public.unidade"
+        },
+        {
+          "privileges": "SELECT (id_workspace)",
+          "object": "public.workspace"
+        },
+        {
+          "privileges": "SELECT (firebase_uid)",
+          "object": "public.admin"
+        }
+      ],
+      "conditional": [],
+      "hosting": "Cloudflare",
+      "sql": "-- Usuário: svc_dashboard\r\n-- Serviço: astro-dashboard-api / Autorização de workspace\r\n-- Hospedagem: Cloudflare\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE svc_dashboard LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO svc_dashboard', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO svc_dashboard;\r\n\r\nGRANT SELECT (id_usuario, firebase_uid, unidade_id, status, tipo) ON TABLE public.usuario TO svc_dashboard;\r\nGRANT SELECT (id_unidade, workspace_id, ativo) ON TABLE public.unidade TO svc_dashboard;\r\nGRANT SELECT (id_workspace) ON TABLE public.workspace TO svc_dashboard;\r\nGRANT SELECT (firebase_uid) ON TABLE public.admin TO svc_dashboard;\r\nGRANT EXECUTE ON FUNCTION public.fn_retornar_nivel_acesso(text) TO svc_dashboard;\r\nCOMMIT;\r\n"
+    },
+    {
+      "name": "ops_backup",
+      "service": "postgresql-backup",
+      "process": "Backup integral",
+      "purpose": "Todos os objetos cobertos pelo dump, incluindo schemas extras e sequences",
+      "profile": "Leitura integral para pg_dump",
+      "connection": "AIVEN_PG_USER / AIVEN_PG_PASSWORD",
+      "database": "Astro",
+      "notes": [
+        "Leitura integral do banco alvo; não concede restauração nem escrita.",
+        "O SQL cobre public e, se instalado, astro_api. Outros schemas, large objects e RLS precisam de inventário no banco real.",
+        "Objetos futuros não recebem acesso automaticamente: reaplicar o bloco de leitura ou configurar default privileges por cada owner criador."
+      ],
+      "source": "https://github.com/Astro-Inter/postgresql-backup/blob/787a8c150259a6b2fd81e9ecb871748b9afae35b/.github/workflows/backup.yml#L1",
+      "file": "database/users/ops_backup.sql",
+      "grants": [],
+      "conditional": [],
+      "hosting": "GitHub Actions",
+      "sql": "-- Usuário: ops_backup\r\n-- Serviço: postgresql-backup / Backup integral\r\n-- Hospedagem: GitHub Actions\r\n-- Proposta baseada na análise de 02/11/2026; conferir objetos/ACLs no ambiente alvo.\r\n-- Executar como administrador no banco ASTRO correto. Não contém senha.\r\n-- Após criar, definir autenticação por canal seguro e atualizar o secret/Hyperdrive.\r\n-- Não revoga privilégios existentes de PUBLIC ou de outras roles.\r\nBEGIN;\r\nCREATE ROLE ops_backup LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\r\nDO $connection$\r\nBEGIN\r\n  EXECUTE format('GRANT CONNECT ON DATABASE %I TO ops_backup', current_database());\r\nEND;\r\n$connection$;\r\nGRANT USAGE ON SCHEMA public TO ops_backup;\r\n\r\nGRANT SELECT ON ALL TABLES IN SCHEMA public TO ops_backup;\r\nGRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO ops_backup;\r\n-- Schema opcional instalado pelo Medallion. O backup integral inclui-o quando existir.\r\nDO $backup$\r\nBEGIN\r\n  IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'astro_api') THEN\r\n    GRANT USAGE ON SCHEMA astro_api TO ops_backup;\r\n    GRANT SELECT ON ALL TABLES IN SCHEMA astro_api TO ops_backup;\r\n    GRANT SELECT ON ALL SEQUENCES IN SCHEMA astro_api TO ops_backup;\r\n  END IF;\r\nEND;\r\n$backup$;\r\nCOMMIT;\r\n"
+    }
+  ],
+  "deployment": {
+    "status": "Planejado; usuários, senhas e secrets ainda não alterados",
+    "credentialsFile": "Na criação real: TXT usuário: senha fora do repositório; sem senhas no catálogo/site/logs",
+    "providers": {
+      "GitHub Actions": [
+        "postgresql-backup"
+      ],
+      "AWS": [
+        "astro-api",
+        "astro-ai-api"
+      ],
+      "Cloudflare": "Todos os demais consumidores incluídos"
+    }
+  },
+  "verification": {
+    "repositories": 21,
+    "checks": 174,
+    "postgresql": "17.10 (Debian 17.10-1.pgdg13+1)",
+    "scope": "Branches main atuais e DDL da main 148d8950; container sem rede externa/portas publicadas",
+    "limitations": "Não substitui a conferência das ACLs, owners e objetos instalados em produção.",
+    "resultsFile": "database/users/validacao-grants.json",
+    "inventoryFile": "database/users/revisao-repositorios.json"
+  }
+}

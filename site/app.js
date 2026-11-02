@@ -1,4 +1,5 @@
 import { performanceView } from './views-performance.js';
+import { usersView } from './views-users.js';
 import { createMongoModelState, mountMongoModel } from './components/mongo/mongo-model.js';
 import { openMongoEditor } from './components/mongo/mongo-editor.js';
 import { mongoView } from './components/mongo/mongo-view.js';
@@ -47,6 +48,7 @@ import {
 const state = {
   mode: { mode: 'readonly', editable: false },
   database: null,
+  users: { data: null, loading: false, error: null },
   mongo: { data: null, loading: false, error: null, query: '', selected: null, model: createMongoModelState() },
   redis: { data: null, loading: false, error: null, query: '', selected: null },
   neo4j: { data: null, loading: false, error: null, query: '', selected: null, scriptQuery: '', scriptSelected: null, model: createNeo4jModelState() },
@@ -391,6 +393,20 @@ async function loadMigrations({ silent = false } = {}) {
  */
 let animatedRoute = null;
 
+async function loadUsers() {
+  state.users.loading = true;
+  state.users.error = null;
+  try {
+    const response = await fetch('./generated/postgresql-users.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Não foi possível carregar os usuários. Execute npm run analyze.');
+    state.users.data = await response.json();
+  } catch (error) { state.users.error = error.message; }
+  finally {
+    state.users.loading = false;
+    if (currentRoute() === 'users') render();
+  }
+}
+
 function render() {
   if (!state.database) return;
 
@@ -435,6 +451,10 @@ function render() {
   } else if (route === 'overview') content.innerHTML = overview(state.database, state.mode);
   else if (route === 'database') content.innerHTML = databaseView(state.database, state.databaseTab, state.model, state.mode);
   else if (route === 'logs') content.innerHTML = logsView(state.database);
+  else if (route === 'users') {
+    content.innerHTML = usersView(state.users);
+    if (!state.users.data && !state.users.loading && !state.users.error) loadUsers();
+  }
   else if (route === 'dataload') content.innerHTML = dataLoadView(state.database);
   else if (route === 'views') content.innerHTML = objectCategoryView(state.database, 'view');
   else if (route === 'procedures') content.innerHTML = objectCategoryView(state.database, 'procedure');
@@ -797,6 +817,19 @@ document.addEventListener('click', async (event) => {
       const object = state.database.objects.find((entry) => entry.id === target.dataset.copyCode);
       await navigator.clipboard.writeText(object?.code ?? '');
       toast('Código copiado.');
+    }
+
+    if (target.dataset.copyUser) {
+      const user = state.users.data?.users.find((entry) => entry.name === target.dataset.copyUser);
+      if (user) {
+        try { await navigator.clipboard.writeText(user.sql); toast('SQL do usuário copiado.'); }
+        catch { toast('Não foi possível copiar. Selecione o SQL exibido.'); }
+      }
+    }
+
+    if (target.dataset.retryUsers !== undefined) loadUsers();
+    if (target.dataset.userFocus) {
+      document.getElementById(`user-${target.dataset.userFocus}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     if (target.dataset.copyFile) {

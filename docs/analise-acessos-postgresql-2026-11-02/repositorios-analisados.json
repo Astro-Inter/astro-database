@@ -1,0 +1,195 @@
+{
+  "date": "2026-11-02",
+  "repos": [
+    {
+      "repo": ".github",
+      "sha": "f78e9cdf1705414dbebe65ce84ff56ee554e121e",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/.github",
+      "files": 11
+    },
+    {
+      "repo": "nr-updater",
+      "sha": "73a99b658d4c0c3724f5ddb412c042758e0e1b75",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/nr-updater",
+      "files": 42
+    },
+    {
+      "repo": "astro-database",
+      "sha": "148d8950be459268beee22b11ab1a4c400a45a71",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-database",
+      "files": 342
+    },
+    {
+      "repo": "astro-api",
+      "sha": "2066ef87c29148eb9be15ce50e5553a8ff99e6c0",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-api",
+      "files": 602
+    },
+    {
+      "repo": "postgresql-backup",
+      "sha": "787a8c150259a6b2fd81e9ecb871748b9afae35b",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/postgresql-backup",
+      "files": 17
+    },
+    {
+      "repo": "astro-ai-api",
+      "sha": "e811ea8c2a7bfa5ccf5d84c67d9f9de6c0c63bdf",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-ai-api",
+      "files": 215
+    },
+    {
+      "repo": "data-integration-rpa",
+      "sha": "f420eef6035d293bd21d545f8ba5e9bf7bd9f3e5",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/data-integration-rpa",
+      "files": 100
+    },
+    {
+      "repo": "astro-email-worker",
+      "sha": "c74ef8282bd3f556f8cc02b30139c3edd8e6d469",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-email-worker",
+      "files": 47
+    },
+    {
+      "repo": "astro-web",
+      "sha": "2960a7faf90703a19a18c54384d84f2f10910fcb",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-web",
+      "files": 771
+    },
+    {
+      "repo": "astro-mobile",
+      "sha": "757c66e951a5f386c147277087a8c27c2cb291d7",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-mobile",
+      "files": 649
+    },
+    {
+      "repo": "astro-data-cleanup",
+      "sha": "102561bb00e1e7a2b6c5b6d8d7815c801f83ce44",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-data-cleanup",
+      "files": 61
+    },
+    {
+      "repo": "astro-ai-observabilidade",
+      "sha": "86e1c01068a541994be95d09c030577dfaca86f3",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-ai-observabilidade",
+      "files": 67
+    },
+    {
+      "repo": "astro-gitops",
+      "sha": "4c9ea272d6c5a6d8ce4f40683749679f17229458",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-gitops",
+      "files": 29
+    },
+    {
+      "repo": "astro-knowledge",
+      "sha": "f051f16014f1b85d7d9bc7d02f37e347dacfd097",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-knowledge",
+      "files": 33
+    },
+    {
+      "repo": "astro-tracking-api",
+      "sha": "5f35be589fabe839cb3875bd54879e9bc4b7a1cf",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-tracking-api",
+      "files": 27
+    },
+    {
+      "repo": "astro-medallion-api",
+      "sha": "c9a40d57105ef35a286449b26b248d456531b29e",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-medallion-api",
+      "files": 64
+    },
+    {
+      "repo": "astro-session-summary-service",
+      "sha": "1af1e08c8bae833819fb8f0b459f4d847be2d647",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-session-summary-service",
+      "files": 31
+    },
+    {
+      "repo": "astro-notification-service",
+      "sha": "153c0fdaecf20a477d4f1ce65f771405d28510e5",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-notification-service",
+      "files": 93
+    },
+    {
+      "repo": "astro-dashboard-api",
+      "sha": "8d792fc991ff132314a6c9f6d40b6138ad352ec1",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-dashboard-api",
+      "files": 41
+    },
+    {
+      "repo": "astro-password-reset",
+      "sha": "92774123f0a69b53a03e9332937b8f107af189d5",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-password-reset",
+      "files": 40
+    },
+    {
+      "repo": "astro-eqs-diagrams",
+      "sha": "946c7cd6e1fbd0ea2f9690b343f1dd237ad0c085",
+      "branch": "main",
+      "private": false,
+      "archived": false,
+      "url": "https://github.com/Astro-Inter/astro-eqs-diagrams",
+      "files": 9
+    }
+  ],
+  "escopo": "Snapshots das branches padrão main; análise estática em 2026-11-02. Não representa inventário de produção nem outras branches."
+}
