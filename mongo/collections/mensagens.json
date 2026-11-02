@@ -64,11 +64,12 @@
   "notes": [
     "Campos legados id_conversa/id_remetente e id_envia/id_recebe são migrados sem inventar vínculo de conversa ausente.",
     "A ferramenta de IA usa remetente/destinatário explícitos; a API Java lista por conversa. Essa diferença funcional já existia e não é resolvida apenas renomeando campos.",
-    "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração."
+    "As definições de índices foram conferidas no banco de origem; os caminhos aqui apresentados são os nomes de destino após a migração.",
+    "Análise de índices: mongo/analysis/performance/README.md. O histórico por destinatário da IA não encontrou documentos compatíveis nesta amostra; índices não corrigem essa diferença de contrato."
   ],
   "indexes": [
     "_id: único.",
-    "Recomendado: conversa_id + data decrescente + _id decrescente.",
+    "Aplicado: idx_mensagens_conversa_data_id em conversa_id ascendente + data decrescente + _id decrescente; na paginação medida, 111 → 10 documentos examinados, sem SORT bloqueante.",
     "Ferramenta IA: remetente_id + destinatario_id + data; destinatario_id + remetente_id + data."
   ]
 }

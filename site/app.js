@@ -1,3 +1,4 @@
+import { mongoPerformanceView } from './components/mongo/mongo-performance.js';
 import { performanceView } from './views-performance.js';
 import { createMongoModelState, mountMongoModel } from './components/mongo/mongo-model.js';
 import { openMongoEditor } from './components/mongo/mongo-editor.js';
@@ -429,6 +430,8 @@ function render() {
   } else if (redisArea) {
     content.innerHTML = redisView(state.redis.data, { ...state.redis, mode: state.mode, tab: route === 'redis-flows' ? 'flows' : route === 'redis-decisions' ? 'decisions' : 'keys' });
     if (!state.redis.data && !state.redis.loading && !state.redis.error) loadRedis();
+  } else if (route === 'mongo-performance') {
+    content.innerHTML = mongoPerformanceView();
   } else if (mongoArea) {
     content.innerHTML = mongoView(state.mongo.data, { ...state.mongo, mode: state.mode, tab: route === 'mongo-decisions' ? 'decisions' : route === 'mongo-model' ? 'model' : 'collections' });
     if (!state.mongo.data && !state.mongo.loading && !state.mongo.error) loadMongo();
