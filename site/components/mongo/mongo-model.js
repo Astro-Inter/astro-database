@@ -1,7 +1,8 @@
+import { mountMongoExport, compactModelSvg, exportLayout } from './mongo-export.js';
 import { escapeHtml, icon } from '../../utils.js';
 
 export function createMongoModelState() {
-  return { zoom: 1, query: '', selected: null, positions: {}, expanded: false, scroll: { left: 0, top: 0 } };
+  return { zoom: 1, query: '', selected: null, positions: {}, expanded: false, compact: true, compactFitted: false, scroll: { left: 0, top: 0 } };
 }
 
 /** Embedding vem dos caminhos dos campos; referências exigem declaração explícita. */
@@ -46,6 +47,7 @@ export function mongoModelLayout(graph) {
 }
 
 function diagram(graph, state) {
+  if (state.compact !== false) return compactModelSvg(graph, state);
   const layout = mongoModelLayout(graph);
   const positions = Object.fromEntries(Object.entries(layout.positions).map(([id, position]) => [id, { ...position, ...state.positions[id] }]));
   const width = Math.max(layout.width, ...Object.values(positions).map((position) => position.x + position.width + 40));
@@ -69,7 +71,7 @@ function diagram(graph, state) {
 export function mongoModelView(data, state) {
   const graph = mongoGraph(data.collections);
   const selected = graph.nodes.find((node) => node.id === state.selected);
-  return `<section class="card mongo-model-card ${state.expanded ? 'expanded' : ''}"><div class="card-head"><div><h2>Modelagem das collections</h2><p class="muted">${data.collections.length} collections · ${graph.nodes.filter((node) => node.type === 'embedded').length} documentos embutidos</p></div><button class="button ghost" data-mongo-model-action="expand">${icon('expand', 16)} ${state.expanded ? 'Reduzir' : 'Expandir'}</button></div><div class="mongo-model-toolbar"><label class="search-box" for="mongo-model-search">${icon('search', 16)}<input id="mongo-model-search" placeholder="Localizar collection ou campo…" value="${escapeHtml(state.query)}"/></label><div class="mongo-model-controls"><button class="icon-button" data-mongo-model-action="out" aria-label="Reduzir zoom">${icon('minus', 16)}</button><output>${Math.round(state.zoom * 100)}%</output><button class="icon-button" data-mongo-model-action="in" aria-label="Aumentar zoom">${icon('plus', 16)}</button><button class="button ghost" data-mongo-model-action="fit">Ajustar à tela</button><button class="button ghost" data-mongo-model-action="reset">Restaurar</button></div></div><div class="mongo-model-canvas" tabindex="0" aria-label="Área navegável da modelagem MongoDB">${graph.nodes.length ? diagram(graph, state) : '<div class="empty"><strong>Nenhuma collection documentada.</strong></div>'}</div>${selected ? `<div class="mongo-model-selection"><div><strong>${escapeHtml(selected.collection.name)}${selected.type === 'embedded' ? ` · ${escapeHtml(selected.name)}` : ''}</strong><p>${escapeHtml(selected.collection.description)}</p></div><button class="button ghost" data-mongo-model-open="${escapeHtml(selected.collection.name)}">Abrir documentação</button></div>` : ''}<div class="mongo-model-legend"><span><i></i>Documento embutido</span><span><i class="reference"></i>Referência declarada</span><span>Arraste os cards ou o fundo · duplo clique abre a documentação</span></div><p class="mongo-model-note">As ligações vêm da estrutura dos campos. Referências entre collections só aparecem quando o campo declara <code>references</code> com o nome da collection.</p></section>`;
+  return `<section class="card mongo-model-card ${state.expanded ? 'expanded' : ''}"><div class="card-head"><div><h2>Modelagem das collections</h2><p class="muted">${data.collections.length} collections · ${graph.nodes.filter((node) => node.type === 'embedded').length} documentos embutidos</p></div><button class="button ghost" data-mongo-model-action="expand">${icon('expand', 16)} ${state.expanded ? 'Reduzir' : 'Expandir'}</button></div><div class="mongo-export-toolbar"><label>Disposição <select data-mongo-export-layout aria-label="Disposição do modelo"><option value="compact" ${state.compact !== false ? 'selected' : ''}>Compacta</option><option value="expanded" ${state.compact === false ? 'selected' : ''}>Espaçada</option></select></label><label>Formato da imagem <select data-mongo-export-pages aria-label="Formato da exportação"><option value="complete">Imagem única completa</option><option value="pages">Páginas numeradas (ZIP)</option></select></label><button class="button ghost" data-mongo-export="png">Exportar PNG</button><button class="button ghost" data-mongo-export="svg">Exportar SVG</button><button class="button ghost" data-mongo-capture>Modo captura</button><p>Exporta todas as coleções e campos, sem depender de zoom ou rolagem. As páginas mantêm juntos os blocos conectados; grupos extensos usam páginas maiores.</p><output data-mongo-export-status role="status" aria-live="polite"></output></div><div class="mongo-model-toolbar"><label class="search-box" for="mongo-model-search">${icon('search', 16)}<input id="mongo-model-search" placeholder="Localizar collection ou campo…" value="${escapeHtml(state.query)}"/></label><div class="mongo-model-controls"><button class="icon-button" data-mongo-model-action="out" aria-label="Reduzir zoom">${icon('minus', 16)}</button><output>${Math.round(state.zoom * 100)}%</output><button class="icon-button" data-mongo-model-action="in" aria-label="Aumentar zoom">${icon('plus', 16)}</button><button class="button ghost" data-mongo-model-action="fit">Ajustar à tela</button><button class="button ghost" data-mongo-model-action="reset">Restaurar</button></div></div><div class="mongo-model-canvas" tabindex="0" aria-label="Área navegável da modelagem MongoDB">${graph.nodes.length ? diagram(graph, state) : '<div class="empty"><strong>Nenhuma collection documentada.</strong></div>'}</div>${selected ? `<div class="mongo-model-selection"><div><strong>${escapeHtml(selected.collection.name)}${selected.type === 'embedded' ? ` · ${escapeHtml(selected.name)}` : ''}</strong><p>${escapeHtml(selected.collection.description)}</p></div><button class="button ghost" data-mongo-model-open="${escapeHtml(selected.collection.name)}">Abrir documentação</button></div>` : ''}<div class="mongo-model-legend"><span><i></i>Documento embutido</span><span><i class="reference"></i>Referência declarada</span><span>${state.compact !== false ? 'Disposição automática · arraste o fundo' : 'Arraste os cards ou o fundo'} · duplo clique abre a documentação</span></div><p class="mongo-model-note">As ligações vêm da estrutura dos campos. Referências entre collections só aparecem quando o campo declara <code>references</code> com o nome da collection.</p></section>`;
 }
 
 export function mountMongoModel(root, data, state, rerender, onOpen) {
@@ -78,20 +80,24 @@ export function mountMongoModel(root, data, state, rerender, onOpen) {
   canvas.scrollTo(state.scroll.left, state.scroll.top);
   canvas.addEventListener('scroll', () => { state.scroll = { left: canvas.scrollLeft, top: canvas.scrollTop }; });
   const graph = mongoGraph(data.collections);
-  const layout = mongoModelLayout(graph);
+  mountMongoExport(root, graph);
+  const layout = state.compact !== false ? exportLayout(graph, undefined, true) : mongoModelLayout(graph);
+  root.querySelector('[data-mongo-export-layout]').addEventListener('change', event => { state.compact = event.target.value === 'compact'; state.compactFitted = false; state.positions = {}; state.selected = null; state.scroll = { left: 0, top: 0 }; rerender(); });
   let drag = null;
   let moved = false;
   const renderDiagram = () => { canvas.innerHTML = diagram(graph, state); };
   const zoom = (value) => {
-    state.zoom = Math.max(0.35, Math.min(2, value));
+    state.zoom = Math.max(state.compact !== false ? 0.08 : 0.35, Math.min(2, value));
     renderDiagram();
     root.querySelector('.mongo-model-controls output').textContent = `${Math.round(state.zoom * 100)}%`;
   };
+  const fitDiagram = () => { const svg = canvas.querySelector('svg'); if (svg) { const width = (canvas.clientWidth - 24) / svg.viewBox.baseVal.width; zoom(state.compact !== false ? Math.min(1, width) : Math.min(width, (canvas.clientHeight - 24) / svg.viewBox.baseVal.height)); } canvas.scrollTo(0, 0); };
+  if (state.compact !== false && !state.compactFitted && graph.nodes.length) { fitDiagram(); state.compactFitted = true; }
   root.querySelectorAll('[data-mongo-model-action]').forEach((button) => button.addEventListener('click', () => {
     const action = button.dataset.mongoModelAction;
     if (action === 'in' || action === 'out') zoom(state.zoom + (action === 'in' ? 0.15 : -0.15));
-    if (action === 'fit') { const svg = canvas.querySelector('svg'); if (svg) zoom(Math.min((canvas.clientWidth - 24) / svg.viewBox.baseVal.width, (canvas.clientHeight - 24) / svg.viewBox.baseVal.height)); canvas.scrollTo(0, 0); }
-    if (action === 'reset') { state.positions = {}; state.selected = null; state.query = ''; state.zoom = 1; state.scroll = { left: 0, top: 0 }; rerender(); }
+    if (action === 'fit') fitDiagram();
+    if (action === 'reset') { state.compactFitted = false; state.positions = {}; state.selected = null; state.query = ''; state.zoom = 1; state.scroll = { left: 0, top: 0 }; rerender(); }
     if (action === 'expand') { state.expanded = !state.expanded; rerender(); }
   }));
   root.querySelector('#mongo-model-search').addEventListener('input', (event) => {
@@ -111,7 +117,7 @@ export function mountMongoModel(root, data, state, rerender, onOpen) {
     const dx = event.clientX - drag.x; const dy = event.clientY - drag.y;
     if (Math.abs(dx) + Math.abs(dy) < 4) return;
     moved = true;
-    if (drag.id) { state.positions[drag.id] = { x: Math.max(10, drag.position.x + dx / state.zoom), y: Math.max(10, drag.position.y + dy / state.zoom) }; renderDiagram(); }
+    if (drag.id && state.compact === false) { state.positions[drag.id] = { x: Math.max(10, drag.position.x + dx / state.zoom), y: Math.max(10, drag.position.y + dy / state.zoom) }; renderDiagram(); }
     else canvas.scrollTo(drag.scrollX - dx, drag.scrollY - dy);
   });
   canvas.addEventListener('pointerup', () => {
