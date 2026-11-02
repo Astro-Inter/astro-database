@@ -1,5 +1,5 @@
 WITH gestor_unidade AS (
-    -- IDs das unidades não dependem da ordem dos VALUES do dataload.
+
     SELECT email
     FROM usuario
     WHERE unidade_id = 1 AND status = 'ATIVO'
@@ -25,7 +25,7 @@ dados (
         ('ana.gomes.006@example.com', 20, 'Manuseio de inflamáveis e defensivos', 'Orientações para armazenamento e manipulação segura de produtos inflamáveis e defensivos.', NULL, 'GESTOR', FALSE, 'ATIVO', NULL, NULL),
         ('ana.gomes.006@example.com', 12, 'Operação de máquinas agrícolas', 'Capacitação para inspeção e operação segura de tratores e implementos agrícolas.', 'https://treinamentos.astro.local/nr-12-agricola', 'GESTOR', FALSE, 'CONCLUIDO', NULL, NULL),
         ('ana.gomes.006@example.com', 6, 'Proteção individual no campo', 'Orientações sobre escolha e conservação de equipamentos de proteção para atividades rurais.', NULL, 'GESTOR', FALSE, 'CANCELADO', '2026-07-20 09:00:00', 'Turmas canceladas durante a atualização do conteúdo programático.'),
-        -- SCRUM-172: cinco eventos da unidade 1, com duas turmas de dez funcionários.
+
         ((SELECT email FROM gestor_unidade), 6, 'Integração de EPI - Unidade 1', 'Seleção, utilização e conservação de equipamentos de proteção individual.', NULL, 'GESTOR', FALSE, 'CONCLUIDO', NULL, NULL),
         ((SELECT email FROM gestor_unidade), 11, 'Movimentação de materiais - Unidade 1', 'Transporte, armazenamento e movimentação segura de materiais na unidade.', NULL, 'GESTOR', FALSE, 'CONCLUIDO', NULL, NULL),
         ((SELECT email FROM gestor_unidade), 12, 'Operação de máquinas - Unidade 1', 'Inspeção e operação segura de máquinas industriais na unidade.', NULL, 'GESTOR', FALSE, 'CONCLUIDO', NULL, NULL),

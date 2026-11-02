@@ -143,8 +143,7 @@ SET nome = EXCLUDED.nome,
     status = EXCLUDED.status,
     criado_em = EXCLUDED.criado_em;
 
--- SCRUM-172: 100 funcionários do TXT, mantendo nome, e-mail e Firebase UID.
--- CPF não informado no arquivo de origem; cargo, modalidade e datas são dados de teste.
+
 DO $$
 BEGIN
     IF NOT EXISTS (
@@ -289,7 +288,7 @@ SET nome = EXCLUDED.nome,
     status = EXCLUDED.status,
     criado_em = EXCLUDED.criado_em;
 
--- Dois usuários pré-cadastrados sem Firebase UID, vinculados explicitamente à unidade 1.
+
 INSERT INTO usuario
     (nome, email, firebase_uid, tipo, cargo_id, unidade_id, cpf,
      modalidade, status, criado_em)
