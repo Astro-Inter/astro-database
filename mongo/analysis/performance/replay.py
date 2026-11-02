@@ -1,8 +1,16 @@
 """Reproduz somente explain de consultas de leitura; não altera documentos ou índices."""
 import argparse, copy, json, math, statistics, time
 from pathlib import Path
-from bson import json_util
-from pymongo import MongoClient
+
+def bind_chat_cursor(command, messages):
+    """Reproduz a página seguinte usando data e ID da décima mensagem."""
+    cursor = messages[9]
+    command = copy.deepcopy(command)
+    command['filter']['$and'][1]['$or'] = [
+        {'data': {'$lt': cursor['data']}},
+        {'data': cursor['data'], '_id': {'$lt': cursor['_id']}}
+    ]
+    return command
 
 def environment(path):
     data = {}
@@ -13,6 +21,8 @@ def environment(path):
     return data
 
 def main():
+    from bson import json_util
+    from pymongo import MongoClient
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--env-file', required=True)
     args = parser.parse_args()
@@ -32,7 +42,7 @@ def main():
         owner = next(db.sessoes.aggregate([{'$group': {'_id': '$usuario_id', 'n': {'$sum': 1}}}, {'$sort': {'n': -1}}, {'$limit': 1}]))['_id']
         session = db.sessoes.find_one({'usuario_id': owner}, {'_id': 1})['_id']
         summary = db.sessoes.find_one({'resumo': {'$type': 'string', '$ne': ''}}, {'usuario_id': 1})
-        replacements = {'<CONVERSATION>': conversation, '<CURSORID>': messages[-1]['_id'],
+        replacements = {'<CONVERSATION>': conversation, '<CURSORID>': messages[9]['_id'],
                         '<SESSIONUID>': owner, '<SUMMARYUID>': summary['usuario_id'] if summary else owner,
                         '<SESSIONID>': session}
         def bind(value):
@@ -53,6 +63,8 @@ def main():
             if workload['id'] == 'java_chat_ultima_por_conversa':
                 command['pipeline'][0]['$match']['conversa_id']['$in'] = [doc['_id'] for doc in db.conversas.find({'participantes_ids': messages[0]['remetente_id']}, {'_id': 1})]
             command = json_util.loads(json.dumps(bind(command)))
+            if workload['id'] == 'java_chat_cursor':
+                command = bind_chat_cursor(command, messages)
             if not ('find' in command or 'aggregate' in command):
                 raise ValueError('Somente find e aggregate são permitidos.')
             if any('$out' in stage or '$merge' in stage for stage in command.get('pipeline', [])):

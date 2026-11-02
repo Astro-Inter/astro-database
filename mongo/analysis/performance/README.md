@@ -98,6 +98,8 @@ Referências oficiais: [Explain Results v8.0](https://www.mongodb.com/docs/v8.0/
 - validation.json: índice final visível, tamanho, ordem de nove consultas comparada contra varredura natural e cobertura de tipos dos campos.
 - scenarios.json e replay.py: reprodução de explain sem criar/remover índices e sem imprimir documentos. Dependência: pymongo (requirements.txt). Resolução dinâmica dos IDs de conversa/sessão; outros IDs numéricos mantêm os parâmetros observados.
 
+As evidências integrais ficam somente nesta pasta. O site carrega o relatório derivado em `site/data/mongo-performance.js` apenas ao abrir “Análise de índices”, sem publicar uma segunda cópia dos JSONs. Na reprodução da paginação, a data e o ID do cursor são obtidos juntos da décima mensagem da conversa amostrada; a data histórica em `scenarios.json` documenta a coleta original.
+
 ```powershell
 python mongo/analysis/performance/replay.py --env-file "CAMINHO_DA_ENV_DA_API"
 ```
