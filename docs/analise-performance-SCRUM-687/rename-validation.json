@@ -1,0 +1,8 @@
+{
+  "verifiedAt": "2026-11-02T02:21:22.914Z",
+  "name": "idx_conformidade_usuario_nr_ordem",
+  "definition": "CREATE INDEX idx_conformidade_usuario_nr_ordem ON public.conformidade USING btree (usuario_id, nr_id, aplicavel DESC, data_validade DESC NULLS LAST, id_conformidade DESC)",
+  "indisvalid": true,
+  "indisready": true,
+  "bytes": "32768"
+}

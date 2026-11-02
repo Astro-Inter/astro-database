@@ -297,7 +297,7 @@ COMMENT ON COLUMN conformidade.conclusao_evento_id IS 'Conclusão que originou a
 
 CREATE TABLE acesso (
     data DATE,
-    usuario_id INTEGER
+    firebase_uid VARCHAR(128)
 );
 
 COMMENT ON TABLE acesso IS
@@ -306,5 +306,5 @@ COMMENT ON TABLE acesso IS
 COMMENT ON COLUMN acesso.data IS
 'Data em que o usuário acessou o sistema. Utilizada para agrupar e calcular os usuários ativos por dia.';
 
-COMMENT ON COLUMN acesso.usuario_id IS
-'Identificador do usuário que acessou o sistema na data registrada.';
+COMMENT ON COLUMN acesso.firebase_uid IS
+'UID validado pelo Firebase da identidade autenticada, incluindo usuários e administradores. Um registro por identidade e dia.';

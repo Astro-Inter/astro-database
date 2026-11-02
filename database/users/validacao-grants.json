@@ -1,0 +1,1439 @@
+{
+  "version": "17.10 (Debian 17.10-1.pgdg13+1)",
+  "disposable": true,
+  "portsPublished": false,
+  "snapshots": {
+    "date": "2026-11-02",
+    "repos": [
+      {
+        "repo": ".github",
+        "sha": "f78e9cdf1705414dbebe65ce84ff56ee554e121e",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/.github",
+        "files": 11
+      },
+      {
+        "repo": "nr-updater",
+        "sha": "73a99b658d4c0c3724f5ddb412c042758e0e1b75",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/nr-updater",
+        "files": 42
+      },
+      {
+        "repo": "astro-database",
+        "sha": "148d8950be459268beee22b11ab1a4c400a45a71",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-database",
+        "files": 342
+      },
+      {
+        "repo": "astro-api",
+        "sha": "2241699760eb0b20ef17056ab6ef7fa9e75039f5",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-api",
+        "files": 602
+      },
+      {
+        "repo": "postgresql-backup",
+        "sha": "787a8c150259a6b2fd81e9ecb871748b9afae35b",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/postgresql-backup",
+        "files": 17
+      },
+      {
+        "repo": "astro-ai-api",
+        "sha": "e811ea8c2a7bfa5ccf5d84c67d9f9de6c0c63bdf",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-ai-api",
+        "files": 215
+      },
+      {
+        "repo": "data-integration-rpa",
+        "sha": "f420eef6035d293bd21d545f8ba5e9bf7bd9f3e5",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/data-integration-rpa",
+        "files": 100
+      },
+      {
+        "repo": "astro-email-worker",
+        "sha": "c74ef8282bd3f556f8cc02b30139c3edd8e6d469",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-email-worker",
+        "files": 47
+      },
+      {
+        "repo": "astro-web",
+        "sha": "c1a389a19756f862cd7676ee745102a23d2ac816",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-web",
+        "files": 771
+      },
+      {
+        "repo": "astro-mobile",
+        "sha": "757c66e951a5f386c147277087a8c27c2cb291d7",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-mobile",
+        "files": 649
+      },
+      {
+        "repo": "astro-data-cleanup",
+        "sha": "102561bb00e1e7a2b6c5b6d8d7815c801f83ce44",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-data-cleanup",
+        "files": 61
+      },
+      {
+        "repo": "astro-ai-observabilidade",
+        "sha": "86e1c01068a541994be95d09c030577dfaca86f3",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-ai-observabilidade",
+        "files": 67
+      },
+      {
+        "repo": "astro-gitops",
+        "sha": "20e2ced6cfb3df0a1f678e2de0611c2834762066",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-gitops",
+        "files": 29
+      },
+      {
+        "repo": "astro-knowledge",
+        "sha": "f051f16014f1b85d7d9bc7d02f37e347dacfd097",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-knowledge",
+        "files": 33
+      },
+      {
+        "repo": "astro-tracking-api",
+        "sha": "5f35be589fabe839cb3875bd54879e9bc4b7a1cf",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-tracking-api",
+        "files": 27
+      },
+      {
+        "repo": "astro-medallion-api",
+        "sha": "c9a40d57105ef35a286449b26b248d456531b29e",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-medallion-api",
+        "files": 64
+      },
+      {
+        "repo": "astro-session-summary-service",
+        "sha": "1af1e08c8bae833819fb8f0b459f4d847be2d647",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-session-summary-service",
+        "files": 31
+      },
+      {
+        "repo": "astro-notification-service",
+        "sha": "153c0fdaecf20a477d4f1ce65f771405d28510e5",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-notification-service",
+        "files": 93
+      },
+      {
+        "repo": "astro-dashboard-api",
+        "sha": "8d792fc991ff132314a6c9f6d40b6138ad352ec1",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-dashboard-api",
+        "files": 41
+      },
+      {
+        "repo": "astro-password-reset",
+        "sha": "92774123f0a69b53a03e9332937b8f107af189d5",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-password-reset",
+        "files": 40
+      },
+      {
+        "repo": "astro-eqs-diagrams",
+        "sha": "946c7cd6e1fbd0ea2f9690b343f1dd237ad0c085",
+        "branch": "main",
+        "private": false,
+        "archived": false,
+        "url": "https://github.com/Astro-Inter/astro-eqs-diagrams",
+        "files": 9
+      }
+    ]
+  },
+  "results": [
+    {
+      "label": "install svc_astro_api",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_astro_ai",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_rpa_target",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_email_employee",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_nr_updater",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_cleanup",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_tracking",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_medallion",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_notif_expiring",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_notif_expired",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_notif_deadlines",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_notif_pending",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_notif_event_push",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_dashboard",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install ops_backup",
+      "user": "postgres",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "install svc_rpa_legacy",
+      "user": "postgres",
+      "database": "legacy_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.workspace",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.cargo",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.unidade",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.unidade_endereco",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.usuario",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.usuario_foto_perfil",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.nr_catalogo",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.cargo_nr",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.unidade_nr",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.evento",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.turma",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.turma_colaborador",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.conclusao_evento",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.evidencia",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.conformidade",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.acesso",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.admin",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_gestores",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_colaboradores",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_conformidade_colaborador",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_conformidade_unidade",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_eventos_gestor",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_cargos",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_unidades",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api read public.vw_home_estatisticas_gerais",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.admin",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.usuario",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.cargo",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.unidade",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.workspace",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.unidade_endereco",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.cargo_nr",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.unidade_nr",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.nr_catalogo",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.conformidade",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.turma_colaborador",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.turma",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.evento",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.conclusao_evento",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.acesso",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.evidencia",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.usuario_foto_perfil",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.vw_conformidade_colaborador",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai read public.vw_unidades",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_rpa_target read public.workspace",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_rpa_target read public.cargo",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_rpa_target read public.unidade",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_rpa_target read public.usuario",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_rpa_target read public.admin",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_rpa_target read public.conta",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_email_employee read public.usuario",
+      "user": "svc_email_employee",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_email_employee read public.unidade",
+      "user": "svc_email_employee",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_email_employee read public.workspace",
+      "user": "svc_email_employee",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_email_employee read public.cargo",
+      "user": "svc_email_employee",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_nr_updater read public.nr_catalogo",
+      "user": "svc_nr_updater",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_cleanup read public.conta",
+      "user": "svc_cleanup",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_tracking read public.evento_astro",
+      "user": "svc_tracking",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.unidade",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.unidade_endereco",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.usuario",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.dim_nr_catalogo",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.turma_colaborador",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.turma",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.conclusao_evento",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.conformidade",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.evento",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.evento_astro",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.cargo_nr",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read public.cargo",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read astro_api.history_control",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read astro_api.usuario_history",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read astro_api.snapshots",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion read astro_api.rate_buckets",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expiring read public.conformidade",
+      "user": "svc_notif_expiring",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expiring read public.usuario",
+      "user": "svc_notif_expiring",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expiring read public.unidade",
+      "user": "svc_notif_expiring",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expiring read public.cargo",
+      "user": "svc_notif_expiring",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expiring read public.nr_catalogo",
+      "user": "svc_notif_expiring",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expired read public.conformidade",
+      "user": "svc_notif_expired",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expired read public.usuario",
+      "user": "svc_notif_expired",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expired read public.unidade",
+      "user": "svc_notif_expired",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expired read public.cargo",
+      "user": "svc_notif_expired",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expired read public.nr_catalogo",
+      "user": "svc_notif_expired",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines read public.turma_colaborador",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines read public.turma",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines read public.evento",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines read public.usuario",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines read public.unidade",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines read public.cargo",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines read public.conclusao_evento",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending read public.turma_colaborador",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending read public.turma",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending read public.evento",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending read public.usuario",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending read public.unidade",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending read public.cargo",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending read public.conclusao_evento",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push read public.turma_colaborador",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push read public.turma",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push read public.evento",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push read public.usuario",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push read public.unidade",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push read public.cargo",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push read public.conclusao_evento",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_dashboard read public.usuario",
+      "user": "svc_dashboard",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_dashboard read public.unidade",
+      "user": "svc_dashboard",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_dashboard read public.workspace",
+      "user": "svc_dashboard",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_dashboard read public.admin",
+      "user": "svc_dashboard",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual query expiring-compliance",
+      "user": "svc_notif_expiring",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual query expired-compliance",
+      "user": "svc_notif_expired",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual query class-deadlines",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual query pending-validations",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual pending push page",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual pending push current",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual dashboard authorization",
+      "user": "svc_dashboard",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API existsByEmail admin (projection id)",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api authorization invoker",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai authorization invoker",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_dashboard authorization invoker",
+      "user": "svc_dashboard",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_api unit function invoker",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai unit function invoker",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API fn_carrega_home_colaborador",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API fn_carrega_home_gestor",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API fn_carrega_workspace",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API fn_seleciona_cargos",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API fn_carrega_colaboradores",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API remaining read routines",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API daily access insert",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API write routines and triggers",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API NR and conformity locks",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "API completion insert with main trigger FOR SHARE participant lock",
+      "user": "svc_astro_api",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "NR procedure insert and conflict update + audit trigger",
+      "user": "svc_nr_updater",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual tracking INSERT RETURNING + sequence",
+      "user": "svc_tracking",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "actual email employee query",
+      "user": "svc_email_employee",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "cleanup inherited UID queries",
+      "user": "svc_cleanup",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "RPA target DML/locks/guards + audit/SCD",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "Medallion internal DML and sequence",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "Medallion snapshot insert/read/delete",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "svc_astro_ai cannot delete users",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_email_employee cannot delete users",
+      "user": "svc_email_employee",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_cleanup cannot delete users",
+      "user": "svc_cleanup",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expiring cannot delete users",
+      "user": "svc_notif_expiring",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_expired cannot delete users",
+      "user": "svc_notif_expired",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_deadlines cannot delete users",
+      "user": "svc_notif_deadlines",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_pending cannot delete users",
+      "user": "svc_notif_pending",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_notif_event_push cannot delete users",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_dashboard cannot delete users",
+      "user": "svc_dashboard",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "ops_backup cannot delete users",
+      "user": "ops_backup",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_tracking cannot delete workspace",
+      "user": "svc_tracking",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_nr_updater cannot delete workspace",
+      "user": "svc_nr_updater",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_medallion cannot delete workspace",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "svc_rpa_target cannot delete workspace",
+      "user": "svc_rpa_target",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "tracking cannot update events",
+      "user": "svc_tracking",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "Medallion cannot read CPF",
+      "user": "svc_medallion",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "push cannot read email",
+      "user": "svc_notif_event_push",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "AI cannot execute write function",
+      "user": "svc_astro_ai",
+      "database": "astro_audit",
+      "expected": "42501 permission denied",
+      "passed": true
+    },
+    {
+      "label": "RPA legacy base and catalog",
+      "user": "svc_rpa_legacy",
+      "database": "legacy_audit",
+      "expected": "success",
+      "passed": true
+    },
+    {
+      "label": "pg_dump complete database",
+      "user": "ops_backup",
+      "expected": "success",
+      "passed": true
+    }
+  ],
+  "passed": 174,
+  "failed": 0,
+  "schemaBaseCommit": "148d8950be459268beee22b11ab1a4c400a45a71",
+  "grantFileSha256": {
+    "ops_backup.sql": "fe914b03ff79d29b584a87456c564136004aab46b547ba608be2e90d885f5344",
+    "svc_astro_ai.sql": "1c5ad75d3ae5d6e4dcbe25cbedd9efb2818cb62e798fcbc6e8f7e92072ce3397",
+    "svc_astro_api.sql": "f4043ef35e5ac8d58b90da198be29ab633ff666debef7f36dbf076708d84b783",
+    "svc_cleanup.sql": "3ddf91047eccdb18295baa7eee8e504fe036310596b660561b9075f22ded4947",
+    "svc_dashboard.sql": "e6148a9843857a898aba94db035fc39df36f0076c6a53ee166fc7cead19fa457",
+    "svc_email_employee.sql": "2507b1cf8cb74de34dde77a48465da0bd985c805f17402b2799303938ed02852",
+    "svc_medallion.sql": "c5804a4088258241569d674aa72d7c44727f1ab3a34e76ea7bf4077f7bc3dee2",
+    "svc_notif_deadlines.sql": "cda2550f80b1a2924cb1eda18d0ad2cb587089101d13fa0606a2216022d9a3f9",
+    "svc_notif_event_push.sql": "d38cab00b6996080317edf1116a70f563bcda4dc8c9fae8cef5f27ec40ea040e",
+    "svc_notif_expired.sql": "c807074f0abc6a17cc99d8485039bfb6097f8415b5407bf73d6f947f716be6e8",
+    "svc_notif_expiring.sql": "edec5aefb8966b9cde1c0e135a4da71596eb44a1301b10425f5b0af6ca057355",
+    "svc_notif_pending.sql": "0cca813aabc7c1db4e5009ebf666db98f10b005daee998a55af94b5a9ace8809",
+    "svc_nr_updater.sql": "cfa46728264ed43773b4959035d632e21f4e4ac2db749e7398ccadced3a5809e",
+    "svc_rpa_legacy.sql": "7abb9cf90843d98f7de69e5302aca37befd91eb9f28b44373481973246ed754f",
+    "svc_rpa_target.sql": "0ad577644f3c81d77436dc09fa35ff915e7954df4fe76aea9952281fecfba0f6",
+    "svc_tracking.sql": "4bb9b6a6000e3a15a24cb94457744d581a1dfcfdd8f7df70fa631efe73c7ba61"
+  }
+}

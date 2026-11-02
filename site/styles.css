@@ -63,6 +63,19 @@
 .mongo-model-navigation-note { color: var(--muted); font-size: 11px; }
 .mongo-model-scope { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
 .mongo-model-scope select { max-width: 250px; padding: 9px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink); }
+.mongo-export-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 20px; padding: 16px; background: #f7faf8; border: 1px solid #d8e4dc; border-radius: 10px; }
+.mongo-export-toolbar label { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 12px; color: #506459; }
+.mongo-export-toolbar select { border: 1px solid #c9d8cf; border-radius: 6px; padding: 9px; background: white; color: var(--ink); max-width: 100%; }
+.mongo-export-toolbar p, .mongo-export-toolbar output { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.6; color: #506459; }
+.mongo-export-toolbar output:empty { display: none; }
+.mongo-export-toolbar button:focus-visible, .mongo-export-toolbar select:focus-visible { outline: 2px solid #176338; outline-offset: 3px; }
+.mongo-capture[open] { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; border: 0; padding: 0; overflow: auto; background: #f7faf8; }
+.mongo-capture::backdrop { background: #f7faf8; }
+.mongo-capture-sheet { width: max-content; min-width: 100%; background: #f7faf8; }
+.mongo-capture-sheet svg { display: block; max-width: none; }
+.mongo-capture-close { position: fixed; top: 12px; right: 20px; z-index: 1; background: white; box-shadow: var(--shadow); }
+.mongo-capture-close:not(:hover):not(:focus-visible) { opacity: .2; }
+@media print { .mongo-capture-close { display: none; } .mongo-capture[open] { position: absolute; height: auto; overflow: visible; } }
 .mongo-model-controls { margin-left: auto; }
 .mongo-model-controls .icon-button { padding: 10px; }
 .mongo-model-controls output { font-size: 12px; min-width: 38px; text-align: center; }
@@ -247,7 +260,7 @@ dialog .code-editor { min-height: 180px; resize: none; }
 .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
 .detail-meta span { padding: 7px 10px; color: var(--muted); background: var(--canvas); border-radius: 8px; font-size: 11px; }
 .tabs { display: flex; gap: 4px; margin: 18px 0; border-bottom: 1px solid var(--line); }
-.tab { padding: 10px 13px; border: 0; color: var(--muted); background: transparent; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab { text-decoration: none; padding: 10px 13px; border: 0; color: var(--muted); background: transparent; cursor: pointer; border-bottom: 2px solid transparent; }
 .tab.active { color: var(--purple); border-color: var(--purple); font-weight: 750; }
 .dependency-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
 .dependency-summary > div { padding: 15px 18px; background: white; border: 1px solid var(--line); border-radius: 13px; }
@@ -842,3 +855,11 @@ dialog[open]::backdrop { animation: fade-in .24s ease; }
 @media (min-width: 851px) { .redis-area .topbar { display: none; } }
 @media (max-width: 1000px) { .redis-flows { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .redis-contract > div { grid-template-columns: 1fr; gap: 6px; } }
+
+/* Catálogo PostgreSQL de identidades e permissões. */
+.users-report .card { margin-bottom: 24px; }
+.users-report .user-access-card { scroll-margin-top: 88px; }
+.users-report p, .users-report li { line-height: 1.7; overflow-wrap: anywhere; }
+.users-report details { margin-top: 16px; }
+.users-report summary { cursor: pointer; font-weight: 600; padding: 12px 0; }
+.users-report .code-shell { max-height: 520px; overflow: auto; }

@@ -9,10 +9,10 @@ import { redisMatches, redisView } from '../site/components/redis/redis-view.js'
 
 test('catálogo separa contratos implementados e propostas e preserva TTL e payload reais', async () => {
   const data = await analyzeRedis({ write: false });
-  assert.equal(data.keys.length, 16);
-  assert.equal(data.keys.filter((key) => key.status === 'Implementado').length, 14);
+  assert.equal(data.keys.length, 17);
+  assert.equal(data.keys.filter((key) => key.status === 'Implementado').length, 15);
   assert.equal(data.issues.length, 0);
-  assert.equal(data.modeling.flows.length, 6);
+  assert.equal(data.modeling.flows.length, 7);
   const employee = data.keys.find((key) => key.id === 'employee-queue');
   assert.ok(Array.isArray(employee.example) && employee.example.every((value) => typeof value === 'string'));
   assert.match(employee.commands.join(' '), /LPOP/);
@@ -27,6 +27,12 @@ test('catálogo separa contratos implementados e propostas e preserva TTL e payl
   assert.equal(data.keys.find((key) => key.id === 'workspace-queue').key, 'processamento:email:workspace');
   assert.equal(data.keys.find((key) => key.id === 'workspace-token').key, 'processamento:email:workspace:chave_acesso:{email_normalizado}');
   assert.match(employee.example[0], /@/);
+  const sources = data.keys.find((key) => key.id === 'ai-public-source-cache');
+  assert.equal(sources.key, 'ia:cache:fonte_publica:v1:{hash_consulta}');
+  assert.match(sources.ttl, /900/);
+  assert.match(sources.notes.join(' '), /não.*renov/i);
+  assert.match(sources.notes.join(' '), /262144/);
+  assert.match(data.keys.find((key) => key.id === 'user-avatar').consumer, /astro-ai-api/);
   assert.match(data.keys.find((key) => key.id === 'user-avatar').ttl, /PXAT/);
   assert.ok(redisMatches(employee, 'FILA'));
   assert.doesNotMatch(JSON.stringify(data), /atlassian|confluence/i);

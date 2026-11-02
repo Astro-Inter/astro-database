@@ -9,7 +9,7 @@ PostgreSQL mantém os cadastros, MongoDB guarda conversas e mensagens e R2 armaz
 ## Catálogo e fluxos
 
 - `keys/*.json`: uma definição por família, com nome, tipo, finalidade, prazo, produtores, consumidores, comandos, estrutura, exemplos fictícios, limites e evidências de código.
-- `docs/modeling.json`: importância do Redis, responsabilidades, decisões pendentes e seis fluxos operacionais.
+- `docs/modeling.json`: importância do Redis, responsabilidades, decisões pendentes e sete fluxos operacionais.
 - `analyzer/redis/`: validação de String, List, Set e Pub/Sub e geração de `generated/redis.json`.
 - `site/components/redis/`: catálogo, busca, fluxos e decisões apresentados pelo site.
 
@@ -19,8 +19,12 @@ API e worker precisam concordar nos prefixos `ACCESS_TOKEN_PREFIX` e `WORKSPACE_
 
 ## Base da revisão
 
-Contratos conferidos no código da API Astro e do astro-email-worker em 30/10/2026. O catálogo tem 14 contratos implementados no código e duas propostas (sessão de chatbot e cache genérico). Esse estado não confirma implantação ou configuração de produção. Não foi localizado ranking Redis.
+Contratos conferidos no código da API Astro e do astro-email-worker em 30/10/2026. O catálogo tem 15 contratos implementados no código e duas propostas (sessão de chatbot e cache genérico). Esse estado não confirma implantação ou configuração de produção. Não foi localizado ranking Redis.
 
 O levantamento anterior descrevia IDs nas filas de colaboradores e tokens por ID. O código atual usa e-mails normalizados em ambos. A validação dos códigos está em `UserService.verifyAccessKey`; ela compara o valor sem removê-lo. O código de workspace continua sem TTL no worker. As limitações de entrega, retenção e produtores não localizados estão em Decisões de uso.
 
 Este módulo documenta contratos; não conecta ao Redis nem executa os comandos dos exemplos. Nenhuma credencial, código real ou dado pessoal foi copiado. Para validar, use `node --test test/redis.test.js`; para gerar o site, use `npm run build`.
+
+## Otimizações da IA (SCRUM-167)
+
+`ia:cache:fonte_publica:v1:{hash_consulta}` compartilha documentos públicos do MCP por 900 segundos, sem cache de respostas finais ou permissões. A IA também passa a reutilizar `usuario:foto:{id_usuario}` em lote após autorização. Código e documentação não confirmam deploy; detalhes, limites e invalidação constam nas famílias e no fluxo de consulta pública.

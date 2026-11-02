@@ -1,5 +1,4 @@
 WITH gestor_unidade AS (
-    -- IDs das unidades não dependem da ordem dos VALUES do dataload.
     SELECT email
     FROM usuario
     WHERE unidade_id = 1 AND status = 'ATIVO'
@@ -21,7 +20,7 @@ eventos_base (gestor_email, titulo_evento, data_base) AS (
         ('ana.gomes.006@example.com', 'Manuseio de inflamáveis e defensivos', '2026-03-24'::DATE),
         ('ana.gomes.006@example.com', 'Operação de máquinas agrícolas', '2026-04-28'::DATE),
         ('ana.gomes.006@example.com', 'Proteção individual no campo', '2026-07-28'::DATE),
-        -- SCRUM-172: Turma A e Turma B para cada novo evento.
+
         ((SELECT email FROM gestor_unidade), 'Integração de EPI - Unidade 1', '2026-09-02'::DATE),
         ((SELECT email FROM gestor_unidade), 'Movimentação de materiais - Unidade 1', '2026-09-02'::DATE),
         ((SELECT email FROM gestor_unidade), 'Operação de máquinas - Unidade 1', '2026-09-02'::DATE),

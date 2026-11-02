@@ -521,10 +521,12 @@ export function impactResult(result) {
   return `<div class="card-head"><h2>Resultado</h2><span class="pill ${severity}">${result.level}</span></div><div class="impact-score"><div class="score-orb">${result.score}</div><div><strong>Complexidade ${result.level}</strong><p class="muted">${result.directDependencies} diretas · ${result.indirectDependencies} indiretas · ${result.files.length} arquivos</p></div></div><h3>Por que essa complexidade?</h3><ul>${result.reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join('')}</ul><h3>Arquivos para revisar</h3>${result.files.length ? `<ul>${result.files.map((file) => `<li>${escapeHtml(file)}</li>`).join('')}</ul>` : '<p class="muted">Nenhum arquivo adicional identificado.</p>'}<h3>Sugestões</h3>${result.suggestions.length ? `<ol>${result.suggestions.map((suggestion) => `<li>${escapeHtml(suggestion.replace(/^\d+\.\s*/, ''))}</li>`).join('')}</ol>` : '<p class="muted">Revise e teste o objeto alterado.</p>'}`;
 }
 
-export function modeling(config = {}) {
-  const source = `./${config.conceptual ?? 'models/conceitual.png'}`;
+export function modeling(config = {}, selectedModel = 'conceptual') {
+  const model = selectedModel === 'logical' ? 'logical' : 'conceptual';
+  const label = model === 'logical' ? 'lógico' : 'conceitual';
+  const source = `./${config[model] ?? `models/${model === 'logical' ? 'logico' : 'conceitual'}.png`}`;
   return `${pageHead('Modelagem', 'Consulte os modelos conceitual e lógico do projeto.')}
-    <section class="card"><div class="card-head"><h2>Diagramas</h2><div><button class="button ghost" data-model-zoom="out" aria-label="Reduzir">${icon('minus', 16)}</button> <button class="button ghost" data-model-zoom="reset">${icon('reset', 16)} Ajustar</button> <button class="button ghost" data-model-zoom="in" aria-label="Ampliar">${icon('zoomIn', 16)}</button></div></div><div class="tabs"><button class="tab active" data-model-tab="conceptual">Modelo Conceitual</button><button class="tab" data-model-tab="logical">Modelo Lógico</button></div><div class="model-frame" id="model-frame"><img src="${escapeHtml(source)}" alt="Modelo conceitual do banco de dados" data-model-image></div></section>`;
+    <section class="card"><div class="card-head"><h2>Diagramas</h2><div><button class="button ghost" data-model-zoom="out" aria-label="Reduzir">${icon('minus', 16)}</button> <button class="button ghost" data-model-zoom="reset">${icon('reset', 16)} Ajustar</button> <button class="button ghost" data-model-zoom="in" aria-label="Ampliar">${icon('zoomIn', 16)}</button></div></div><div class="tabs"><a class="tab${model === 'conceptual' ? ' active' : ''}" href="#/modeling/conceptual"${model === 'conceptual' ? ' aria-current="page"' : ''}>Modelo Conceitual</a><a class="tab${model === 'logical' ? ' active' : ''}" href="#/modeling/logical"${model === 'logical' ? ' aria-current="page"' : ''}>Modelo Lógico</a></div><div class="model-frame" id="model-frame"><img src="${escapeHtml(source)}" alt="Modelo ${label} do banco de dados" data-model-image></div></section>`;
 }
 
 export function changes(mode) {

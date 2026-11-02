@@ -12,7 +12,7 @@ WITH participantes AS (
     WHERE participante.tipo = 'COLABORADOR'
       AND participante.status = 'ATIVO'
       AND participante.email LIKE '%@example.com'
-      -- O lote SCRUM-172 possui distribuição própria, sem alterar as turmas anteriores.
+
       AND participante.email !~ '^[^.]+[.]c689bedf0fc64d4c[.]([1-9][0-9]?|100)@example[.]com$'
 ),
 turmas_disponiveis AS (
@@ -60,9 +60,9 @@ INNER JOIN turmas_disponiveis turma
    )
 ON CONFLICT (turma_id, usuario_id) DO NOTHING;
 
--- SCRUM-172: a posição no TXT determina o evento (20 pessoas) e a turma (10).
+
 WITH gestor_unidade AS (
-    -- IDs das unidades não dependem da ordem dos VALUES do dataload.
+
     SELECT email
     FROM usuario
     WHERE unidade_id = 1 AND status = 'ATIVO'

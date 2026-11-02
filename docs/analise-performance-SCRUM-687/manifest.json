@@ -1,0 +1,35 @@
+{
+  "jira": "SCRUM-687",
+  "finishedAt": "2026-11-02T01:59:57.403Z",
+  "phases": {
+    "A": "selected.json:baseline (índices originais)",
+    "B": "selected.json:indexed (3 candidatos compostos)",
+    "A2": "selected.json:baseline_repeat",
+    "B2": "final-selection.json:selected_only (1 índice selecionado)"
+  },
+  "indexesFinal": [
+    {
+      "name": "idx_scrum687_conformidade_ordem",
+      "indisvalid": true,
+      "indisready": true,
+      "bytes": "32768"
+    }
+  ],
+  "resultHashesEqual": true,
+  "queries": 14,
+  "businessRowsModified": false,
+  "apiHttpBenchmarked": false,
+  "aiGenerationBenchmarked": false,
+  "ssl": "TLS com CA privada; cliente experimental usou rejectUnauthorized=false como o executor existente. Reprodução aceita PGSSLROOTCERT; não foram alteradas configurações da aplicação.",
+  "discarded": [
+    "idx_scrum687_conformidade_representante (parcial)",
+    "idx_scrum687_conformidade_recente",
+    "idx_scrum687_turma_evento_inicio"
+  ],
+  "indexRename": {
+    "from": "idx_scrum687_conformidade_ordem",
+    "to": "idx_conformidade_usuario_nr_ordem",
+    "verifiedAt": "2026-11-02T02:21:22.914Z",
+    "historicalCaptureNamesPreserved": true
+  }
+}

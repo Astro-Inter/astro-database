@@ -70,3 +70,17 @@ test('layout mantém cards separados e campos dentro dos limites do documento', 
     assert.ok(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
   }
 });
+
+
+test('exportação e captura permanecem disponíveis nas visões conceitual e de estrutura', async () => {
+  const data = await analyzeMongo({ write: false });
+  for (const view of ['conceptual', 'structure']) {
+    const markup = mongoModelView(data, { ...createMongoModelState(), view, scope: 'formularios' });
+    assert.match(markup, /data-mongo-export="png"/);
+    assert.match(markup, /data-mongo-export="svg"/);
+    assert.match(markup, /data-mongo-capture/);
+    assert.match(markup, /data-mongo-export-layout/);
+    assert.match(markup, /data-mongo-export-pages/);
+    assert.match(markup, /data-mongo-export-status/);
+  }
+});

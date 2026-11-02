@@ -1,0 +1,1857 @@
+{
+  "version": [
+    {
+      "version": "PostgreSQL 17.11 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.3.1 20260722 (Red Hat 15.3.1-1), 64-bit",
+      "current_database": "astro_2",
+      "timezone": "GMT",
+      "measured_at": "2026-11-02T01:51:24.767Z"
+    }
+  ],
+  "tables": [
+    {
+      "relname": "evento_astro",
+      "n_live_tup": "12568",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-11-01T13:45:48.794Z",
+      "bytes": "3121152"
+    },
+    {
+      "relname": "snapshots",
+      "n_live_tup": "756",
+      "n_dead_tup": "29",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-31T21:14:59.029Z",
+      "bytes": "13213696"
+    },
+    {
+      "relname": "insere_log",
+      "n_live_tup": "554",
+      "n_dead_tup": "2",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-29T12:54:47.468Z",
+      "bytes": "204800"
+    },
+    {
+      "relname": "turma_colaborador",
+      "n_live_tup": "501",
+      "n_dead_tup": "5",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-24T23:09:54.230Z",
+      "bytes": "172032"
+    },
+    {
+      "relname": "altera_log",
+      "n_live_tup": "383",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-28T02:31:28.625Z",
+      "bytes": "106496"
+    },
+    {
+      "relname": "conformidade",
+      "n_live_tup": "335",
+      "n_dead_tup": "12",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-28T02:31:28.611Z",
+      "bytes": "253952"
+    },
+    {
+      "relname": "rate_buckets",
+      "n_live_tup": "227",
+      "n_dead_tup": "13",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-11-01T05:03:23.820Z",
+      "bytes": "122880"
+    },
+    {
+      "relname": "conclusao_evento",
+      "n_live_tup": "212",
+      "n_dead_tup": "76",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-31T23:11:00.289Z",
+      "bytes": "90112"
+    },
+    {
+      "relname": "turma",
+      "n_live_tup": "121",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-29T12:54:47.434Z",
+      "bytes": "73728"
+    },
+    {
+      "relname": "evento",
+      "n_live_tup": "98",
+      "n_dead_tup": "1",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-29T12:54:47.453Z",
+      "bytes": "106496"
+    },
+    {
+      "relname": "deleta_log",
+      "n_live_tup": "90",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-10-31T23:11:00.294Z",
+      "bytes": "106496"
+    },
+    {
+      "relname": "nr_catalogo",
+      "n_live_tup": "38",
+      "n_dead_tup": "38",
+      "last_analyze": null,
+      "last_autoanalyze": "2026-11-01T03:01:22.662Z",
+      "bytes": "65536"
+    },
+    {
+      "relname": "usuario",
+      "n_live_tup": "13",
+      "n_dead_tup": "14",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "229376"
+    },
+    {
+      "relname": "unidade",
+      "n_live_tup": "12",
+      "n_dead_tup": "7",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "40960"
+    },
+    {
+      "relname": "unidade_endereco",
+      "n_live_tup": "12",
+      "n_dead_tup": "4",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "32768"
+    },
+    {
+      "relname": "cargo",
+      "n_live_tup": "11",
+      "n_dead_tup": "3",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "40960"
+    },
+    {
+      "relname": "usuario_foto_perfil",
+      "n_live_tup": "6",
+      "n_dead_tup": "11",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "49152"
+    },
+    {
+      "relname": "unidade_nr",
+      "n_live_tup": "5",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "40960"
+    },
+    {
+      "relname": "workspace",
+      "n_live_tup": "3",
+      "n_dead_tup": "5",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "40960"
+    },
+    {
+      "relname": "acesso",
+      "n_live_tup": "2",
+      "n_dead_tup": "6",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "24576"
+    },
+    {
+      "relname": "cargo_nr",
+      "n_live_tup": "1",
+      "n_dead_tup": "5",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "40960"
+    },
+    {
+      "relname": "evidencia",
+      "n_live_tup": "1",
+      "n_dead_tup": "3",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "65536"
+    },
+    {
+      "relname": "admin",
+      "n_live_tup": "0",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "65536"
+    },
+    {
+      "relname": "_astroworkspace_migrations",
+      "n_live_tup": "0",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "90112"
+    },
+    {
+      "relname": "usuario_history",
+      "n_live_tup": "0",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "1474560"
+    },
+    {
+      "relname": "conta",
+      "n_live_tup": "0",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "16384"
+    },
+    {
+      "relname": "history_control",
+      "n_live_tup": "0",
+      "n_dead_tup": "0",
+      "last_analyze": null,
+      "last_autoanalyze": null,
+      "bytes": "24576"
+    }
+  ],
+  "indexes": [
+    {
+      "table_name": "_astroworkspace_migrations",
+      "index_name": "_astroworkspace_migrations_file_path_idx",
+      "definition": "CREATE INDEX _astroworkspace_migrations_file_path_idx ON public._astroworkspace_migrations USING btree (file_path)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "index_name": "_astroworkspace_migrations_pkey",
+      "definition": "CREATE UNIQUE INDEX _astroworkspace_migrations_pkey ON public._astroworkspace_migrations USING btree (id)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "acesso",
+      "index_name": "pk_acesso",
+      "definition": "CREATE UNIQUE INDEX pk_acesso ON public.acesso USING btree (data, firebase_uid)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "45"
+    },
+    {
+      "table_name": "admin",
+      "index_name": "pk_admin",
+      "definition": "CREATE UNIQUE INDEX pk_admin ON public.admin USING btree (id_admin)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "admin",
+      "index_name": "uq_admin_email",
+      "definition": "CREATE UNIQUE INDEX uq_admin_email ON public.admin USING btree (email)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "819"
+    },
+    {
+      "table_name": "admin",
+      "index_name": "uq_admin_firebase_uid",
+      "definition": "CREATE UNIQUE INDEX uq_admin_firebase_uid ON public.admin USING btree (firebase_uid)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "8745"
+    },
+    {
+      "table_name": "altera_log",
+      "index_name": "pk_altera_log",
+      "definition": "CREATE UNIQUE INDEX pk_altera_log ON public.altera_log USING btree (id_log)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "cargo",
+      "index_name": "pk_cargo",
+      "definition": "CREATE UNIQUE INDEX pk_cargo ON public.cargo USING btree (id_cargo)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "563614"
+    },
+    {
+      "table_name": "cargo",
+      "index_name": "uq_cargo_workspace_nome",
+      "definition": "CREATE UNIQUE INDEX uq_cargo_workspace_nome ON public.cargo USING btree (workspace_id, nome)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "5100"
+    },
+    {
+      "table_name": "cargo_nr",
+      "index_name": "idx_cargo_nr_nr_cargo",
+      "definition": "CREATE INDEX idx_cargo_nr_nr_cargo ON public.cargo_nr USING btree (nr_id, cargo_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "3015"
+    },
+    {
+      "table_name": "cargo_nr",
+      "index_name": "pk_cargo_nr",
+      "definition": "CREATE UNIQUE INDEX pk_cargo_nr ON public.cargo_nr USING btree (cargo_id, nr_id)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "11"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "index_name": "pk_conclusao_evento",
+      "definition": "CREATE UNIQUE INDEX pk_conclusao_evento ON public.conclusao_evento USING btree (id_conclusao_evento)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "31"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "index_name": "uq_conclusao_evento_participacao",
+      "definition": "CREATE UNIQUE INDEX uq_conclusao_evento_participacao ON public.conclusao_evento USING btree (turma_colaborador_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "86852"
+    },
+    {
+      "table_name": "conformidade",
+      "index_name": "idx_conformidade_unidade_nr",
+      "definition": "CREATE INDEX idx_conformidade_unidade_nr ON public.conformidade USING btree (unidade_id, nr_id, aplicavel DESC, data_validade DESC NULLS LAST, id_conformidade DESC) WHERE ((tipo)::text = 'UNIDADE'::text)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "449"
+    },
+    {
+      "table_name": "conformidade",
+      "index_name": "idx_conformidade_usuario_nr",
+      "definition": "CREATE INDEX idx_conformidade_usuario_nr ON public.conformidade USING btree (usuario_id, nr_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "40960",
+      "idx_scan": "852382"
+    },
+    {
+      "table_name": "conformidade",
+      "index_name": "idx_conformidade_validade_usuario",
+      "definition": "CREATE INDEX idx_conformidade_validade_usuario ON public.conformidade USING btree (data_validade, usuario_id) WHERE ((aplicavel IS TRUE) AND (data_validade IS NOT NULL))",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "conformidade",
+      "index_name": "pk_conformidade",
+      "definition": "CREATE UNIQUE INDEX pk_conformidade ON public.conformidade USING btree (id_conformidade)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "40960",
+      "idx_scan": "30"
+    },
+    {
+      "table_name": "conformidade",
+      "index_name": "uq_conformidade_conclusao",
+      "definition": "CREATE UNIQUE INDEX uq_conformidade_conclusao ON public.conformidade USING btree (conclusao_evento_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "211"
+    },
+    {
+      "table_name": "conformidade",
+      "index_name": "uq_conformidade_formulario",
+      "definition": "CREATE UNIQUE INDEX uq_conformidade_formulario ON public.conformidade USING btree (formulario_resposta_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "32768",
+      "idx_scan": "1"
+    },
+    {
+      "table_name": "conta",
+      "index_name": "uq_conta_firebase_uid",
+      "definition": "CREATE UNIQUE INDEX uq_conta_firebase_uid ON public.conta USING btree (firebase_uid)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "8192",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "deleta_log",
+      "index_name": "pk_deleta_log",
+      "definition": "CREATE UNIQUE INDEX pk_deleta_log ON public.deleta_log USING btree (id_log)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "evento",
+      "index_name": "idx_evento_gestor_status",
+      "definition": "CREATE INDEX idx_evento_gestor_status ON public.evento USING btree (gestor_id, status)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "49143"
+    },
+    {
+      "table_name": "evento",
+      "index_name": "idx_evento_nr_status",
+      "definition": "CREATE INDEX idx_evento_nr_status ON public.evento USING btree (nr_id, status)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "64656"
+    },
+    {
+      "table_name": "evento",
+      "index_name": "pk_evento",
+      "definition": "CREATE UNIQUE INDEX pk_evento ON public.evento USING btree (id_evento)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "20575"
+    },
+    {
+      "table_name": "evento_astro",
+      "index_name": "idx_evento_astro_criado_em",
+      "definition": "CREATE INDEX idx_evento_astro_criado_em ON public.evento_astro USING btree (criado_em DESC, id_evento DESC)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "720896",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "evento_astro",
+      "index_name": "pk_evento_astro",
+      "definition": "CREATE UNIQUE INDEX pk_evento_astro ON public.evento_astro USING btree (id_evento)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "303104",
+      "idx_scan": "6"
+    },
+    {
+      "table_name": "evidencia",
+      "index_name": "idx_evidencia_conclusao_evento",
+      "definition": "CREATE INDEX idx_evidencia_conclusao_evento ON public.evidencia USING btree (conclusao_evento_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "225"
+    },
+    {
+      "table_name": "evidencia",
+      "index_name": "pk_evidencia",
+      "definition": "CREATE UNIQUE INDEX pk_evidencia ON public.evidencia USING btree (id_evidencia)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "3"
+    },
+    {
+      "table_name": "evidencia",
+      "index_name": "uq_evidencia_caminho_objeto",
+      "definition": "CREATE UNIQUE INDEX uq_evidencia_caminho_objeto ON public.evidencia USING btree (caminho_objeto)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "insere_log",
+      "index_name": "pk_insere_log",
+      "definition": "CREATE UNIQUE INDEX pk_insere_log ON public.insere_log USING btree (id_log)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "32768",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "nr_catalogo",
+      "index_name": "pk_nr_catalogo",
+      "definition": "CREATE UNIQUE INDEX pk_nr_catalogo ON public.nr_catalogo USING btree (codigo_nr)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "1265560"
+    },
+    {
+      "table_name": "turma",
+      "index_name": "pk_turma",
+      "definition": "CREATE UNIQUE INDEX pk_turma ON public.turma USING btree (id_turma)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "1079426"
+    },
+    {
+      "table_name": "turma",
+      "index_name": "uq_turma_evento_nome",
+      "definition": "CREATE UNIQUE INDEX uq_turma_evento_nome ON public.turma USING btree (evento_id, nome)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "136569"
+    },
+    {
+      "table_name": "turma_colaborador",
+      "index_name": "idx_turma_colaborador_usuario_turma",
+      "definition": "CREATE INDEX idx_turma_colaborador_usuario_turma ON public.turma_colaborador USING btree (usuario_id, turma_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "49152",
+      "idx_scan": "528593"
+    },
+    {
+      "table_name": "turma_colaborador",
+      "index_name": "pk_turma_colaborador",
+      "definition": "CREATE UNIQUE INDEX pk_turma_colaborador ON public.turma_colaborador USING btree (id_turma_colaborador)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "32768",
+      "idx_scan": "4586"
+    },
+    {
+      "table_name": "turma_colaborador",
+      "index_name": "uq_turma_colaborador_participacao",
+      "definition": "CREATE UNIQUE INDEX uq_turma_colaborador_participacao ON public.turma_colaborador USING btree (turma_id, usuario_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "32768",
+      "idx_scan": "116727"
+    },
+    {
+      "table_name": "unidade",
+      "index_name": "pk_unidade",
+      "definition": "CREATE UNIQUE INDEX pk_unidade ON public.unidade USING btree (id_unidade)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "498004"
+    },
+    {
+      "table_name": "unidade",
+      "index_name": "uq_unidade_workspace_nome",
+      "definition": "CREATE UNIQUE INDEX uq_unidade_workspace_nome ON public.unidade USING btree (workspace_id, nome)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "60061"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "index_name": "pk_unidade_endereco",
+      "definition": "CREATE UNIQUE INDEX pk_unidade_endereco ON public.unidade_endereco USING btree (unidade_id)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "13145"
+    },
+    {
+      "table_name": "unidade_nr",
+      "index_name": "idx_unidade_nr_nr_unidade",
+      "definition": "CREATE INDEX idx_unidade_nr_nr_unidade ON public.unidade_nr USING btree (nr_id, unidade_id)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "849107"
+    },
+    {
+      "table_name": "unidade_nr",
+      "index_name": "pk_unidade_nr",
+      "definition": "CREATE UNIQUE INDEX pk_unidade_nr ON public.unidade_nr USING btree (unidade_id, nr_id)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "8"
+    },
+    {
+      "table_name": "usuario",
+      "index_name": "idx_usuario_cargo_status",
+      "definition": "CREATE INDEX idx_usuario_cargo_status ON public.usuario USING btree (cargo_id, status)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "21806"
+    },
+    {
+      "table_name": "usuario",
+      "index_name": "idx_usuario_unidade_status",
+      "definition": "CREATE INDEX idx_usuario_unidade_status ON public.usuario USING btree (unidade_id, status)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": false,
+      "bytes": "16384",
+      "idx_scan": "296505"
+    },
+    {
+      "table_name": "usuario",
+      "index_name": "pk_usuario",
+      "definition": "CREATE UNIQUE INDEX pk_usuario ON public.usuario USING btree (id_usuario)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "496021"
+    },
+    {
+      "table_name": "usuario",
+      "index_name": "uq_usuario_cpf",
+      "definition": "CREATE UNIQUE INDEX uq_usuario_cpf ON public.usuario USING btree (cpf)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "25"
+    },
+    {
+      "table_name": "usuario",
+      "index_name": "uq_usuario_email",
+      "definition": "CREATE UNIQUE INDEX uq_usuario_email ON public.usuario USING btree (email)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "40960",
+      "idx_scan": "959"
+    },
+    {
+      "table_name": "usuario",
+      "index_name": "uq_usuario_firebase_uid",
+      "definition": "CREATE UNIQUE INDEX uq_usuario_firebase_uid ON public.usuario USING btree (firebase_uid)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "40960",
+      "idx_scan": "27555"
+    },
+    {
+      "table_name": "usuario_foto_perfil",
+      "index_name": "pk_usuario_foto_perfil",
+      "definition": "CREATE UNIQUE INDEX pk_usuario_foto_perfil ON public.usuario_foto_perfil USING btree (usuario_id)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "9619"
+    },
+    {
+      "table_name": "usuario_foto_perfil",
+      "index_name": "uq_usuario_foto_perfil_caminho",
+      "definition": "CREATE UNIQUE INDEX uq_usuario_foto_perfil_caminho ON public.usuario_foto_perfil USING btree (caminho_objeto)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "0"
+    },
+    {
+      "table_name": "workspace",
+      "index_name": "pk_workspace",
+      "definition": "CREATE UNIQUE INDEX pk_workspace ON public.workspace USING btree (id_workspace)",
+      "indisvalid": true,
+      "indisprimary": true,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "32928"
+    },
+    {
+      "table_name": "workspace",
+      "index_name": "uq_workspace_cnpj",
+      "definition": "CREATE UNIQUE INDEX uq_workspace_cnpj ON public.workspace USING btree (cnpj)",
+      "indisvalid": true,
+      "indisprimary": false,
+      "indisunique": true,
+      "bytes": "16384",
+      "idx_scan": "16"
+    }
+  ],
+  "extensions": [
+    {
+      "extname": "plpgsql"
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "file_path",
+      "data_type": "text"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "file_name",
+      "data_type": "text"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "checksum",
+      "data_type": "text"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "executed_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "duration_ms",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "error_message",
+      "data_type": "text"
+    },
+    {
+      "table_name": "_astroworkspace_migrations",
+      "column_name": "database_version",
+      "data_type": "text"
+    },
+    {
+      "table_name": "acesso",
+      "column_name": "data",
+      "data_type": "date"
+    },
+    {
+      "table_name": "acesso",
+      "column_name": "firebase_uid",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "admin",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "admin",
+      "column_name": "email",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "admin",
+      "column_name": "firebase_uid",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "admin",
+      "column_name": "id_admin",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "altera_log",
+      "column_name": "id_log",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "altera_log",
+      "column_name": "tabela",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "altera_log",
+      "column_name": "data",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "table_name": "altera_log",
+      "column_name": "dado_anterior",
+      "data_type": "jsonb"
+    },
+    {
+      "table_name": "altera_log",
+      "column_name": "dado_atual",
+      "data_type": "jsonb"
+    },
+    {
+      "table_name": "altera_log",
+      "column_name": "usuario",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "cargo",
+      "column_name": "id_cargo",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "cargo",
+      "column_name": "workspace_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "cargo",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "cargo",
+      "column_name": "ativo",
+      "data_type": "boolean"
+    },
+    {
+      "table_name": "cargo_nr",
+      "column_name": "cargo_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "cargo_nr",
+      "column_name": "nr_id",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "column_name": "id_conclusao_evento",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "column_name": "turma_colaborador_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "column_name": "status",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "column_name": "data_conclusao",
+      "data_type": "timestamp without time zone"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "column_name": "data_validacao",
+      "data_type": "timestamp without time zone"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "column_name": "data_validade",
+      "data_type": "date"
+    },
+    {
+      "table_name": "conclusao_evento",
+      "column_name": "motivo_rejeicao",
+      "data_type": "text"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "id_conformidade",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "usuario_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "nr_id",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "aplicavel",
+      "data_type": "boolean"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "data_validade",
+      "data_type": "date"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "origem",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "conclusao_evento_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "tipo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "conformidade",
+      "column_name": "formulario_resposta_id",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "conta",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "conta",
+      "column_name": "email",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "conta",
+      "column_name": "firebase_uid",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "deleta_log",
+      "column_name": "id_log",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "deleta_log",
+      "column_name": "tabela",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "deleta_log",
+      "column_name": "data",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "table_name": "deleta_log",
+      "column_name": "dado",
+      "data_type": "jsonb"
+    },
+    {
+      "table_name": "deleta_log",
+      "column_name": "usuario",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "dim_nr_catalogo",
+      "column_name": "id_dim_nr_catalogo",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "dim_nr_catalogo",
+      "column_name": "id_unidade",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "dim_nr_catalogo",
+      "column_name": "codigo_nr",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "dim_nr_catalogo",
+      "column_name": "titulo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "dim_resumo_funcionario",
+      "column_name": "id_dim_resumo",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "dim_resumo_funcionario",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "dim_resumo_funcionario",
+      "column_name": "unidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "dim_resumo_funcionario",
+      "column_name": "cargo_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "dim_resumo_funcionario",
+      "column_name": "cargo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "dim_resumo_funcionario",
+      "column_name": "qtd_funcionario",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "dim_resumo_funcionario",
+      "column_name": "dt_referencia",
+      "data_type": "date"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "id_evento",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "gestor_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "nr_id",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "titulo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "descricao",
+      "data_type": "text"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "link_externo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "modo_conclusao",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "evidencia_obrigatoria",
+      "data_type": "boolean"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "status",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "data_cancelamento",
+      "data_type": "timestamp without time zone"
+    },
+    {
+      "table_name": "evento",
+      "column_name": "motivo_cancelamento",
+      "data_type": "text"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "id_evento",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "firebase_uid",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "cliente_ip",
+      "data_type": "inet"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "tipo_evento",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "nome_botao",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "nome_tela",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "contexto_tela",
+      "data_type": "text"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "nome_dialog",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "dialog_clicado",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "showcase_click",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "nome_showcase",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evento_astro",
+      "column_name": "criado_em",
+      "data_type": "timestamp without time zone"
+    },
+    {
+      "table_name": "evidencia",
+      "column_name": "id_evidencia",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "evidencia",
+      "column_name": "conclusao_evento_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "evidencia",
+      "column_name": "nome_original",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evidencia",
+      "column_name": "caminho_objeto",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evidencia",
+      "column_name": "mime_type",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "evidencia",
+      "column_name": "tamanho_byte",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "insere_log",
+      "column_name": "id_log",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "insere_log",
+      "column_name": "tabela",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "insere_log",
+      "column_name": "data",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "table_name": "insere_log",
+      "column_name": "dado",
+      "data_type": "jsonb"
+    },
+    {
+      "table_name": "insere_log",
+      "column_name": "usuario",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "nr_catalogo",
+      "column_name": "codigo_nr",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "nr_catalogo",
+      "column_name": "titulo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "nr_catalogo",
+      "column_name": "tempo_reciclagem_mes",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "nr_catalogo",
+      "column_name": "revogada",
+      "data_type": "boolean"
+    },
+    {
+      "table_name": "turma",
+      "column_name": "id_turma",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "turma",
+      "column_name": "evento_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "turma",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "turma",
+      "column_name": "data_inicial",
+      "data_type": "timestamp without time zone"
+    },
+    {
+      "table_name": "turma",
+      "column_name": "data_termino",
+      "data_type": "timestamp without time zone"
+    },
+    {
+      "table_name": "turma_colaborador",
+      "column_name": "id_turma_colaborador",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "turma_colaborador",
+      "column_name": "turma_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "turma_colaborador",
+      "column_name": "usuario_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "unidade",
+      "column_name": "id_unidade",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "unidade",
+      "column_name": "workspace_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "unidade",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade",
+      "column_name": "ativo",
+      "data_type": "boolean"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "cep",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "rua",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "cidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "bairro",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "estado",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "complemento",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "geolocalizacao",
+      "data_type": "point"
+    },
+    {
+      "table_name": "unidade_endereco",
+      "column_name": "numero",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "unidade_nr",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "unidade_nr",
+      "column_name": "nr_id",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "email",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "firebase_uid",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "id_usuario",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "tipo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "cargo_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "cpf",
+      "data_type": "character"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "modalidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "status",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "usuario",
+      "column_name": "criado_em",
+      "data_type": "timestamp without time zone"
+    },
+    {
+      "table_name": "usuario_foto_perfil",
+      "column_name": "usuario_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "usuario_foto_perfil",
+      "column_name": "caminho_objeto",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_cargos",
+      "column_name": "id_cargo",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_cargos",
+      "column_name": "id_workspace",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_cargos",
+      "column_name": "cargo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_cargos",
+      "column_name": "quantidade_colaboradores",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_cargos",
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "id_usuario",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "email",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "cpf",
+      "data_type": "character"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "modalidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "status",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "cargo_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "cargo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "unidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "workspace_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_colaboradores",
+      "column_name": "tipo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "id_conformidade",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "usuario_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "email",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "status_colaborador",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "cargo_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "workspace_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "nr_id",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "titulo_nr",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "aplicavel",
+      "data_type": "boolean"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "data_validade",
+      "data_type": "date"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "origem",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "conclusao_evento_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_colaborador",
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "id_conformidade",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "tipo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "nome_unidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "workspace_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "nr_id",
+      "data_type": "integer"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "titulo_nr",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "aplicavel",
+      "data_type": "boolean"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "data_validade",
+      "data_type": "date"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "origem",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "formulario_resposta_id",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_conformidade_unidade",
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "table_name": "vw_eventos_gestor",
+      "column_name": "id_evento",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_eventos_gestor",
+      "column_name": "id_gestor",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_eventos_gestor",
+      "column_name": "titulo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_eventos_gestor",
+      "column_name": "status",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_eventos_gestor",
+      "column_name": "modo_conclusao",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_eventos_gestor",
+      "column_name": "qtd_pendencias",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "id_usuario",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "email",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "cpf",
+      "data_type": "character"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "modalidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "status",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "cargo_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "cargo",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "unidade_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "unidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_gestores",
+      "column_name": "workspace_id",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "id_workspace",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "quantidade_unidades",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "quantidade_colaboradores",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "quantidade_requisitos",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "quantidade_conformes",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "quantidade_proximos_vencimento",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "quantidade_vencidos",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "quantidade_pendentes",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "percentual_conformidade_geral",
+      "data_type": "numeric"
+    },
+    {
+      "table_name": "vw_home_estatisticas_gerais",
+      "column_name": "data_referencia",
+      "data_type": "date"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "id_unidade",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "id_workspace",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "quantidade_colaboradores",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "cep",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "rua",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "cidade",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "bairro",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "estado",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "vw_unidades",
+      "column_name": "complemento",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "workspace",
+      "column_name": "id_workspace",
+      "data_type": "bigint"
+    },
+    {
+      "table_name": "workspace",
+      "column_name": "nome",
+      "data_type": "character varying"
+    },
+    {
+      "table_name": "workspace",
+      "column_name": "cnpj",
+      "data_type": "character varying"
+    }
+  ]
+}

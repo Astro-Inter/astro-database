@@ -32,6 +32,12 @@ Neo4j possui uma área de documentação de colaboradores e treinamentos, com pr
 
 ## Read Only e Local Mode
 
+### Usuários e acessos PostgreSQL
+
+O menu **PostgreSQL → Usuários e acessos** reúne os 16 usuários propostos por serviço, finalidade, hospedagem e SQL de criação/GRANTs. Os arquivos estão em [`database/users/`](database/users/README.md). O catálogo funciona nos modos local e estático; seus scripts não são executados automaticamente. `astro-database` está fora do provisionamento.
+
+Backup usa GitHub Actions; APIs Java e IA usam AWS; os demais serviços usam Cloudflare. A criação real, as senhas e a troca dos secrets/conexões estão planejadas; esta documentação não as aplica.
+
 A interface consulta `GET /api/status` ao iniciar. Se a API responder, o modo local habilita as operações de filesystem. Se a API estiver indisponível, a interface carrega `generated/database.json` e assume Read Only.
 
 No **Read Only**, todas as funções de documentação, busca, dependências e navegação permanecem disponíveis. Nenhum arquivo pode ser alterado. No **Local Mode**, a API Node valida as operações e modifica os `.sql` reais; o Git reconhece essas mudanças normalmente.
@@ -131,6 +137,53 @@ Na criação do banco do zero, aplique as tabelas e constraints e depois as fun�
 Coordene a publicação com a API: as chamadas de `GET /home/collaborator` e `GET /home/manager` devem usar os novos nomes com `fn_`. Não há aliases para os nomes anteriores. No repositório `astro-api`, alinhe os filtros de perfis das consultas de conformidades e substitua a contagem `countByUnit_IdAndType(..., UserType.COLABORADOR)` de `UnitSettingsService` por uma consulta dos três perfis com status ativo e a mesma unidade. Alterar `vw_unidades` não modifica essa contagem feita pela API. Este checkout contém somente o banco.
 
 Para testar com PostgreSQL/psql, execute `\i test/sql/gestores_como_colaboradores.sql` na raiz. O teste cria tabelas e constraints reais em schema isolado e termina com `ROLLBACK`. Cobre os três perfis, UID inválido, administrador, inatividade, isolamento de workspace/unidade, deduplicação e conformidades na criação do banco do zero. Execute também `test/sql/vw_conformidade_colaborador.sql` em banco de teste com tabelas, constraints e a view atualizada, para validar seleção e edição do histórico. Nenhum desses arquivos aplica alterações ao banco publicado automaticamente.
+
+## Acessos diários por Firebase UID (SCRUM-138)
+
+`acesso` armazena `data DATE` e `firebase_uid VARCHAR(128)`, com chave primária
+`(data, firebase_uid)`. `fn_registrar_acesso_diario(p_firebase_uid VARCHAR)` retorna
+`VOID` e insere o UID no `CURRENT_DATE` da sessão PostgreSQL. `ON CONFLICT DO NOTHING`
+preserva um registro por identidade e dia, inclusive em chamadas concorrentes.
+O banco publicado usa GMT; a função preserva esse critério de data.
+
+O UID deve vir de um token já validado pela API. A função não autentica, não
+consulta perfis e não possui FK para `usuario`, permitindo contar também
+administradores. Ela rejeita UID nulo, vazio, composto apenas por espaços ou maior
+que 128 caracteres com SQLSTATE `22023`; mantém a comparação exata do UID.
+
+Para banco novo, aplique tabelas, constraints e a função como os demais objetos.
+Para banco existente, execute na mesma transação:
+
+```sql
+BEGIN;
+\i database/scripts/6_migrar_acesso_firebase_uid.sql
+\i database/functions/02_fn_registrar_acesso_diario.sql
+COMMIT;
+```
+
+A migração converte cada `usuario_id` histórico pelo `usuario.firebase_uid`,
+preserva as datas e substitui a chave primária. Ela aborta integralmente se houver
+vínculos sem UID válido ou se a nova chave gerar duplicidades, sem descartar
+histórico. Remove a assinatura antiga `fn_registrar_acesso_diario(BIGINT)` sem
+`CASCADE`; dependências devem ser adequadas antes da instalação. Pode ser
+reaplicada, assim como a função. A API deve ser publicada depois desse ajuste.
+
+Exemplo de chamada e consulta de DAU:
+
+```sql
+SELECT fn_registrar_acesso_diario('uid-validado-pelo-firebase'::VARCHAR);
+SELECT data, count(*) AS dau FROM acesso GROUP BY data ORDER BY data;
+```
+
+Na API, o filtro HTTP registra o UID após criar o principal, sem consultar o ID
+interno e antes da autorização específica da operação. Falhas no registro geram
+log e deixam a requisição continuar; novas requisições tentam novamente. A mudança
+não adiciona contagem aos frames STOMP do WebSocket.
+
+Valide com `psql -v ON_ERROR_STOP=1 -f test/sql/registrar_acesso_diario.sql`.
+O teste usa schema isolado e `ROLLBACK`, cobrindo preservação de histórico,
+reaplicação, duplicidade diária, identidades distintas, dias diferentes e UID
+inválido. `npm test` e `npm run build` validam o catálogo e o site gerado.
 
 ## Como adicionar scripts
 

@@ -1,0 +1,21 @@
+{
+  "verifiedAt": "2026-11-02T02:07:02.716Z",
+  "originalIndexes": 51,
+  "originalIndexesPreserved": true,
+  "selected": [
+    {
+      "index_name": "idx_scrum687_conformidade_ordem",
+      "definition": "CREATE INDEX idx_scrum687_conformidade_ordem ON public.conformidade USING btree (usuario_id, nr_id, aplicavel DESC, data_validade DESC NULLS LAST, id_conformidade DESC)",
+      "indisvalid": true,
+      "indisready": true,
+      "bytes": "32768"
+    }
+  ],
+  "existingTests": {
+    "passed": 153,
+    "failed": 0
+  },
+  "build": "npm run build: passed",
+  "readonlyReplay": "14 scenarios: passed",
+  "apiJavaChanged": false
+}
