@@ -1,0 +1,9 @@
+.performance-report { display: grid; gap: 20px; min-width: 0; }
+.performance-report .card { min-width: 0; }
+.performance-report .card-head { flex-wrap: wrap; }
+.performance-report p { line-height: 1.65; overflow-wrap: anywhere; }
+.performance-report h3, .performance-report summary, .performance-report .stat span { overflow-wrap: anywhere; }
+.performance-report table { min-width: 850px; }
+.performance-report details { padding: 10px 0; }
+.performance-report summary { cursor: pointer; font-weight: 600; }
+.performance-report details .code-shell { margin: 12px 0; }

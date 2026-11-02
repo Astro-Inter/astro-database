@@ -1,3 +1,4 @@
+import { performanceView } from './views-performance.js';
 import { createMongoModelState, mountMongoModel } from './components/mongo/mongo-model.js';
 import { openMongoEditor } from './components/mongo/mongo-editor.js';
 import { mongoView } from './components/mongo/mongo-view.js';
@@ -439,6 +440,7 @@ function render() {
   else if (route === 'procedures') content.innerHTML = objectCategoryView(state.database, 'procedure');
   else if (route === 'functions') content.innerHTML = objectCategoryView(state.database, 'function');
   else if (route === 'indexes') content.innerHTML = objectCategoryView(state.database, 'index');
+  else if (route === 'performance') content.innerHTML = performanceView();
   else if (route === 'triggers') content.innerHTML = objectCategoryView(state.database, 'trigger');
   else if (route === 'scripts') content.innerHTML = scriptsView(state.database, state.selectedFilePath, state.fileCategory, state.mode);
   else if (route === 'object') content.innerHTML = explorer(state.database, state.selectedId, state.filter, false);
