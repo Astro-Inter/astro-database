@@ -32,6 +32,12 @@ Neo4j possui uma área de documentação de colaboradores e treinamentos, com pr
 
 ## Read Only e Local Mode
 
+### Usuários e acessos PostgreSQL
+
+O menu **PostgreSQL → Usuários e acessos** reúne os 16 usuários propostos por serviço, finalidade, hospedagem e SQL de criação/GRANTs. Os arquivos estão em [`database/users/`](database/users/README.md). O catálogo funciona nos modos local e estático; seus scripts não são executados automaticamente. `astro-database` está fora do provisionamento.
+
+Backup usa GitHub Actions; APIs Java e IA usam AWS; os demais serviços usam Cloudflare. A criação real, as senhas e a troca dos secrets/conexões estão planejadas; esta documentação não as aplica.
+
 A interface consulta `GET /api/status` ao iniciar. Se a API responder, o modo local habilita as operações de filesystem. Se a API estiver indisponível, a interface carrega `generated/database.json` e assume Read Only.
 
 No **Read Only**, todas as funções de documentação, busca, dependências e navegação permanecem disponíveis. Nenhum arquivo pode ser alterado. No **Local Mode**, a API Node valida as operações e modifica os `.sql` reais; o Git reconhece essas mudanças normalmente.

@@ -818,3 +818,11 @@ dialog[open]::backdrop { animation: fade-in .24s ease; }
 @media (min-width: 851px) { .redis-area .topbar { display: none; } }
 @media (max-width: 1000px) { .redis-flows { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .redis-contract > div { grid-template-columns: 1fr; gap: 6px; } }
+
+/* Catálogo PostgreSQL de identidades e permissões. */
+.users-report .card { margin-bottom: 24px; }
+.users-report .user-access-card { scroll-margin-top: 88px; }
+.users-report p, .users-report li { line-height: 1.7; overflow-wrap: anywhere; }
+.users-report details { margin-top: 16px; }
+.users-report summary { cursor: pointer; font-weight: 600; padding: 12px 0; }
+.users-report .code-shell { max-height: 520px; overflow: auto; }
