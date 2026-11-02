@@ -36,8 +36,7 @@ SET tipo = EXCLUDED.tipo,
     data_validade = EXCLUDED.data_validade,
     origem = EXCLUDED.origem;
 
--- SCRUM-172: NRs aplicáveis ao cargo ainda sem conclusão permanecem sem validade.
--- Cada funcionário tem duas NRs aplicáveis: 60 registros por conclusão e 140 por análise.
+
 INSERT INTO conformidade
     (tipo, usuario_id, nr_id, aplicavel, data_validade, origem, conclusao_evento_id)
 SELECT 'COLABORADOR', participante.id_usuario, cargo_nr.nr_id, TRUE, NULL, 'MANUAL', NULL

@@ -76,7 +76,6 @@ SET status = EXCLUDED.status,
     data_validade = EXCLUDED.data_validade,
     motivo_rejeicao = EXCLUDED.motivo_rejeicao;
 
--- SCRUM-172: eventos futuros do tipo GESTOR mantêm a participação sem conclusão.
 INSERT INTO conclusao_evento
     (turma_colaborador_id, status, data_conclusao, data_validacao, data_validade, motivo_rejeicao)
 SELECT
