@@ -13,7 +13,8 @@ SELECT
             WHERE ce.id_conclusao_evento IS NULL
         )
         ELSE 0::BIGINT
-    END AS qtd_pendencias
+    END AS qtd_pendencias,
+    MAX(t.data_termino) AS ultima_data_limite
 FROM evento e
 LEFT JOIN turma t ON t.evento_id = e.id_evento
 LEFT JOIN turma_colaborador tc ON tc.turma_id = t.id_turma
