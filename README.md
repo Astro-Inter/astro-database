@@ -10,6 +10,10 @@ Neo4j possui uma área de documentação de colaboradores e treinamentos, com pr
 
 > Foco em PostgreSQL. Os arquivos SQL continuam sendo a fonte da verdade: no Local Mode eles também podem ser **executados** em um banco informado por você, na ordem calculada pelo grafo de dependências.
 
+## Relatório de justificativa — PostgreSQL
+
+A justificativa da entrega interdisciplinar, com decisões de modelagem, evidências por requisito e pontos que ainda precisam de comprovação, está no [relatório de justificativa](site/relatorio-justificativa.md). No Workspace, acesse **PostgreSQL → Relatório de justificativa** para consultar o mesmo conteúdo e seus links.
+
 ## O que a V1 oferece
 
 - Dashboard com contadores, data de geração e saúde do analyzer;

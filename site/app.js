@@ -1,3 +1,4 @@
+import { justificativaView } from './views-justificativa.js';
 import { performanceView } from './views-performance.js';
 import { usersView } from './views-users.js';
 import { createMongoModelState, mountMongoModel } from './components/mongo/mongo-model.js';
@@ -450,6 +451,7 @@ function render() {
     if (!state.mongo.data && !state.mongo.loading && !state.mongo.error) loadMongo();
   } else if (route === 'overview') content.innerHTML = overview(state.database, state.mode);
   else if (route === 'database') content.innerHTML = databaseView(state.database, state.databaseTab, state.model, state.mode);
+  else if (route === 'justificativa') content.innerHTML = justificativaView();
   else if (route === 'logs') content.innerHTML = logsView(state.database);
   else if (route === 'users') {
     content.innerHTML = usersView(state.users);
