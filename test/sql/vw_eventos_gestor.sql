@@ -37,6 +37,12 @@ INSERT INTO turma (id_turma, evento_id, nome, data_inicial, data_termino)
 SELECT id, evento, 'Turma ' || id, TIMESTAMP '2026-10-01 08:00:00', TIMESTAMP '2026-10-01 09:00:00'
 FROM (VALUES (1, 1), (2, 1), (3, 2), (4, 2), (5, 5), (6, 6), (7, 7), (8, 8)) AS dados(id, evento);
 
+-- Prazos diferentes e uma turma vazia com o maior prazo do evento.
+UPDATE turma SET data_termino = TIMESTAMP '2026-10-02 18:00:00' WHERE id_turma = 2;
+UPDATE turma SET data_termino = TIMESTAMP '2026-10-03 18:00:00' WHERE id_turma = 4;
+INSERT INTO turma (id_turma, evento_id, nome, data_inicial, data_termino)
+VALUES (9, 1, 'Turma vazia com maior prazo', TIMESTAMP '2026-10-04 08:00:00', TIMESTAMP '2026-10-04 18:00:00');
+
 -- O mesmo usuário em duas turmas representa duas participações distintas.
 INSERT INTO turma_colaborador (id_turma_colaborador, turma_id, usuario_id)
 VALUES (1, 1, 1), (2, 1, 2), (3, 2, 1), (4, 2, 2),
@@ -58,6 +64,10 @@ VALUES
 
 DO $$
 BEGIN
+    ASSERT (SELECT ultima_data_limite = TIMESTAMP '2026-10-04 18:00:00' FROM vw_eventos_gestor WHERE id_evento = 1), 'Maior prazo inclui turma sem participantes';
+    ASSERT (SELECT ultima_data_limite = TIMESTAMP '2026-10-03 18:00:00' FROM vw_eventos_gestor WHERE id_evento = 2), 'Maior prazo entre turmas com participantes';
+    ASSERT NOT EXISTS (SELECT 1 FROM vw_eventos_gestor WHERE id_evento IN (3, 4) AND ultima_data_limite IS NOT NULL), 'Sem turmas retorna NULL';
+    ASSERT (SELECT BOOL_AND(ultima_data_limite = TIMESTAMP '2026-10-01 09:00:00') FROM vw_eventos_gestor WHERE id_evento BETWEEN 5 AND 8), 'Preservar prazo em turmas vazias e eventos concluidos ou cancelados';
     ASSERT (SELECT COUNT(*) = 8 FROM vw_eventos_gestor), 'Uma linha por evento';
     ASSERT (SELECT COUNT(DISTINCT id_evento) = 8 FROM vw_eventos_gestor);
     ASSERT (SELECT qtd_pendencias = 2 FROM vw_eventos_gestor WHERE id_evento = 1), 'Contar apenas PENDENTE, somando turmas';
