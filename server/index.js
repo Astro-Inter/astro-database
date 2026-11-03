@@ -88,6 +88,10 @@ async function api(request, response, url) {
 async function staticFile(response, url) {
   const config = await loadConfig();
   let relative = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname);
+  if (relative === '/relatorio-justificativa.md') {
+    const file = path.join(workspaceRoot, 'relatorio-justificativa.md');
+    return { file, content: await fs.readFile(file) };
+  }
   if (relative.startsWith('/generated/') || relative.startsWith('/models/')) {
     const file = path.resolve(workspaceRoot, `.${relative}`);
     const root = path.resolve(workspaceRoot, relative.startsWith('/models/') ? 'models' : config.generated);
