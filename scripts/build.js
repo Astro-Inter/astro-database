@@ -17,6 +17,7 @@ if (!history.available) console.warn(`Histórico Git indisponível: ${history.me
 await fs.rm(dist, { recursive: true, force: true });
 await fs.mkdir(dist, { recursive: true });
 await fs.cp(path.join(workspaceRoot, config.site), dist, { recursive: true });
+await fs.copyFile(path.join(workspaceRoot, 'relatorio-justificativa.md'), path.join(dist, 'relatorio-justificativa.md'));
 await fs.cp(path.join(workspaceRoot, config.generated), path.join(dist, 'generated'), { recursive: true });
 try { await fs.cp(path.join(workspaceRoot, 'models'), path.join(dist, 'models'), { recursive: true }); } catch (error) { if (error.code !== 'ENOENT') throw error; }
 await fs.writeFile(path.join(dist, '.nojekyll'), '');

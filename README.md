@@ -12,7 +12,7 @@ Neo4j possui uma área de documentação de colaboradores e treinamentos, com pr
 
 ## Relatório de justificativa — PostgreSQL
 
-A justificativa da entrega interdisciplinar, com decisões de modelagem, evidências por requisito e pontos que ainda precisam de comprovação, está no [relatório de justificativa](site/relatorio-justificativa.md). No Workspace, acesse **PostgreSQL → Relatório de justificativa** para consultar o mesmo conteúdo e seus links.
+A justificativa da entrega interdisciplinar, com decisões de modelagem, evidências por requisito e pontos que ainda precisam de comprovação, está no [relatório de justificativa](relatorio-justificativa.md). No Workspace, acesse **PostgreSQL → Relatório de justificativa** para consultar o mesmo conteúdo e seus links.
 
 ## O que a V1 oferece
 
