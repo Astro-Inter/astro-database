@@ -7,3 +7,35 @@
 .performance-report details { padding: 10px 0; }
 .performance-report summary { cursor: pointer; font-weight: 600; }
 .performance-report details .code-shell { margin: 12px 0; }
+
+.mongo-result-overview { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(250px, 1fr); gap: 30px; }
+.mongo-result-badge { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px; background: #f0eef4; color: #5d5870; font-size: 12px; font-weight: 700; line-height: 1.4; white-space: nowrap; }
+.mongo-result-badge.is-positive { color: #087448; background: #daf5e9; }
+.mongo-result-badge.is-existing { color: #245b86; background: #e8f1fa; }
+.mongo-result-badge.is-attention { color: #87510a; background: #fff2d9; }
+.mongo-reading-result h2 { margin: 16px 0 10px; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.25; }
+.mongo-reading-result .mongo-reading-number { margin: 12px 0 0; font-size: clamp(38px, 5vw, 58px); line-height: 1.2; font-weight: 700; letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
+.mongo-reading-number span { color: var(--muted); font-weight: 400; }
+.mongo-reading-result .mongo-reading-gain { margin-bottom: 0; font-size: 14px; }
+.mongo-reading-gain strong { color: #087448; }
+.mongo-read-comparison { display: grid; gap: 10px; margin: 22px 0; }
+.mongo-read-row { display: grid; grid-template-columns: 54px minmax(0, 1fr) 34px; align-items: center; gap: 10px; font-size: 13px; }
+.mongo-read-row strong { text-align: right; font-variant-numeric: tabular-nums; }
+.mongo-read-track { height: 12px; border-radius: 3px; background: #f0eef4; overflow: hidden; }
+.mongo-read-track i { display: block; height: 100%; border-radius: 3px; }
+.mongo-read-track .is-before { background: #aaa4b9; }
+.mongo-read-track .is-after { background: #22a06b; }
+.mongo-outcome-notes { display: grid; align-content: start; gap: 20px; border-left: 1px solid var(--line); padding-left: 28px; }
+.mongo-outcome-notes h3 { margin: 10px 0 4px; font-size: 16px; }
+.mongo-outcome-notes p { margin: 4px 0 0; font-size: 14px; }
+.mongo-results .mongo-summary-table table { min-width: 760px; }
+.mongo-summary-table th:first-child { width: 23%; }
+.mongo-summary-table td { vertical-align: top; line-height: 1.6; }
+.mongo-results details.card { padding: 20px 22px; }
+.mongo-results .mongo-technical > summary { font-size: 16px; }
+.mongo-results summary:focus-visible { outline: 2px solid #176338; outline-offset: 5px; border-radius: 3px; }
+@media (max-width: 850px) {
+  .mongo-result-overview { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .mongo-outcome-notes { padding: 22px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+  .mongo-result-badge { white-space: normal; }
+}

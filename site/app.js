@@ -393,6 +393,22 @@ async function loadMigrations({ silent = false } = {}) {
  * a pessoa digita. A animação entra quando a rota realmente muda.
  */
 let animatedRoute = null;
+let mongoPerformanceView = null;
+let mongoPerformanceLoading = false;
+let mongoPerformanceError = null;
+
+async function loadMongoPerformance() {
+  if (mongoPerformanceView || mongoPerformanceLoading || mongoPerformanceError) return;
+  mongoPerformanceLoading = true;
+  try {
+    ({ mongoPerformanceView } = await import('./components/mongo/mongo-performance.js'));
+  } catch (error) {
+    mongoPerformanceError = error;
+  } finally {
+    mongoPerformanceLoading = false;
+    if (currentRoute() === 'mongo-performance') render();
+  }
+}
 
 async function loadUsers() {
   state.users.loading = true;
@@ -446,6 +462,11 @@ function render() {
   } else if (redisArea) {
     content.innerHTML = redisView(state.redis.data, { ...state.redis, mode: state.mode, tab: route === 'redis-flows' ? 'flows' : route === 'redis-decisions' ? 'decisions' : 'keys' });
     if (!state.redis.data && !state.redis.loading && !state.redis.error) loadRedis();
+  } else if (route === 'mongo-performance') {
+    content.innerHTML = mongoPerformanceView ? mongoPerformanceView() : mongoPerformanceError
+      ? '<div class="empty"><strong>Não foi possível carregar a análise de índices.</strong><p>Recarregue a página para tentar novamente.</p></div>'
+      : '<p class="muted" role="status">Carregando análise de índices…</p>';
+    if (!mongoPerformanceView) loadMongoPerformance();
   } else if (mongoArea) {
     content.innerHTML = mongoView(state.mongo.data, { ...state.mongo, mode: state.mode, tab: route === 'mongo-decisions' ? 'decisions' : route === 'mongo-model' ? 'model' : 'collections' });
     if (!state.mongo.data && !state.mongo.loading && !state.mongo.error) loadMongo();

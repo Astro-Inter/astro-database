@@ -31,6 +31,6 @@
   ],
   "indexes": [
     "_id: único.",
-    "Recomendado: participantes_ids para listar conversas por usuário."
+    "Candidato participantes_ids testado e não mantido na base de quatro conversas; reavaliar conforme crescimento. Evidências em mongo/analysis/performance/."
   ]
 }

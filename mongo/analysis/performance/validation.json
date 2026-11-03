@@ -1,0 +1,53 @@
+{
+  "verifiedAt": "2026-11-02T02:43:25.057263+00:00",
+  "selectedIndex": {
+    "collection": "mensagens",
+    "name": "idx_mensagens_conversa_data_id",
+    "keys": [
+      [
+        "conversa_id",
+        1
+      ],
+      [
+        "data",
+        -1
+      ],
+      [
+        "_id",
+        -1
+      ]
+    ],
+    "hidden": false,
+    "unique": false
+  },
+  "indexSizeBytes": 24576,
+  "orderedResultsEqualToCollectionScan": [
+    "java_chat_primeira_pagina",
+    "java_chat_cursor",
+    "java_notificacoes_home",
+    "ia_notificacoes",
+    "java_formularios_recebidos",
+    "ia_sessoes_lista",
+    "java_nr_catalogo",
+    "ia_nrs_candidatas",
+    "ia_historico_par_sem_campo"
+  ],
+  "messageShapeCoverage": [
+    {
+      "_id": {
+        "conversationIdType": "string",
+        "recipientIdType": "missing"
+      },
+      "count": 111
+    }
+  ],
+  "businessDocumentsModified": false,
+  "documentationChecks": {
+    "existingTestsPassed": 153,
+    "existingTestsFailed": 0,
+    "buildPassed": true,
+    "readonlyReplayScenarios": 16,
+    "browserRouteVerified": "#/mongo-performance",
+    "measurementIntegrityVerified": true
+  }
+}

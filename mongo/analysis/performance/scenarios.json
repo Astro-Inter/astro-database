@@ -1,0 +1,586 @@
+[
+  {
+    "id": "java_chat_primeira_pagina",
+    "source": "ChatMongoRepository.findMessagesBefore",
+    "collection": "mensagens",
+    "command": {
+      "find": "mensagens",
+      "filter": {
+        "conversa_id": "<CONVERSATION>"
+      },
+      "sort": {
+        "data": -1,
+        "_id": -1
+      },
+      "limit": 10,
+      "projection": {
+        "_id": 1,
+        "remetente_id": 1,
+        "mensagem": 1,
+        "resposta_mensagem_id": 1,
+        "data": 1
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "java_chat_cursor",
+    "source": "ChatMongoRepository.findMessagesBefore (cursor real da página anterior)",
+    "collection": "mensagens",
+    "command": {
+      "find": "mensagens",
+      "filter": {
+        "$and": [
+          {
+            "conversa_id": "<CONVERSATION>"
+          },
+          {
+            "$or": [
+              {
+                "data": {
+                  "$lt": {
+                    "$date": "2026-11-01T19:55:29.622Z"
+                  }
+                }
+              },
+              {
+                "data": {
+                  "$date": "2026-11-01T19:55:29.622Z"
+                },
+                "_id": {
+                  "$lt": "<CURSORID>"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "sort": {
+        "data": -1,
+        "_id": -1
+      },
+      "limit": 10,
+      "projection": {
+        "_id": 1,
+        "remetente_id": 1,
+        "mensagem": 1,
+        "resposta_mensagem_id": 1,
+        "data": 1
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "java_chat_por_id",
+    "source": "ChatMongoRepository.findMessage",
+    "collection": "mensagens",
+    "command": {
+      "find": "mensagens",
+      "filter": {
+        "_id": "<IDENTIFIER_1>",
+        "conversa_id": "<CONVERSATION>"
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "java_chat_ultima_por_conversa",
+    "source": "ChatMongoRepository.findLatestMessages",
+    "collection": "mensagens",
+    "command": {
+      "aggregate": "mensagens",
+      "pipeline": [
+        {
+          "$match": {
+            "conversa_id": {
+              "$in": [
+                "<CONVERSATION>",
+                "<IDENTIFIER_2>"
+              ]
+            }
+          }
+        },
+        {
+          "$sort": {
+            "data": -1,
+            "_id": -1
+          }
+        },
+        {
+          "$group": {
+            "_id": "$conversa_id",
+            "senderId": {
+              "$first": "$remetente_id"
+            },
+            "content": {
+              "$first": "$mensagem"
+            },
+            "date": {
+              "$first": "$data"
+            }
+          }
+        },
+        {
+          "$project": {
+            "senderId": 1,
+            "content": 1,
+            "date": 1,
+            "conversationId": "$_id"
+          }
+        }
+      ],
+      "cursor": {}
+    },
+    "note": ""
+  },
+  {
+    "id": "java_conversas_usuario",
+    "source": "ChatMongoRepository.findConversationsFor",
+    "collection": "conversas",
+    "command": {
+      "find": "conversas",
+      "filter": {
+        "participantes_ids": {
+          "$eq": 2,
+          "$size": 2
+        }
+      },
+      "projection": {
+        "_id": 1,
+        "participantes_ids": 1
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "java_conversa_par",
+    "source": "ChatMongoRepository.findConversationByPair",
+    "collection": "conversas",
+    "command": {
+      "find": "conversas",
+      "filter": {
+        "participantes_ids": {
+          "$all": [
+            2,
+            5
+          ],
+          "$size": 2
+        }
+      },
+      "limit": 2
+    },
+    "note": ""
+  },
+  {
+    "id": "java_notificacoes_home",
+    "source": "NotificationRepository.findTop3ByUserIdOrderByCreatedAtDescIdDesc",
+    "collection": "notificacoes",
+    "command": {
+      "find": "notificacoes",
+      "filter": {
+        "usuario_id": 9
+      },
+      "sort": {
+        "data_criacao": -1,
+        "_id": -1
+      },
+      "limit": 3
+    },
+    "note": ""
+  },
+  {
+    "id": "ia_notificacoes",
+    "source": "roteador/tools.py:consultar_notificacoes",
+    "collection": "notificacoes",
+    "command": {
+      "find": "notificacoes",
+      "filter": {
+        "usuario_id": 9
+      },
+      "sort": {
+        "data_criacao": -1,
+        "_id": -1
+      },
+      "limit": 5,
+      "projection": {
+        "_id": 0,
+        "mensagem": 1,
+        "data_criacao": 1
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "java_formularios_recebidos",
+    "source": "FormRepositoryCustomImpl.findReceived (destinatário)",
+    "collection": "formularios",
+    "command": {
+      "find": "formularios",
+      "filter": {
+        "$and": [
+          {
+            "workspace_id": 1
+          },
+          {
+            "gestor_id": 3
+          },
+          {
+            "status": {
+              "$in": [
+                "PENDENTE",
+                "CONCLUIDO"
+              ]
+            }
+          }
+        ]
+      },
+      "sort": {
+        "criado_em": -1,
+        "_id": -1
+      },
+      "limit": 10,
+      "projection": {
+        "_id": 1,
+        "titulo": 1,
+        "descricao": 1,
+        "nr_id": 1,
+        "unidade_id": 1,
+        "gestor_remetente_id": 1,
+        "data_limite": 1,
+        "criado_em": 1,
+        "respondido_em": 1,
+        "status": 1,
+        "analise": 1,
+        "configuracao": 1,
+        "perguntas.pergunta_id": 1
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "java_formularios_home",
+    "source": "FormRepository.findTop3PendingByManagerId",
+    "collection": "formularios",
+    "command": {
+      "aggregate": "formularios",
+      "pipeline": [
+        {
+          "$match": {
+            "gestor_id": 3,
+            "status": "PENDENTE"
+          }
+        },
+        {
+          "$addFields": {
+            "_due_date_missing": {
+              "$cond": [
+                {
+                  "$eq": [
+                    {
+                      "$ifNull": [
+                        "$data_limite",
+                        null
+                      ]
+                    },
+                    null
+                  ]
+                },
+                1,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "$sort": {
+            "_due_date_missing": 1,
+            "data_limite": 1,
+            "_id": 1
+          }
+        },
+        {
+          "$limit": 3
+        },
+        {
+          "$project": {
+            "_id": 1,
+            "titulo": 1,
+            "data_limite": 1
+          }
+        }
+      ],
+      "cursor": {}
+    },
+    "note": "A chave de ordenação calculada _due_date_missing não existe no documento; o índice não elimina este Sort."
+  },
+  {
+    "id": "ia_sessoes_lista",
+    "source": "database/sessions.py:MongoSessions.list_sessions (pipeline extraído do código)",
+    "collection": "sessoes",
+    "command": {
+      "aggregate": "sessoes",
+      "pipeline": [
+        {
+          "$match": {
+            "usuario_id": "<SESSIONUID>"
+          }
+        },
+        {
+          "$sort": {
+            "atualizada_em": -1,
+            "_id": -1
+          }
+        },
+        {
+          "$limit": 11
+        },
+        {
+          "$project": {
+            "iniciada_em": 1,
+            "atualizada_em": 1,
+            "status": 1,
+            "titulo": 1,
+            "ultima_mensagem_previa": 1,
+            "primeira_pergunta": {
+              "$arrayElemAt": [
+                {
+                  "$filter": {
+                    "input": {
+                      "$ifNull": [
+                        "$mensagens",
+                        []
+                      ]
+                    },
+                    "as": "message",
+                    "cond": {
+                      "$and": [
+                        {
+                          "$eq": [
+                            "$$message.papel",
+                            "human"
+                          ]
+                        },
+                        {
+                          "$eq": [
+                            {
+                              "$type": "$$message.conteudo"
+                            },
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                0
+              ]
+            },
+            "ultima_mensagem": {
+              "$arrayElemAt": [
+                {
+                  "$filter": {
+                    "input": {
+                      "$ifNull": [
+                        "$mensagens",
+                        []
+                      ]
+                    },
+                    "as": "message",
+                    "cond": {
+                      "$and": [
+                        {
+                          "$in": [
+                            "$$message.papel",
+                            [
+                              "human",
+                              "assistant"
+                            ]
+                          ]
+                        },
+                        {
+                          "$eq": [
+                            {
+                              "$type": "$$message.conteudo"
+                            },
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                -1
+              ]
+            }
+          }
+        }
+      ],
+      "cursor": {}
+    },
+    "note": ""
+  },
+  {
+    "id": "ia_memoria_resumos",
+    "source": "database/sessions.py:MongoSessions.previous",
+    "collection": "sessoes",
+    "command": {
+      "find": "sessoes",
+      "filter": {
+        "usuario_id": "<SUMMARYUID>",
+        "_id": {
+          "$ne": "<SESSIONID>"
+        },
+        "status": {
+          "$in": [
+            "ativa",
+            "encerrada"
+          ]
+        },
+        "resumo": {
+          "$type": "string",
+          "$ne": ""
+        },
+        "$or": [
+          {
+            "status": "encerrada",
+            "resumo_mensagens": {
+              "$exists": false
+            }
+          },
+          {
+            "$expr": {
+              "$and": [
+                {
+                  "$eq": [
+                    "$resumo_mensagens",
+                    {
+                      "$size": {
+                        "$ifNull": [
+                          "$mensagens",
+                          []
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "$eq": [
+                    "$resumo_ultima_mensagem_em",
+                    {
+                      "$ifNull": [
+                        "$ultima_mensagem_em",
+                        "$atualizada_em"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "sort": {
+        "atualizada_em": -1
+      },
+      "limit": 3,
+      "projection": {
+        "resumo": 1,
+        "iniciada_em": 1,
+        "mensagens": {
+          "$slice": -6
+        }
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "ia_sessao_por_id",
+    "source": "database/sessions.py:MongoSessions.get",
+    "collection": "sessoes",
+    "command": {
+      "find": "sessoes",
+      "filter": {
+        "_id": "<SESSIONID>",
+        "usuario_id": "<SESSIONUID>"
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "java_nr_catalogo",
+    "source": "NrReviewRepository.findAll",
+    "collection": "nrs",
+    "command": {
+      "find": "nrs",
+      "filter": {},
+      "sort": {
+        "_id": 1
+      }
+    },
+    "note": ""
+  },
+  {
+    "id": "ia_nrs_candidatas",
+    "source": "support/nr_recommendations.py:EmployeeNrRepository.list_candidates (MAX_NR_CANDIDATES=50)",
+    "collection": "nrs",
+    "command": {
+      "find": "nrs",
+      "filter": {
+        "usabilidade": {
+          "$regularExpression": {
+            "pattern": "^(?:Colaborador|Funcion[aá]rio)$",
+            "options": "iu"
+          }
+        },
+        "revogada": {
+          "$ne": true
+        }
+      },
+      "sort": {
+        "_id": 1
+      },
+      "limit": 50,
+      "projection": {
+        "_id": 1,
+        "nome": 1,
+        "objetivo": 1,
+        "descricao": 1,
+        "aplicabilidade": 1
+      }
+    },
+    "note": "Regex case-insensitive e $ne: validar o plano; igualdade simples não reproduz esta consulta."
+  },
+  {
+    "id": "ia_historico_par_sem_campo",
+    "source": "roteador/tools.py:consultar_historico_mensagens",
+    "collection": "mensagens",
+    "command": {
+      "find": "mensagens",
+      "filter": {
+        "$or": [
+          {
+            "remetente_id": 2,
+            "destinatario_id": 5
+          },
+          {
+            "remetente_id": 5,
+            "destinatario_id": 2
+          }
+        ]
+      },
+      "sort": {
+        "data": -1,
+        "_id": -1
+      },
+      "limit": 5,
+      "projection": {
+        "_id": 0,
+        "remetente_id": 1,
+        "destinatario_id": 1,
+        "mensagem": 1,
+        "data": 1
+      }
+    },
+    "note": "Diagnóstico de contrato: os documentos atuais têm conversa_id, mas não destinatario_id; retorno vazio não comprova desempenho de histórico útil."
+  }
+]
